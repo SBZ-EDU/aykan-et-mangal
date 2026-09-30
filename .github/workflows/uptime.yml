@@ -9,11 +9,20 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Check endpoints
+      - name: Check endpoints (both accounts)
         id: chk
         run: |
           FAIL=""
-          for u in "https://aykan-tgbot.aykanet34.workers.dev/health" "https://aykan-panel.aykanet34.workers.dev/" "https://aykan-hizli.aykanet34.workers.dev/" "https://aykan-site.aykanet34.workers.dev/" "https://aykan-site.aykanet34.workers.dev/brosur/aykan_fiyat_brosuru_baski.pdf" "https://t.me/AykanEtmangal_shapping_bot"; do
+          for u in \
+            "https://aykan-tgbot.aykanet34.workers.dev/health" \
+            "https://aykan-panel.aykanet34.workers.dev/api/ping" \
+            "https://aykan-hizli.aykanet34.workers.dev/" \
+            "https://aykan-site.aykanet34.workers.dev/" \
+            "https://aykan-tgbot.elasa2next.workers.dev/health" \
+            "https://aykan-panel.elasa2next.workers.dev/api/ping" \
+            "https://aykan-hizli.elasa2next.workers.dev/" \
+            "https://aykan-site.elasa2next.workers.dev/" \
+            "https://t.me/AykanEtmangal_shapping_bot"; do
             code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 -A "AykanBot/1.0" "$u" || echo 000)
             echo "$u → $code"
             [ "$code" = "200" ] || FAIL="$FAIL $u($code)"

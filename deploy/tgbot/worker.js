@@ -173,7 +173,7 @@ function kbMenu(lang) {
   });
   var rows = [];
   for (var i = 0; i < btns.length; i += 2) rows.push(btns.slice(i, i + 2));
-  rows.push([{ text: "🔥 " + L(lang, "Günün Fiyatı", "Today's Special", "قیمت امروز"), callback_data: "gununfiyati" }, { text: "📄 PDF Fiyat Listesi", url: PDF_URL }]);
+  rows.push([{ text: "🔥 " + L(lang, "Günün Fiyatı", "Today's Special", "قیمت امروز"), callback_data: "gununfiyati" }, { text: "💰 " + L(lang, "Tüm Fiyatlar", "All Prices", "همه قیمت‌ها"), callback_data: "fiyatlar" }, { text: "📄 PDF", url: PDF_URL }]);
   rows.push([{ text: "🛒 " + ((k.kb || {}).sepet || "Sepet"), callback_data: "sepet" }]);
   rows.push([{ text: k.home || "🏠 Ana Menü", callback_data: "home" }]);
   return rows;
@@ -285,6 +285,16 @@ async function sendGallery(env, cid) {
   try { var r = await tg(env, "sendMediaGroup", { chat_id: cid, media: media }); if (r.ok) return; } catch (e) {}
   await send(env, cid, "📷 https://aykan-site.aykanet34.workers.dev/");
 }
+function priceListText(lang) {
+  var cur = lang === "fa" ? "لیر" : "TL";
+  var lines = [L(lang, "💰 GÜNCEL FİYAT LİSTEMİZ:", "💰 OUR CURRENT PRICES:", "💰 قیمت‌های به‌روز ما:")];
+  DATA.MENU.forEach(function (m0) {
+    var m = menuById(m0.id); if (!m || _STK[m.id] === false) return;
+    lines.push("• " + m.name[lang] + " — " + fmtTL(m.price) + " " + cur + "/" + m.unit[lang] + (_OV[m.id] ? " 🔥" : ""));
+  });
+  lines.push(L(lang, "\n🚚 Gün içinde teslim • 💵 Kapıda ödeme", "\n🚚 Same-day delivery • 💵 Pay at the door", "\n🚚 ارسال همان روز • 💵 پرداخت درب منزل"));
+  return lines.join("\n");
+}
 function k_home(lang) { return L(lang, "🏠 Ana Menü", "🏠 Main Menu", "🏠 منوی اصلی"); }
 function greet(lang) {
   var h = istanbulNow().hh;
@@ -379,6 +389,25 @@ async function handleAction(env, cid, data, lang, frm, msgId) {
   var c = await getChat(env, cid);
   var st = await getBotState(env);
 
+  if (data.indexOf("adm:") === 0) {
+    if (st.admin_chat !== cid) return "🔐 sadece yönetici!";
+    var asub = data.slice(4);
+    if (asub === "duyuruok") {
+      var dbody = st.pending_duyuru; st.pending_duyuru = null; await setSetting(env, "bot_state", st);
+      if (!dbody) return "⚠️";
+      var tgts2 = [];
+      try { tgts2 = (await env.DB.prepare("SELECT chat_id FROM bot_chats LIMIT 400").all()).results || []; } catch (e) {}
+      var sn2 = 0;
+      for (var tj = 0; tj < tgts2.length; tj++) {
+        try { var rj = await tg(env, "sendMessage", { chat_id: tgts2[tj].chat_id, text: "📢 " + dbody }); if (rj.ok) sn2++; } catch (e) {}
+      }
+      await editOrSend(env, cid, msgId, "📢 Duyuru gönderildi: " + sn2 + "/" + tgts2.length + " sohbet ✔");
+    } else if (asub === "duyuruno") {
+      st.pending_duyuru = null; await setSetting(env, "bot_state", st);
+      await editOrSend(env, cid, msgId, "❌ Duyuru iptal edildi.");
+    }
+    return "";
+  }
   if (data.indexOf("lb:") === 0) {
     if (st.admin_chat !== cid) return "🔐 فقط برای مدیر!";
     var sub = data.slice(3);
@@ -442,7 +471,7 @@ async function handleAction(env, cid, data, lang, frm, msgId) {
   if (data === "iletisim") { await send(env, cid, tx(lang, "iletisim", OWNER_WA), kbMain(lang)); return ""; }
   if (data === "b2b") {
     await send(env, cid, b2bText(lang),
-      [[{ text: tx(lang, "b2b_btn"), callback_data: "b2breq" }], [{ text: tx(lang, "home"), callback_data: "home" }]]);
+      [[{ text: tx(lang, "b2b_btn"), callback_data: "b2breq" }], [{ text: "📄 PDF Katalog", url: PDF_URL }, { text: "💬 WhatsApp", url: "https://wa.me/" + OWNER_WA }], [{ text: tx(lang, "home"), callback_data: "home" }]]);
     return "";
   }
   if (data === "b2breq") { c.mode = "b2b_company"; await saveChat(env, cid, c); await send(env, cid, tx(lang, "ask_company")); return ""; }
@@ -536,6 +565,7 @@ async function handleAction(env, cid, data, lang, frm, msgId) {
     return "";
   }
   if (data === "galeri") { await sendGallery(env, cid); return ""; }
+  if (data === "fiyatlar") { await send(env, cid, priceListText(lang), kbMenu(lang)); return ""; }
   if (data.indexOf("rate:") === 0) {
     var rv = parseInt(data.split(":")[1], 10) || 5;
     statBump(env, "rate" + rv);
@@ -606,14 +636,11 @@ async function handleAdminCommand(env, cid, text) {
   }
   if (cmd === "/duyuru") {
     var body = text.split(" ").slice(1).join(" ").trim();
-    if (!body) { await send(env, cid, "📢 kullanım: /duyuru MESAJ — tüm bot kullanıcılarına gönderilir."); return; }
-    var targets = [];
-    try { targets = (await env.DB.prepare("SELECT chat_id FROM bot_chats LIMIT 400").all()).results || []; } catch (e) {}
-    var sentN = 0;
-    for (var ti = 0; ti < targets.length; ti++) {
-      try { var rr = await tg(env, "sendMessage", { chat_id: targets[ti].chat_id, text: "📢 " + body }); if (rr.ok) sentN++; } catch (e) {}
-    }
-    await send(env, cid, "📢 Duyuru " + sentN + "/" + targets.length + " sohbete iletildi.");
+    if (!body) { await send(env, cid, "📢 kullanım: /duyuru MESAJ — önizleme gösterilir, onaydan sonra gönderilir."); return; }
+    if (st.pending_duyuru) { await send(env, cid, "⚠️ Zaten onay bekleyen bir duyuru var — önce onu onayla/iptal et."); return; }
+    st.pending_duyuru = body.slice(0, 800); await setSetting(env, "bot_state", st);
+    await send(env, cid, "📢 ÖNİZLEME:\n\n📢 " + st.pending_duyuru + "\n\n―\nGöndermek onaylıyor musunuz?",
+      [[{ text: "✅ Onayla ve Gönder", callback_data: "adm:duyuruok" }, { text: "❌ İptal", callback_data: "adm:duyuruno" }]]);
     return;
   }
   if (cmd === "/durum") {
@@ -628,7 +655,7 @@ async function handleAdminCommand(env, cid, text) {
     return;
   }
   if (cmd === "/yardim") {
-    await send(env, cid, "🛠 ADMİN KOMUTLARI\n\n🔗 KANAL\n/kanal @x — bağla • /kanalkapat — kes\n/postnow — hemen post • /plan — yayın planı\n/aralik N — saat aralığı • /durdur • /devam\n\n📊 YÖNETİM\n/istatistik — satış/chat/etkinlik\n/siparisler — son 10 sipariş\n/durum KOD MESAJ — müşteriye bildirim\n/duyuru MESAJ — toplu duyuru\n/fiyatguncelle id fiyat — fiyat değiştir (sifirla = geri al)\n/stok id yok|var — stok kapat/aç\n/ping — sistem durumu\n\n🎯 LİDLER\n/lidedefteri — tarayıcı • /bolge N • /yatirim");
+    await send(env, cid, "🛠 ADMİN KOMUTLARI\n\n🔗 KANAL\n/kanal @x — bağla • /kanalkapat — kes\n/postnow — hemen post • /plan — yayın planı\n/aralik N — saat aralığı • /durdur • /devam\n\n📊 YÖNETİM\n/istatistik — satış/chat/etkinlik\n/siparisler — son 10 sipariş\n/bul KOD — sipariş ara • /rapor — son 24 saat\n/durum KOD MESAJ — müşteriye bildirim\n/duyuru MESAJ — toplu duyuru\n/fiyatguncelle id fiyat — fiyat değiştir (sifirla = geri al)\n/stok id yok|var — stok kapat/aç\n/ping — sistem durumu\n\n🎯 LİDLER\n/lidedefteri — tarayıcı • /bolge N • /yatirim");
     return;
   }
   if (cmd === "/fiyatguncelle") {
@@ -649,6 +676,24 @@ async function handleAdminCommand(env, cid, text) {
     else { await send(env, cid, "📌 Kullanım: /stok kusbasi yok  (geri açmak için: /stok kusbasi var)"); return; }
     await setSetting(env, "stock", _STK);
     await send(env, cid, "✅ " + sid + " → " + (sv === "yok" ? "STOKTA YOK (menüden gizlendi)" : "STOKTA (menüde görünüyor)"));
+    return;
+  }
+  if (cmd === "/bul") {
+    var bc = (parts[1] || "").toUpperCase();
+    if (!bc) { await send(env, cid, "📌 kullanım: /bul SİPARİŞKODU (kısmi yazım yeter)"); return; }
+    var brs = [];
+    try { brs = (await env.DB.prepare("SELECT code, kind, total, name, phone, chat, created_at FROM orders WHERE code LIKE ? ORDER BY rowid DESC LIMIT 3").bind("%" + bc + "%").all()).results || []; } catch (e) {}
+    if (!brs.length) { await send(env, cid, "⚠️ Bulunamadı: " + bc); return; }
+    var bm = "🔍 '" + bc + "':\n\n";
+    brs.forEach(function (r) { bm += "• " + r.code + " | " + r.kind + " | " + fmtTL(r.total) + " TL\n  👤 " + (r.name || "?") + " | 📞 " + (r.phone || "?") + "\n  💬 chat: " + r.chat + " | " + (r.created_at || "") + "\n\n"; });
+    await send(env, cid, bm);
+    return;
+  }
+  if (cmd === "/rapor") {
+    var yr = {};
+    try { yr = (await env.DB.prepare("SELECT COUNT(*) n, COALESCE(SUM(total),0) t FROM orders WHERE kind='order' AND created_at >= datetime('now','-1 day')").first()) || {}; } catch (e) {}
+    var nch2 = 0; try { nch2 = ((await env.DB.prepare("SELECT COUNT(*) n FROM bot_chats").first()) || {}).n || 0; } catch (e) {}
+    await send(env, cid, "📊 SON 24 SAAT\n\n🧾 Sipariş: " + (yr.n || 0) + " | " + fmtTL(yr.t || 0) + " TL\n👥 Sohbet: " + nch2);
     return;
   }
   if (cmd === "/siparisler") {
@@ -809,7 +854,7 @@ async function handleUpdate(env, u) {
   var st = await getBotState(env);
 
   // ادمین؟
-  var adminCmds = ["/kanal", "/channel", "/kanalkapat", "/postnow", "/plan", "/aralik", "/interval", "/durdur", "/pause", "/devam", "/resume", "/lidedefteri", "/lidegonder", "/lidekanal", "/leadschannel", "/lidekanalkapat", "/bolge", "/yatirim", "/istatistik", "/stats", "/duyuru", "/durum", "/ping", "/siparisler", "/fiyatguncelle", "/stok", "/yardim"];
+  var adminCmds = ["/kanal", "/channel", "/kanalkapat", "/postnow", "/plan", "/aralik", "/interval", "/durdur", "/pause", "/devam", "/resume", "/lidedefteri", "/lidegonder", "/lidekanal", "/leadschannel", "/lidekanalkapat", "/bolge", "/yatirim", "/istatistik", "/stats", "/duyuru", "/durum", "/ping", "/siparisler", "/fiyatguncelle", "/stok", "/yardim", "/bul", "/rapor"];
   for (var ai = 0; ai < adminCmds.length; ai++) {
     if (new RegExp("^" + adminCmds[ai].replace(/\//g, "\\/") + "(\\s|$)").test(low)) {
       if (st.admin_chat === cid) { await handleAdminCommand(env, cid, text); }
@@ -833,9 +878,13 @@ async function handleUpdate(env, u) {
   if (c.mode && low.indexOf("/") === 0 && low.indexOf("/start") !== 0) {
     c.mode = null; await saveChat(env, cid, c);  // هر دستور دیگری جریان ورودی را قطع می‌کند
   }
-  if (c.mode === "name") { c.order = c.order || {}; c.order.name = text; c.order.tg = ((msg.from || {}).username ? "@" + msg.from.username : "") || ((msg.from || {}).first_name || ""); c.mode = "phone"; await saveChat(env, cid, c); await send(env, +cid, tx(lang, "ask_phone")); return; }
-  if (c.mode === "phone") { c.order.phone = text; c.mode = "note"; await saveChat(env, cid, c); await send(env, +cid, tx(lang, "ask_note")); return; }
-  if (c.mode === "note") { c.order.note = text; c.mode = null; await saveChat(env, cid, c); await finalizeOrder(env, cid, c, lang); return; }
+  if (c.mode === "name") { c.order = c.order || {}; c.order.name = text.slice(0, 80); c.order.tg = ((msg.from || {}).username ? "@" + msg.from.username : "") || ((msg.from || {}).first_name || ""); c.mode = "phone"; await saveChat(env, cid, c); await send(env, +cid, tx(lang, "ask_phone")); return; }
+  if (c.mode === "phone") {
+    var phv = digits(faDig(text));
+    if (phv.length < 10 || phv.length > 15) { await send(env, +cid, L(lang, "⚠️ Geçerli bir telefon yazın (örn. 0537 732 52 69):", "⚠️ Please enter a valid phone (e.g. 0537 732 52 69):", "⚠️ شماره معتبر بنویسید (مثلاً 0537 732 52 69):")); return; }
+    c.order.phone = text.slice(0, 40); c.mode = "note"; await saveChat(env, cid, c); await send(env, +cid, tx(lang, "ask_note")); return;
+  }
+  if (c.mode === "note") { c.order.note = text.slice(0, 300); c.mode = null; await saveChat(env, cid, c); await finalizeOrder(env, cid, c, lang); return; }
   if (c.mode === "feedback") {
     c.mode = null; await saveChat(env, cid, c);
     await notifyAdmin(env, "⚠️ GERİ BİLDİRİM / FEEDBACK (⭐ " + (c.last_rate || "?") + ")\n\n" + text.slice(0, 500) + "\nChat: " + cid);
@@ -844,6 +893,7 @@ async function handleUpdate(env, u) {
   }
   if (c.mode === "b2b_company") { c.order = c.order || {}; c.order.b2b_company = text; c.mode = "b2b_phone"; await saveChat(env, cid, c); await send(env, +cid, tx(lang, "ask_b2b_phone")); return; }
   if (c.mode === "b2b_phone") {
+    if (digits(faDig(text)).length < 10) { await send(env, +cid, L(lang, "⚠️ Geçerli bir telefon yazın:", "⚠️ Please enter a valid phone:", "⚠️ شماره معتبر بنویسید:")); return; }
     c.mode = null;
     var comp = (c.order || {}).b2b_company || "";
     await saveChat(env, cid, c);
@@ -880,6 +930,9 @@ async function handleUpdate(env, u) {
     } else if (dl.indexOf("p_") === 0) {
       var pm = menuById(dl.slice(2));
       if (pm) await send(env, +cid, tx(lang, "qty_prompt", pm.name[lang], pm.price, pm.unit[lang]), kbQty(pm, lang));
+    } else if (dl.indexOf("c_") === 0) {
+      var oi = parseInt(dl.slice(2), 10) || 0;
+      await send(env, +cid, "🎁 " + L(lang, "SIZE ÖZEL TEKLİF:", "A SPECIAL OFFER FOR YOU:", "پیشنهاد ویژه شما:") + "\n\n" + DATA.OFFERS[oi % DATA.OFFERS.length], kbMenu(lang));
     }
   } else if (low.indexOf("/lang") === 0 || low.indexOf("/dil") === 0 || low.indexOf("/zaban") === 0) {
     await send(env, +cid, tx(lang, "pick_lang"), kbLang());
@@ -888,7 +941,7 @@ async function handleUpdate(env, u) {
   } else if (low.indexOf("/paket") === 0 || low.indexOf("/pack") === 0) {
     await send(env, +cid, tx(lang, "paket_title"), kbMenu(lang));
   } else if (low.indexOf("/b2b") === 0 || low.indexOf("/toptan") === 0) {
-    await send(env, +cid, b2bText(lang), [[{ text: tx(lang, "b2b_btn"), callback_data: "b2breq" }], [{ text: tx(lang, "home"), callback_data: "home" }]]);
+    await send(env, +cid, b2bText(lang), [[{ text: tx(lang, "b2b_btn"), callback_data: "b2breq" }], [{ text: "📄 PDF Katalog", url: PDF_URL }, { text: "💬 WhatsApp", url: "https://wa.me/" + OWNER_WA }], [{ text: tx(lang, "home"), callback_data: "home" }]]);
   } else if (low.indexOf("/sepet") === 0 || low.indexOf("/cart") === 0) {
     var ct3 = cartText(c, lang); await send(env, +cid, ct3.text, ct3.kb);
   } else if (low.indexOf("/siparislerim") === 0 || low.indexOf("/siparis") === 0 || low.indexOf("/orders") === 0) {
@@ -903,6 +956,11 @@ async function handleUpdate(env, u) {
     await send(env, +cid, L(lang, "🚚 TESLİMAT BÖLGELERİ\n\n" + an2 + "\n\nGün içinde teslim — Bağcılar, Esenler ve çevre mahalleler.", "🚚 DELIVERY AREAS\n\n" + an2 + "\n\nSame-day delivery.", "🚚 مناطق ارسال\n\n" + ((DATA.AREAS || []).map(function (a, i) { return (i + 1) + ". " + (a.fa || ""); }).join("\n")) + "\n\nارسال در همان روز."), kbMain(lang));
   } else if (low.indexOf("/galeri") === 0) {
     await sendGallery(env, +cid);
+  } else if (low.indexOf("/onerme") === 0 || low.indexOf("/oneri") === 0) {
+    c.mode = "feedback"; await saveChat(env, cid, c);
+    await send(env, +cid, L(lang, "💡 Önerinizi/şikayetinizi yazın — doğrudan yönetime gider:", "💡 Write your suggestion — goes straight to management:", "💡 پیشنهاد/انتقاد خود را بنویسید — مستقیم به مدیریت می‌رسد:"), kbMain(lang));
+  } else if (low.indexOf("/fiyatlar") === 0) {
+    await send(env, +cid, priceListText(lang), kbMenu(lang));
   } else if (low.indexOf("/takip") === 0) {
     var tc = (text.split(/\s+/)[1] || "").toUpperCase();
     if (!tc) await send(env, +cid, L(lang, "📌 Kullanım: /takip SİPARİŞKODU", "📌 Usage: /takip ORDERCODE", "📌 استفاده: /takip کد_سفارش"), kbMain(lang));
@@ -995,6 +1053,22 @@ async function maybeTick(env) {
     await ensureWebhook(env);
     await autopostTick(env);
     await cartNudge(env, nowTs);
+    await weeklyReport(env);
+  } catch (e) {}
+}
+async function weeklyReport(env) {
+  try {
+    var now = istanbulNow();
+    var pd = now.dateStr.split("-");
+    var dt = new Date(Date.UTC(+pd[0], +pd[1] - 1, +pd[2]));
+    if (dt.getUTCDay() !== 1 || now.hh !== 10) return;
+    var st = await getBotState(env);
+    if (st.weekly_report === now.dateStr) return;
+    st.weekly_report = now.dateStr; await setSetting(env, "bot_state", st);
+    var wr = {};
+    try { wr = (await env.DB.prepare("SELECT COUNT(*) n, COALESCE(SUM(total),0) t FROM orders WHERE kind='order' AND created_at >= datetime('now','-7 days')").first()) || {}; } catch (e) {}
+    var nch3 = 0; try { nch3 = ((await env.DB.prepare("SELECT COUNT(*) n FROM bot_chats").first()) || {}).n || 0; } catch (e) {}
+    await notifyAdmin(env, "📊 HAFTALIK RAPOR / گزارش هفتگی\n\n🧾 7 gün: " + (wr.n || 0) + " sipariş | " + fmtTL(wr.t || 0) + " TL\n👥 Toplam sohbet: " + nch3);
   } catch (e) {}
 }
 async function cartNudge(env, nowTs) {

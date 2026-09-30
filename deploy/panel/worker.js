@@ -128,9 +128,16 @@ async function handleApi(request, env, path) {
     } catch (e) {}
     return new Response(null, { status: 204, headers: { "access-control-allow-origin": "*" } });
   }
+  if (path === "/api/ping") return json({ ok: true, ts: Date.now(), svc: "aykan-panel" });
+  if (path === "/robots.txt") return new Response("User-agent: *\nDisallow: /\n", { headers: { "content-type": "text/plain" } });
   if (path === "/api/login" && request.method === "POST") {
     let pin = "";
     try { pin = String((await request.json()).pin || ""); } catch (e) {}
+    const ipLR = request.headers.get("cf-connecting-ip") || "x";
+    const lr = _LR[ipLR] = _LR[ipLR] || { n: 0, t: Date.now() };
+    if (Date.now() - lr.t > 600000) { lr.n = 0; lr.t = Date.now(); }
+    lr.n++;
+    if (lr.n > 5) return json({ ok: false, error: "Çok fazla deneme — 10 dakika bekleyin" }, 429);
     if (pin !== String(env.ADMIN_PIN || "__ADMIN_PIN__")) return json({ ok: false, error: "رمز نادرست است" }, 401);
     const token = await sha256hex(env.PANEL_SECRET + ":" + pin);
     return json({ ok: true, token });
@@ -710,6 +717,7 @@ if (TOK) startApp();if (TOK) startApp();
 </body></html>`;
 }
 
+const _LR = {};  // login rate-limit: 5 تلاش / ۱۰ دقیقه به ازای IP
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
