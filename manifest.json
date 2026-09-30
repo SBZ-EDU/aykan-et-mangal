@@ -1,0 +1,10 @@
+{
+  "name": "Aykan Et & Mangal",
+  "short_name": "Aykan Et",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#b91c1c",
+  "description": "Bağcılar/Esenler kasap ve mangal — 1 kilo çiğ tartıp pişiriyoruz.",
+  "icons": [{ "src": "assets/img0.jpg", "sizes": "420x420", "type": "image/jpeg", "purpose": "any" }]
+}
