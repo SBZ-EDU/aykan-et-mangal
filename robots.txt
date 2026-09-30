@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aykan-site.elasa2next.workers.dev/sitemap.xml

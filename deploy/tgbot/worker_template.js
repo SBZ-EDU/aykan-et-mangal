@@ -16,16 +16,16 @@ const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=Aykan+Et+Manga
 const OFFER_SLOT = "09:00";
 const DEFAULT_INTERVAL = 3;
 var PHOTOS = {
-  kemikli: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/kemikli.jpg",
-  kusbasi: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/kusbasi.jpg",
-  antrikot: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/antrikot.jpg",
-  kuzu: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/kuzu.jpg",
-  pirzola: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/pirzola.jpg",
-  mangal: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/mangal.jpg",
-  tortilla: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/tortilla.jpg",
-  aile: "https://sbz-edu.github.io/aykan-et-mangal/assets/foods/aile.jpg"
+  kemikli: "https://aykan-site.elasa2next.workers.dev/assets/foods/kemikli.jpg",
+  kusbasi: "https://aykan-site.elasa2next.workers.dev/assets/foods/kusbasi.jpg",
+  antrikot: "https://aykan-site.elasa2next.workers.dev/assets/foods/antrikot.jpg",
+  kuzu: "https://aykan-site.elasa2next.workers.dev/assets/foods/kuzu.jpg",
+  pirzola: "https://aykan-site.elasa2next.workers.dev/assets/foods/pirzola.jpg",
+  mangal: "https://aykan-site.elasa2next.workers.dev/assets/foods/mangal.jpg",
+  tortilla: "https://aykan-site.elasa2next.workers.dev/assets/foods/tortilla.jpg",
+  aile: "https://aykan-site.elasa2next.workers.dev/assets/foods/aile.jpg"
 };
-const PDF_URL = "https://sbz-edu.github.io/aykan-et-mangal/brosur/aykan_fiyat_brosuru_baski.pdf";
+const PDF_URL = "https://aykan-site.elasa2next.workers.dev/brosur/aykan_fiyat_brosuru_baski.pdf";
 
 let SIM = null; // حالت شبیه‌سازی تست
 
@@ -283,7 +283,7 @@ async function sendGallery(env, cid) {
     return { type: "photo", media: PHOTOS[id], caption: m ? (m.name.tr + " — " + fmtTL(m.price) + " TL/" + m.unit.tr) : "Aykan Et & Mangal" };
   });
   try { var r = await tg(env, "sendMediaGroup", { chat_id: cid, media: media }); if (r.ok) return; } catch (e) {}
-  await send(env, cid, "📷 https://sbz-edu.github.io/aykan-et-mangal/");
+  await send(env, cid, "📷 https://aykan-site.elasa2next.workers.dev/");
 }
 function k_home(lang) { return L(lang, "🏠 Ana Menü", "🏠 Main Menu", "🏠 منوی اصلی"); }
 function greet(lang) {

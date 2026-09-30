@@ -8,7 +8,7 @@ on:
         type: choice
         required: true
         default: tgbot
-        options: [tgbot, panel, hizli, all]
+        options: [tgbot, panel, hizli, site, all]
 
 jobs:
   deploy:
@@ -49,6 +49,21 @@ jobs:
       - name: Deploy hizli
         if: ${{ inputs.worker == 'hizli' || inputs.worker == 'all' }}
         run: cd deploy/worker && npx -y wrangler@3.100.0 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      - name: Build site assets
+        if: ${{ inputs.worker == 'site' || inputs.worker == 'all' }}
+        run: |
+          mkdir -p deploy/site/public/brosur
+          cp index.html robots.txt sitemap.xml manifest.json 404.html deploy/site/public/
+          cp -r assets deploy/site/public/
+          cp brosur/aykan_fiyat_brosuru_baski.pdf brosur/aykan_fiyat_brosuru_preview.png deploy/site/public/brosur/
+
+      - name: Deploy site
+        if: ${{ inputs.worker == 'site' || inputs.worker == 'all' }}
+        run: cd deploy/site && npx -y wrangler@3.100.0 deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
