@@ -8,4 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Tick Aykan TG Bot Worker
-        run: curl -fsS --max-time 30 "https://aykan-tgbot.elasa2next.workers.dev/api/tick?key=${{ secrets.TICK_KEY }}" || true
+        run: curl -fsS --max-time 30 "https://aykan-tgbot.aykanet34.workers.dev/api/tick?key=${{ secrets.TICK_KEY }}" || true
