@@ -1,4 +1,4 @@
-name = "aykan-tgbot"
+name = "lively-mouse-0c7c"
 main = "worker.js"
 compatibility_date = "2024-09-23"
 
@@ -7,5 +7,5 @@ binding = "DB"
 database_name = "aykan-db"
 database_id = "058e06bb-6148-4c5b-ba34-e1321bb9ac7c"
 
-# [triggers] disabled: free cron limit — GitHub Actions tick used instead
-# crons = ["*/15 * * * *"]
+[assets]
+directory = "./public"

@@ -37,7 +37,7 @@
 
 | بروشور v2.1 | کارت ویزیت v4 | صفحه سریع |
 |---|---|---|
-| ![Broşür](brosur/aykan_fiyat_brosuru_preview.png) | ![Kartvizit](kartvizit/kart_v4_1_on.png) | [Hızlı Sipariş](https://aykan-hizli.aykanet34.workers.dev) |
+| ![Broşür](brosur/aykan_fiyat_brosuru_preview.png) | ![Kartvizit](kartvizit/kart_v4_1_on.png) | [Hızlı Sipariş](https://lively-mouse-0c7c.aykanet34.workers.dev) |
 
 | مستندات | | |
 |---|---|---|

@@ -1,6 +1,0 @@
-name = "aykan-site"
-compatibility_date = "2024-09-23"
-
-[assets]
-directory = "./public"
-not_found_handling = "404-page"

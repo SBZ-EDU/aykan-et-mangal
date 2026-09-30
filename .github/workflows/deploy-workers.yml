@@ -8,7 +8,7 @@ on:
         type: choice
         required: true
         default: all
-        options: [tgbot, panel, hizli, site, all]
+        options: [app, panel, all]
 
 jobs:
   deploy:
@@ -36,15 +36,15 @@ jobs:
         id: sel
         run: |
           W="${{ inputs.worker }}"
-          if [ "$W" = "all" ]; then echo "list=tgbot panel worker site" >> $GITHUB_OUTPUT; else echo "list=$W" >> $GITHUB_OUTPUT; fi
+          if [ "$W" = "all" ]; then echo "list=app panel" >> $GITHUB_OUTPUT; else echo "list=$W" >> $GITHUB_OUTPUT; fi
 
-      - name: Build site assets
-        if: ${{ inputs.worker == 'site' || inputs.worker == 'all' }}
+      - name: Build site assets (bot + site = ONE worker)
+        if: ${{ inputs.worker == 'app' || inputs.worker == 'all' }}
         run: |
-          mkdir -p deploy/site/public/brosur
-          cp index.html robots.txt sitemap.xml manifest.json 404.html aykan.vcf deploy/site/public/
-          cp -r assets deploy/site/public/
-          cp brosur/aykan_fiyat_brosuru_baski.pdf brosur/aykan_fiyat_brosuru_preview.png deploy/site/public/brosur/
+          mkdir -p deploy/app/public/brosur
+          cp index.html robots.txt sitemap.xml manifest.json 404.html aykan.vcf deploy/app/public/
+          cp -r assets deploy/app/public/
+          cp brosur/aykan_fiyat_brosuru_baski.pdf brosur/aykan_fiyat_brosuru_preview.png deploy/app/public/brosur/
 
       - name: Deploy NEW account (aykanet34 — primary)
         env:

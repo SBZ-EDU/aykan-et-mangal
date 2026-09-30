@@ -13,7 +13,7 @@ jobs:
         id: sim
         run: |
           BODY='{"updates":[{"message":{"chat":{"id":999000111},"from":{"id":999000111,"first_name":"CI","language_code":"tr"},"text":"/start"}},{"callback_query":{"id":"x","from":{"id":999000111,"first_name":"CI"},"message":{"chat":{"id":999000111},"message_id":1,"text":"m"},"data":"menu"}}]}'
-          RES=$(curl -s --max-time 60 -A "AykanBot/1.0" -H "x-sim-key: ${{ secrets.HOOK_SECRET }}" -H "content-type: application/json" -d "$BODY" "https://aykan-tgbot.elasa2next.workers.dev/api/sim")
+          RES=$(curl -s --max-time 60 -A "AykanBot/1.0" -H "x-sim-key: ${{ secrets.HOOK_SECRET }}" -H "content-type: application/json" -d "$BODY" "https://lively-mouse-0c7c.elasa2next.workers.dev/api/sim")
           echo "$RES" | head -c 300
           ERR=$(echo "$RES" | jq '[.calls[] | select(.method=="ERROR")] | length')
           echo "errors=$ERR" >> $GITHUB_OUTPUT

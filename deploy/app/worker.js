@@ -7,25 +7,25 @@ const PANEL_URL = "https://aykan-panel.aykanet34.workers.dev";
 const PANEL_SECRET = "__PANEL_SECRET__";
 const HOOK_SECRET = "__HOOK_SECRET__";
 const HOOK_PATH = "/hook-__HOOK_SECRET__";
-const HOOK_URL = "https://aykan-tgbot.aykanet34.workers.dev/hook-__HOOK_SECRET__";
+const HOOK_URL = "https://lively-mouse-0c7c.aykanet34.workers.dev/hook-__HOOK_SECRET__";
 const ADMIN_PIN = "__ADMIN_PIN__";
 const OWNER_WA = "905377325269";
-const SITE_URL = "https://aykan-hizli.aykanet34.workers.dev";
+const SITE_URL = "https://lively-mouse-0c7c.aykanet34.workers.dev";
 const CHANNEL_URL = "https://t.me/AykanEtmangal_shopping";
 const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=Aykan+Et+Mangal+G%C3%B6ztepe+Ba%C4%9Fc%C4%B1lar";
 const OFFER_SLOT = "09:00";
 const DEFAULT_INTERVAL = 3;
 var PHOTOS = {
-  kemikli: "https://aykan-site.aykanet34.workers.dev/assets/foods/kemikli.jpg",
-  kusbasi: "https://aykan-site.aykanet34.workers.dev/assets/foods/kusbasi.jpg",
-  antrikot: "https://aykan-site.aykanet34.workers.dev/assets/foods/antrikot.jpg",
-  kuzu: "https://aykan-site.aykanet34.workers.dev/assets/foods/kuzu.jpg",
-  pirzola: "https://aykan-site.aykanet34.workers.dev/assets/foods/pirzola.jpg",
-  mangal: "https://aykan-site.aykanet34.workers.dev/assets/foods/mangal.jpg",
-  tortilla: "https://aykan-site.aykanet34.workers.dev/assets/foods/tortilla.jpg",
-  aile: "https://aykan-site.aykanet34.workers.dev/assets/foods/aile.jpg"
+  kemikli: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/kemikli.jpg",
+  kusbasi: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/kusbasi.jpg",
+  antrikot: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/antrikot.jpg",
+  kuzu: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/kuzu.jpg",
+  pirzola: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/pirzola.jpg",
+  mangal: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/mangal.jpg",
+  tortilla: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/tortilla.jpg",
+  aile: "https://lively-mouse-0c7c.aykanet34.workers.dev/assets/foods/aile.jpg"
 };
-const PDF_URL = "https://aykan-site.aykanet34.workers.dev/brosur/aykan_fiyat_brosuru_baski.pdf";
+const PDF_URL = "https://lively-mouse-0c7c.aykanet34.workers.dev/brosur/aykan_fiyat_brosuru_baski.pdf";
 
 let SIM = null; // حالت شبیه‌سازی تست
 
@@ -283,7 +283,7 @@ async function sendGallery(env, cid) {
     return { type: "photo", media: PHOTOS[id], caption: m ? (m.name.tr + " — " + fmtTL(m.price) + " TL/" + m.unit.tr) : "Aykan Et & Mangal" };
   });
   try { var r = await tg(env, "sendMediaGroup", { chat_id: cid, media: media }); if (r.ok) return; } catch (e) {}
-  await send(env, cid, "📷 https://aykan-site.aykanet34.workers.dev/");
+  await send(env, cid, "📷 https://lively-mouse-0c7c.aykanet34.workers.dev/");
 }
 function priceListText(lang) {
   var cur = lang === "fa" ? "لیر" : "TL";
@@ -1139,7 +1139,7 @@ export default {
       var out = SIM; SIM = null;
       return new Response(JSON.stringify({ ok: true, calls: out }, null, 1), { headers: { "content-type": "application/json" } });
     }
-    return new Response("AYKAN ET & MANGAL — Telegram Bot Worker 24/7 ⚡<br><a href=\"/health\">health</a>", { headers: { "content-type": "text/html; charset=utf-8" } });
+    return new Response("<!DOCTYPE html><html lang=\"fa\" dir=\"rtl\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>صفحه پیدا نشد | قصاب آیکان</title><style>body{font-family:Tahoma,system-ui,sans-serif;background:#f5f5f5;color:#151617;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;text-align:center}.c{max-width:420px;padding:32px}.b{background:#b91c1c;color:#fff;padding:12px 22px;border-radius:14px;text-decoration:none;font-weight:800;display:inline-block;margin:6px}</style></head><body><div class=\"c\"><div style=\"font-size:64px\">🥩</div><h1>این صفحه پیدا نشد</h1><p style=\"color:#878c9f\">ولی گوشت‌های ما سرِ جایشان هستند! 🔥</p><a class=\"b\" href=\"/\">🏠 صفحه اصلی</a><a class=\"b\" style=\"background:#16a34a\" href=\"https://wa.me/905377325269\">💬 واتس‌اپ</a></div></body></html>", { status: 404, headers: { "content-type": "text/html; charset=utf-8" } });
   },
   async scheduled(event, env) {
     await ensureWebhook(env);
