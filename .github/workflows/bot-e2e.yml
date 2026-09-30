@@ -1,0 +1,26 @@
+name: Bot E2E Health
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Sim test (start + menu)
+        id: sim
+        run: |
+          BODY='{"updates":[{"message":{"chat":{"id":999000111},"from":{"id":999000111,"first_name":"CI","language_code":"tr"},"text":"/start"}},{"callback_query":{"id":"x","from":{"id":999000111,"first_name":"CI"},"message":{"chat":{"id":999000111},"message_id":1,"text":"m"},"data":"menu"}}]}'
+          RES=$(curl -s --max-time 60 -A "AykanBot/1.0" -H "x-sim-key: ${{ secrets.HOOK_SECRET }}" -H "content-type: application/json" -d "$BODY" "https://aykan-tgbot.elasa2next.workers.dev/api/sim")
+          echo "$RES" | head -c 300
+          ERR=$(echo "$RES" | jq '[.calls[] | select(.method=="ERROR")] | length')
+          echo "errors=$ERR" >> $GITHUB_OUTPUT
+          [ "$ERR" = "0" ] || exit 1
+      - name: Open issue on failure
+        if: failure()
+        run: |
+          gh issue create --title "🤖 Bot E2E testi başarısız" --body "Sim test hata verdi — $(date -u '+%Y-%m-%d %H:%M UTC')" || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

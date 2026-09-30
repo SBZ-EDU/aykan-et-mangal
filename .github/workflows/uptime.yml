@@ -1,0 +1,31 @@
+name: Uptime Monitor
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check endpoints
+        id: chk
+        run: |
+          FAIL=""
+          for u in "https://aykan-tgbot.elasa2next.workers.dev/health" "https://aykan-panel.elasa2next.workers.dev/" "https://aykan-hizli.elasa2next.workers.dev/" "https://sbz-edu.github.io/aykan-et-mangal/" "https://sbz-edu.github.io/aykan-et-mangal/brosur/aykan_fiyat_brosuru_baski.pdf" "https://t.me/AykanEtmangal_shapping_bot"; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 -A "AykanBot/1.0" "$u" || echo 000)
+            echo "$u → $code"
+            [ "$code" = "200" ] || FAIL="$FAIL $u($code)"
+          done
+          echo "fail=[$FAIL]" >> $GITHUB_OUTPUT
+      - name: Open issue on failure
+        if: contains(steps.chk.outputs.fail, '(')
+        run: |
+          if gh issue list --search "in:title Uptime alarmı" --state open | grep -q "Uptime"; then
+            echo "Issue zaten açık — atlandı"
+          else
+            gh issue create --title "🚨 Uptime alarmı: servis erişilemez" --body "Erişilemeyen: ${{ steps.chk.outputs.fail }} — $(date -u '+%Y-%m-%d %H:%M UTC')"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

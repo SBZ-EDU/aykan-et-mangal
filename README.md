@@ -32,3 +32,13 @@
 
 ---
 <div dir="rtl">🇮🇷 فروشگاه قصابی آیکان ات و منگال — باجیلار و اسنلر، استانبول. سفارش واتساپ: 0537 732 52 69</div>
+
+## 🖼 گالری
+
+| بروشور v2.1 | کارت ویزیت v4 | صفحه سریع |
+|---|---|---|
+| ![Broşür](brosur/aykan_fiyat_brosuru_preview.png) | ![Kartvizit](kartvizit/kart_v4_1_on.png) | [Hızlı Sipariş](https://aykan-hizli.elasa2next.workers.dev) |
+
+| مستندات | | |
+|---|---|---|
+| [RUNBOOK](docs/RUNBOOK.md) | [مهارت‌ها ۱-۳۰](docs/YETENEKLER_30.md) | [مهارت‌ها ۶۱-۹۰](docs/YETENEKLER_90.md) |
