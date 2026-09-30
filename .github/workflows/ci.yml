@@ -12,7 +12,7 @@ jobs:
         with: { node-version: '20' }
       - name: Worker syntax check
         run: |
-          for f in deploy/tgbot/worker.js deploy/panel/worker.js deploy/worker/worker.js; do
+          for f in deploy/app/worker.js deploy/panel/worker.js; do
             node --check "$f" && echo "OK $f"
           done
       - name: Python syntax check
