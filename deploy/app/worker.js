@@ -5,6 +5,7 @@ const DATA = {"MENU": [{"id": "kemikli", "name": {"tr": "Dana Kemikli Et", "en":
 
 const PANEL_URL = "https://aykan-panel.aykanet34.workers.dev";
 const PANEL_SECRET = "__PANEL_SECRET__";
+var _RFQL = {};  // b2b rfq rate-limit: 10/hour/IP
 const HOOK_SECRET = "__HOOK_SECRET__";
 const HOOK_PATH = "/hook-__HOOK_SECRET__";
 const HOOK_URL = "https://lively-mouse-0c7c.aykanet34.workers.dev/hook-__HOOK_SECRET__";
@@ -941,7 +942,7 @@ async function handleUpdate(env, u) {
   } else if (low.indexOf("/paket") === 0 || low.indexOf("/pack") === 0) {
     await send(env, +cid, tx(lang, "paket_title"), kbMenu(lang));
   } else if (low.indexOf("/b2b") === 0 || low.indexOf("/toptan") === 0) {
-    await send(env, +cid, b2bText(lang), [[{ text: tx(lang, "b2b_btn"), callback_data: "b2breq" }], [{ text: "📄 PDF Katalog", url: PDF_URL }, { text: "💬 WhatsApp", url: "https://wa.me/" + OWNER_WA }], [{ text: tx(lang, "home"), callback_data: "home" }]]);
+    await send(env, +cid, b2bText(lang), [[{ text: tx(lang, "b2b_btn"), callback_data: "b2breq" }], [{ text: L(lang, "📝 Akıllı Satınalma Formu (Web)", "📝 Smart RFQ Form (Web)", "📝 فرم خرید هوشمند (وب)"), url: SITE_URL + "/#b2bform" }], [{ text: "📄 PDF Katalog", url: PDF_URL }, { text: "💬 WhatsApp", url: "https://wa.me/" + OWNER_WA }], [{ text: tx(lang, "home"), callback_data: "home" }]]);
   } else if (low.indexOf("/sepet") === 0 || low.indexOf("/cart") === 0) {
     var ct3 = cartText(c, lang); await send(env, +cid, ct3.text, ct3.kb);
   } else if (low.indexOf("/siparislerim") === 0 || low.indexOf("/siparis") === 0 || low.indexOf("/orders") === 0) {
@@ -1138,6 +1139,45 @@ export default {
       }
       var out = SIM; SIM = null;
       return new Response(JSON.stringify({ ok: true, calls: out }, null, 1), { headers: { "content-type": "application/json" } });
+    }
+    if (p === "/api/b2b/rfq" && request.method === "POST") {
+      try {
+        var b = await request.json();
+        var jh = { "content-type": "application/json", "access-control-allow-origin": "*" };
+        if (String(b.web || "")) return new Response(JSON.stringify({ ok: false, error: "spam" }), { status: 400, headers: jh });
+        var ipRL = request.headers.get("cf-connecting-ip") || "x";
+        var rl = _RFQL[ipRL] = _RFQL[ipRL] || { n: 0, t: Date.now() };
+        if (Date.now() - rl.t > 3600000) { rl.n = 0; rl.t = Date.now(); }
+        rl.n++;
+        if (rl.n > 10) return new Response(JSON.stringify({ ok: false, error: "rate-limit" }), { status: 429, headers: jh });
+        var firm = String(b.firm || "").trim().slice(0, 80);
+        var phone = String(b.phone || "").replace(/[^0-9+]/g, "").slice(0, 20);
+        var addr = String(b.addr || "").trim().slice(0, 200);
+        var note = String(b.note || "").trim().slice(0, 300);
+        var its = [];
+        var list = (b.items || []).slice(0, 20);
+        for (var i2 = 0; i2 < list.length; i2++) {
+          var q2 = Math.round(parseFloat(list[i2].qty) * 10) / 10;
+          if (!q2 || q2 < 0.5 || q2 > 5000) continue;
+          its.push({ name: String(list[i2].name || "").slice(0, 60), qty: q2, price: Math.round(parseFloat(list[i2].price) || 0) });
+        }
+        if (!firm || firm.length < 2) return new Response(JSON.stringify({ ok: false, error: "firm" }), { status: 400, headers: jh });
+        if (!/^\+?\d{7,20}$/.test(phone)) return new Response(JSON.stringify({ ok: false, error: "phone" }), { status: 400, headers: jh });
+        if (!its.length) return new Response(JSON.stringify({ ok: false, error: "items" }), { status: 400, headers: jh });
+        var totKg = 0, totEst = 0;
+        its.forEach(function (x) { totKg += x.qty; totEst += x.qty * (x.price || 0); });
+        totKg = Math.round(totKg * 10) / 10;
+        await env.DB.prepare("CREATE TABLE IF NOT EXISTS b2b_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), firm TEXT, phone TEXT, addr TEXT, items TEXT, total_kg REAL, est_total REAL, status TEXT DEFAULT 'new', quote TEXT, note TEXT)").run();
+        var ins = await env.DB.prepare("INSERT INTO b2b_requests (firm, phone, addr, items, total_kg, est_total, note) VALUES (?,?,?,?,?,?,?)")
+          .bind(firm, phone, addr, JSON.stringify(its), totKg, Math.round(totEst), note).run();
+        var rid = (ins && ins.meta && ins.meta.last_row_id) || 0;
+        if (!rid) { var mx = await env.DB.prepare("SELECT MAX(id) AS id FROM b2b_requests WHERE firm=? AND phone=?").bind(firm, phone).first(); rid = (mx && mx.id) || 0; }
+        var lines = its.map(function (x) { return "• " + x.name + " — " + x.qty + " kg"; }).join("\n");
+        try {
+          await notifyAdmin(env, "🏢 درخواست خرید B2B جدید #" + rid + "\n\n🏪 " + firm + "\n📞 " + phone + (addr ? "\n📍 " + addr : "") + (note ? "\n📝 " + note : "") + "\n\n" + lines + "\n\n⚖️ جمع: " + totKg + " kg\n💰 تخمین: " + Math.round(totEst) + " ₺\n\n🛠 پاسخ: پنل → تب 🏢 B2B → پیش‌فاکتور");
+        } catch (e) {}
+        return new Response(JSON.stringify({ ok: true, id: rid }), { headers: jh });
+      } catch (e) { return new Response(JSON.stringify({ ok: false, error: "bad-request" }), { status: 400, headers: { "content-type": "application/json" } }); }
     }
     return new Response("<!DOCTYPE html><html lang=\"fa\" dir=\"rtl\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>صفحه پیدا نشد | قصاب آیکان</title><style>body{font-family:Tahoma,system-ui,sans-serif;background:#f5f5f5;color:#151617;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;text-align:center}.c{max-width:420px;padding:32px}.b{background:#b91c1c;color:#fff;padding:12px 22px;border-radius:14px;text-decoration:none;font-weight:800;display:inline-block;margin:6px}</style></head><body><div class=\"c\"><div style=\"font-size:64px\">🥩</div><h1>این صفحه پیدا نشد</h1><p style=\"color:#878c9f\">ولی گوشت‌های ما سرِ جایشان هستند! 🔥</p><a class=\"b\" href=\"/\">🏠 صفحه اصلی</a><a class=\"b\" style=\"background:#16a34a\" href=\"https://wa.me/905377325269\">💬 واتس‌اپ</a></div></body></html>", { status: 404, headers: { "content-type": "text/html; charset=utf-8" } });
   },

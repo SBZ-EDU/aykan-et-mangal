@@ -10,3 +10,5 @@ database_id = "058e06bb-6148-4c5b-ba34-e1321bb9ac7c"
 [vars]
 ADMIN_PIN = "__ADMIN_PIN__"
 PANEL_SECRET = "__PANEL_SECRET__"
+APP_URL = "https://lively-mouse-0c7c.aykanet34.workers.dev"
+HOOK_SECRET = "__HOOK_SECRET__"

@@ -121,6 +121,24 @@ h2{font-size:clamp(23px,3.4vw,33px);font-weight:900;margin:6px 0 8px}
 .b2b .card.pop{border:2px solid var(--red);position:relative}
 .b2b .card .bd p{font-size:13.5px}
 .mini{font-size:12.5px;color:var(--mut)}
+/* ── فرم B2B ── */
+.frm{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.frm label{font-size:12.5px;font-weight:800;color:#c8ccd8;display:block;margin-bottom:5px}
+.frm input,.frm textarea{width:100%;background:#151617;border:1.5px solid #33343a;border-radius:12px;color:#f5f5f5;padding:11px 13px;font-family:inherit;font-size:14px;outline:none}
+.frm input:focus,.frm textarea:focus{border-color:var(--red)}
+.rfqrows{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.rfqrow{display:grid;grid-template-columns:1fr 110px 90px 96px;gap:8px;align-items:center;background:#222326;border:1px solid #33343a;border-radius:12px;padding:9px 12px}
+.rfqrow .nm b{font-size:13.5px;display:block}
+.rfqrow .nm span{font-size:11px;color:var(--mut)}
+.rfqrow input{width:100%;background:#151617;border:1.5px solid #33343a;border-radius:9px;color:#fff;padding:7px 9px;font-family:inherit;font-size:14px;text-align:center;outline:none}
+.rfqrow input:focus{border-color:var(--red)}
+.rfqrow .pr{font-size:12.5px;font-weight:800;white-space:nowrap;text-align:left}
+.rfqsum{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;background:#f5f5f5;color:var(--ink);border-radius:14px;padding:13px 16px;font-weight:800;font-size:14px}
+.rfqsum .tier{background:var(--ink);color:#7ee2a8;border-radius:999px;padding:4px 12px;font-size:12px}
+.rfqbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.rfqres{margin-top:14px;background:rgba(126,226,168,.12);border:1.5px solid #2c5e46;border-radius:14px;padding:14px 16px;font-size:14px;display:none}
+.hp{position:absolute;left:-9999px;opacity:0}
+@media(max-width:920px){.frm{grid-template-columns:1fr}.rfqrow{grid-template-columns:1fr 90px 80px}.rfqrow .pr{display:none}}
 /* ── ویدیو ── */
 .vids{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
 .vid{position:relative;border-radius:16px;overflow:hidden;display:block}
@@ -285,6 +303,35 @@ footer a:hover{color:#fff}
   </div>
 </section>
 
+<section class="wrap" id="b2bform">
+  <div class="builder" style="grid-template-columns:1fr">
+    <div>
+      <span class="kicker" style="color:#ff8a8a">🤖 AKILLI SATINALMA (RFQ)</span>
+      <h2>خرید هوشمند رستوران: نیازتان را بگویید، پیش‌فاکتور بگیرید</h2>
+      <p class="lead">فرم زیر را پر کنید؛ سیستم درخواست شما را استاندارد می‌کند، قیمتِ همکار را با تخفیف حجمی حساب می‌کند و پیش‌فاکتور <b style="color:#7ee2a8">حداکثر تا ۲ ساعت کاری</b> نزد شماست. مسیر: درخواست ← پیش‌فاکتور ← تأیید ← تحویل منظم هفتگی.</p>
+      <div class="frm">
+        <div><label>🏪 نام رستوران / مجموعه *</label><input id="rf-firm" maxlength="80" placeholder="مثلاً: کباب‌خانه ولی‌اوغلو"></div>
+        <div><label>📞 واتس‌اپ / تلفن *</label><input id="rf-phone" dir="ltr" maxlength="20" placeholder="05xx xxx xx xx"></div>
+        <div><label>📍 آدرس (اختیاری)</label><input id="rf-addr" maxlength="200" placeholder="محله / منطقه"></div>
+        <div><label>📝 توضیحات (اختیاری)</label><input id="rf-note" maxlength="300" placeholder="مثلاً: تحویل هر دوشنبه صبح"></div>
+      </div>
+      <div class="rfqrows" id="rfqrows"></div>
+      <div class="rfqsum">
+        <span>⚖️ جمع: <span id="rf-kg">۰</span> کیلو</span>
+        <span>💰 تخمین: <span id="rf-est">۰</span> ₺</span>
+        <span class="tier" id="rf-tier" style="display:none"></span>
+        <span style="font-weight:400;color:#5b5f6e;font-size:12px">تخفیف حجمی: ۶۰kg ← ۴٪ · ۱۰۰kg ← ۷٪ · ۱۵۰kg ← ۱۰٪</span>
+      </div>
+      <div class="rfqbtns">
+        <button class="btn btn-red" id="rf-send" onclick="rfqSubmit()">📨 ثبت در سامانه</button>
+        <a class="btn btn-wa" id="rf-wa" href="#" target="_blank" rel="noopener">💬 ارسال با واتس‌اپ</a>
+      </div>
+      <div class="rfqres" id="rf-res"></div>
+      <input class="hp" id="rf-web" tabindex="-1" autocomplete="off">
+    </div>
+  </div>
+</section>
+
 <section class="wrap" id="reels">
   <span class="kicker">📱 محتوای ویدیویی</span>
   <h2>مهارت را ببین، بعد اعتماد کن</h2>
@@ -421,6 +468,71 @@ document.getElementById('personas').onclick=function(e){
   ITEMS.forEach(function(it){it.q=p[it.id]||0});render();
 };
 render();
+// ─── فرم خرید هوشمند B2B ───
+var RFQ=[
+ {tr:'Dana Kuşbaşı',fa:'کوپه گوساله',pr:750},
+ {tr:'Özel Çekim Kıyma',fa:'چرخ‌کرده‌ی مخصوص',pr:750},
+ {tr:'Dana Kemikli Et',fa:'استخوان‌دار گوساله',pr:650},
+ {tr:'Dana Antrikot',fa:'آنترکوت گوساله',pr:1100},
+ {tr:'Kuzu Et / Kuşbaşı',fa:'گوشت بره / کوپه',pr:1069},
+ {tr:'Kuzu Pirzola',fa:'پیرزولای بره',pr:1399},
+ {tr:'Bütün Tavuk',fa:'مرغ کامل',pr:95},
+ {tr:'Tavuk But',fa:'ران مرغ',pr:95},
+ {tr:'Tavuk Bonfile',fa:'سینه‌ی مرغ',pr:160}
+];
+function rfqRender(){
+  var box=document.getElementById('rfqrows');box.innerHTML='';
+  RFQ.forEach(function(it,i){
+    var d=document.createElement('div');d.className='rfqrow';
+    d.innerHTML='<span class="nm"><b>'+it.fa+'</b><span>'+it.tr+' — '+fa(it.pr)+' ₺/kg</span></span><input type="number" min="0" step="1" inputmode="numeric" id="rfq-'+i+'" placeholder="kg" onchange="rfqCalc()" oninput="rfqCalc()"><span class="pr">'+fa(it.pr)+' ₺</span><span class="pr" id="rfqt-'+i+'">—</span>';
+    box.appendChild(d);
+  });
+}
+function rfqItems(){
+  var out=[];
+  RFQ.forEach(function(it,i){
+    var v=parseFloat((document.getElementById('rfq-'+i)||{}).value)||0;
+    if(v>=1)out.push({name:it.tr,fa:it.fa,qty:Math.round(v*10)/10,price:it.pr});
+  });
+  return out;
+}
+function rfqCalc(){
+  var its=rfqItems(),kg=0,est=0;
+  its.forEach(function(x){kg+=x.qty;est+=x.qty*x.price});
+  document.getElementById('rf-kg').textContent=fa(Math.round(kg*10)/10);
+  document.getElementById('rf-est').textContent=fa(Math.round(est));
+  var t=document.getElementById('rf-tier');
+  if(kg>=150){t.style.display='inline';t.textContent='پریمیوم — ۱۰٪'}
+  else if(kg>=100){t.style.display='inline';t.textContent='استاندارد — ۷٪'}
+  else if(kg>=60){t.style.display='inline';t.textContent='اقتصادی — ۴٪'}
+  else{t.style.display='none'}
+  var msg='سلام قصاب آیکان! درخواست خرید عمده دارم:';
+  msg+='\n🏪 '+(document.getElementById('rf-firm').value||'');
+  its.forEach(function(x){msg+='\n• '+x.name+' — '+x.qty+' kg'});
+  if(kg)msg+='\nجمع: '+ (Math.round(kg*10)/10) +' کیلو';
+  document.getElementById('rf-wa').href='https://wa.me/905377325269?text='+encodeURIComponent(msg);
+}
+async function rfqSubmit(){
+  var res=document.getElementById('rf-res');
+  var firm=document.getElementById('rf-firm').value.trim();
+  var phone=document.getElementById('rf-phone').value.replace(/[^0-9+]/g,'');
+  var its=rfqItems();
+  if(firm.length<2){alert('نام مجموعه را وارد کنید');return}
+  if(!/^\+?\d{7,20}$/.test(phone)){alert('شماره تماس معتبر وارد کنید');return}
+  if(!its.length){alert('حداقل یک محصول و کیلوگرم مشخص کنید');return}
+  var btn=document.getElementById('rf-send');btn.disabled=true;btn.textContent='⏳ در حال ثبت...';
+  try{
+    var r=await fetch('/api/b2b/rfq',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
+      firm:firm,phone:phone,addr:document.getElementById('rf-addr').value.trim(),note:document.getElementById('rf-note').value.trim(),
+      items:its,web:document.getElementById('rf-web').value
+    })});
+    var d=await r.json();
+    if(d.ok){res.style.display='block';res.innerHTML='✅ درخواست شما با شماره <b>#'+d.id+'</b> ثبت شد. پیش‌فاکتور قیمت همکار حداکثر تا ۲ ساعت کاری برای شما می‌آید. <a href="https://wa.me/905377325269" style="color:#7ee2a8;font-weight:800">پیگیری در واتس‌اپ ←</a>';}
+    else{res.style.display='block';res.innerHTML='⛔ خطا: '+(d.error||'دوباره تلاش کنید');}
+  }catch(e){res.style.display='block';res.innerHTML='⛔ خطای شبکه — با واتس‌اپ سفارش بدهید.'}
+  btn.disabled=false;btn.textContent='📨 ثبت در سامانه';
+}
+rfqRender();rfqCalc();
 // ─── نکته‌های قصاب ───
 var TIPS=[
  'گوشت را ۳۰ دقیقه قبل از منقل از یخچال بیرون بگذارید؛ برخورد سرد با ذغال تند، بیرونش را می‌سوزاند و درزش خاموش می‌ماند.',
