@@ -1,0 +1,547 @@
+{
+ "Big Restaurant": [
+  {
+   "code": "RESTO-ECO",
+   "tier": "Ekonomi",
+   "tierFa": "اقتصادی",
+   "name": "Usta Ekonomi Paketi",
+   "nameFa": "پکیج اقتصادی استاد",
+   "discount": 4,
+   "minKg": 60,
+   "minLabel": "60 Kg/hafta",
+   "blend": 700,
+   "items": [
+    [
+     "Dana Kuşbaşı / Özel Çekim Kıyma",
+     "Kg",
+     720
+    ],
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     625
+    ],
+    [
+     "Toptan Tavuk (But / Kanat)",
+     "Kg",
+     115
+    ]
+   ],
+   "delivery": "Haftada 3 gün sevkiyat (Pzt – Çar – Cum)",
+   "payment": "Haftalık nakit / kart",
+   "extras": "Ücretsiz zırh çekimi + memnun kalmazsanız iade garantisi",
+   "targetFa": "کباب‌خانه‌ها و ocakbaşıهای کوچک با خرید ۶۰ تا ۱۰۰ کیلو در هفته",
+   "whyFa": "حجم هفتگی شما برای شروع همکاری بدون ریسک مناسب است — تخفیف ۴٪ + ارسال ۳ روز در هفته"
+  },
+  {
+   "code": "RESTO-STD",
+   "tier": "Standart",
+   "tierFa": "استاندارد",
+   "name": "Ocakbaşı & Kebap Standart Paketi",
+   "nameFa": "پکیج استاندارد اوچاق‌باشی و کباب",
+   "discount": 7,
+   "minKg": 100,
+   "minLabel": "100 Kg/hafta",
+   "blend": 790,
+   "items": [
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     700
+    ],
+    [
+     "Kuzu Kuşbaşı",
+     "Kg",
+     995
+    ],
+    [
+     "Dana Antrikot",
+     "Kg",
+     1025
+    ],
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     605
+    ]
+   ],
+   "delivery": "Her sabah günlük taze sevkiyat (07:00'a kadar)",
+   "payment": "Haftalık ödeme + kurumsal fatura",
+   "extras": "Her teslimde 5 Kg birinci sınıf meşe mangal kömürü HEDİYE",
+   "targetFa": "رستوران‌های متوسط کبابی و پیده با خرید ۱۰۰ تا ۱۵۰ کیلو در هفته",
+   "whyFa": "حجم هفتگی شما در رده استاندارد است — تخفیف ۷٪، ارسال روزانه تازه و ذغال هدیه"
+  },
+  {
+   "code": "RESTO-PRO",
+   "tier": "Premium",
+   "tierFa": "پریمیوم",
+   "name": "Şef Premium / Saray Paketi",
+   "nameFa": "پکیج پریمیوم سرآشپز و سلطنتی",
+   "discount": 10,
+   "minKg": 150,
+   "minLabel": "150 Kg/hafta",
+   "blend": 940,
+   "items": [
+    [
+     "Dana Antrikot",
+     "Kg",
+     990
+    ],
+    [
+     "Kuzu Pirzola",
+     "Kg",
+     1259
+    ],
+    [
+     "Kuzu Et",
+     "Kg",
+     962
+    ],
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     675
+    ]
+   ],
+   "delivery": "Günlük ÇİFT sevkiyat + soğuk zincir araç",
+   "payment": "30 gün vadeli kurumsal ödeme",
+   "extras": "Şef'e ücretsiz numune seti + VIP müşteri hattı + sınırsız meşe kömürü hediye",
+   "targetFa": "رستوران‌های بزرگ، استیک‌هاوس و ocakbaşıهای سلطنتی با خرید +۱۵۰ کیلو در هفته",
+   "whyFa": "حجم بالای خرید و منوی انترکوت/پیرولا شما — حداکثر سود با ۱۰٪ تخفیف و پرداخت ۳۰ روزه"
+  }
+ ],
+ "Ordinary Fast Food": [
+  {
+   "code": "FAST-ECO",
+   "tier": "Ekonomi",
+   "tierFa": "اقتصادی",
+   "name": "Dönerci & Köftecı Başlangıç Paketi",
+   "nameFa": "پکیج شروع دونر و کوفته",
+   "discount": 4,
+   "minKg": 40,
+   "minLabel": "40 Kg/hafta",
+   "blend": 640,
+   "items": [
+    [
+     "Özel Çekim Kıyma (düşük yağ)",
+     "Kg",
+     720
+    ],
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     625
+    ],
+    [
+     "Toptan Tavuk",
+     "Kg",
+     112
+    ]
+   ],
+   "delivery": "Haftada 3 gün sevkiyat",
+   "payment": "Nakit / haftalık",
+   "extras": "İstediğiniz gramajda ücretsiz öğütme (köfte / burger)",
+   "targetFa": "بوفه‌ها، دونر و کوفته‌فروشی‌های کوچک با خرید ۴۰ تا ۷۰ کیلو در هفته",
+   "whyFa": "برای شروع همکاری کم‌ریسک — تخفیف ۴٪ و آسیاب رایگان گوشت به گرم دلخواه شما"
+  },
+  {
+   "code": "FAST-STD",
+   "tier": "Standart",
+   "tierFa": "استاندارد",
+   "name": "Kasap Burger & Döner Standart Paketi",
+   "nameFa": "پکیج استاندارد برگر و دونر قصابی",
+   "discount": 7,
+   "minKg": 70,
+   "minLabel": "70 Kg/hafta",
+   "blend": 680,
+   "items": [
+    [
+     "Özel Çekim Kıyma",
+     "Kg",
+     700
+    ],
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     700
+    ],
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     605
+    ],
+    [
+     "Toptan Tavuk",
+     "Kg",
+     108
+    ]
+   ],
+   "delivery": "Her sabah günlük sevkiyat",
+   "payment": "Haftalık ödeme + fiş/fatura",
+   "extras": "Döner yaprak özel kesim + burger sosu hediyesi",
+   "targetFa": "فست‌فودهای متوسط برگر، دونر و تانتونی با خرید ۷۰ تا ۱۰۵ کیلو در هفته",
+   "whyFa": "حجم هفتگی شما استاندارد است — تخفیف ۷٪ با ارسال روزانه و برش اختصاصی دونر"
+  },
+  {
+   "code": "FAST-PRO",
+   "tier": "Premium",
+   "tierFa": "پریمیوم",
+   "name": "Zincir & Şube Ağı Pro Paketi",
+   "nameFa": "پکیج حرفه‌ای زنجیره و چند شعبه",
+   "discount": 10,
+   "minKg": 110,
+   "minLabel": "110 Kg/hafta",
+   "blend": 730,
+   "items": [
+    [
+     "Özel Çekim Kıyma",
+     "Kg",
+     675
+    ],
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     675
+    ],
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     585
+    ],
+    [
+     "Toptan Tavuk",
+     "Kg",
+     102
+    ]
+   ],
+   "delivery": "Günlük ÇİFT sevkiyat (sabah + akşam servise özel)",
+   "payment": "15 gün vadeli ödeme",
+   "extras": "Şube bazlı özel gramaj + ücretsiz teslim + açılış kampanya desteği",
+   "targetFa": "فست‌فودهای شلوغ و زنجیره‌ای با خرید بالای ۱۱۰ کیلو در هفته",
+   "whyFa": "شلوغی و حجم بالای فروش شما — ۱۰٪ تخفیف، دو ارسال در روز و پرداخت ۱۵ روزه"
+  }
+ ],
+ "Hotel": [
+  {
+   "code": "HOTEL-ECO",
+   "tier": "Ekonomi",
+   "tierFa": "اقتصادی",
+   "name": "Otel Kahvaltı & Tabldot Paketi",
+   "nameFa": "پکیج صبحانه و تابل‌دو هتل",
+   "discount": 5,
+   "minKg": 100,
+   "minLabel": "100 Kg/hafta",
+   "blend": 630,
+   "items": [
+    [
+     "Dana Kemikli Et (çorba/sulu yemek)",
+     "Kg",
+     617
+    ],
+    [
+     "Özel Çekim Kıyma",
+     "Kg",
+     712
+    ],
+    [
+     "Toptan Tavuk",
+     "Kg",
+     110
+    ]
+   ],
+   "delivery": "Her sabah 06:00'ya kadar soğuk zincir sevkiyat",
+   "payment": "Haftalık ödeme + kurumsal fatura",
+   "extras": "HACCP uyumlu sevkiyat etiketi + numune test raporu",
+   "targetFa": "هتل‌های کوچک و اقامتگاه‌ها با خرید ۱۰۰ تا ۱۴۰ کیلو در هفته",
+   "whyFa": "منوی صبحانه و تابل‌دوت شما — تخفیف ۵٪ با اسناد بهداشتی و فاکتور رسمی"
+  },
+  {
+   "code": "HOTEL-STD",
+   "tier": "Standart",
+   "tierFa": "استاندارد",
+   "name": "Otel Mutfak Standart Paketi",
+   "nameFa": "پکیج استاندارد آشپزخانه هتل",
+   "discount": 8,
+   "minKg": 140,
+   "minLabel": "140 Kg/hafta",
+   "blend": 780,
+   "items": [
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     690
+    ],
+    [
+     "Kuzu Et",
+     "Kg",
+     985
+    ],
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     598
+    ],
+    [
+     "Toptan Tavuk",
+     "Kg",
+     105
+    ]
+   ],
+   "delivery": "Günlük sabah soğuk zincir sevkiyatı",
+   "payment": "15 gün vadeli kurumsal ödeme",
+   "extras": "Bufe için özel porsiyon kesim + şef ile menü planlama desteği",
+   "targetFa": "هتل‌های ۳ و ۴ ستاره با خرید ۱۴۰ تا ۱۸۰ کیلو در هفته",
+   "whyFa": "حجم آشپزخانه هتل شما — تخفیف ۸٪، برش پورسینی اختصاصی و پرداخت ۱۵ روزه"
+  },
+  {
+   "code": "HOTEL-PRO",
+   "tier": "Premium",
+   "tierFa": "پریمیوم",
+   "name": "Grand Otel & Konvansiyon Pro Paketi",
+   "nameFa": "پکیج حرفه‌ای هتل بزرگ و کنوانسیون",
+   "discount": 10,
+   "minKg": 180,
+   "minLabel": "180 Kg/hafta",
+   "blend": 930,
+   "items": [
+    [
+     "Dana Antrikot",
+     "Kg",
+     990
+    ],
+    [
+     "Kuzu Pirzola",
+     "Kg",
+     1259
+    ],
+    [
+     "Kuzu Et",
+     "Kg",
+     962
+    ],
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     675
+    ]
+   ],
+   "delivery": "Günlük çift sevkiyat + hafta sonu acil (emergency) desteği",
+   "payment": "30 gün vadeli kurumsal ödeme",
+   "extras": "Şef'e ücretsiz numune seti + banquet/kongre öncelikli kapasite rezervasyonu",
+   "targetFa": "هتل‌های ۵ ستاره و کنوانسیون با خرید بالای ۱۸۰ کیلو در هفته",
+   "whyFa": "عظمت هتل و بنکِت‌های شما — ۱۰٪ تخفیف، رزرو ظرفیت اولویت‌دار و پرداخت ۳۰ روزه"
+  }
+ ],
+ "Catering": [
+  {
+   "code": "CATER-ECO",
+   "tier": "Ekonomi",
+   "tierFa": "اقتصادی",
+   "name": "Esnaf Tabldot Paketi",
+   "nameFa": "پکیج تابل‌دوی اصناف",
+   "discount": 6,
+   "minKg": 150,
+   "minLabel": "150 Kg/hafta",
+   "blend": 620,
+   "items": [
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     611
+    ],
+    [
+     "Özel Çekim Kıyma",
+     "Kg",
+     705
+    ],
+    [
+     "Toptan Tavuk",
+     "Kg",
+     108
+    ]
+   ],
+   "delivery": "Günlük sabah sevkiyatı",
+   "payment": "Haftalık ödeme",
+   "extras": "Acil (son dakika) siparişlerde aynı gün sevkiyat desteği",
+   "targetFa": "تالارهای کوچک و آشپزخانه‌های اصناف با خرید ۱۵۰ تا ۲۲۰ کیلو در هفته",
+   "whyFa": "برای تابل‌دوی روزانه — تخفیف ۶٪ و پشتیبانی سفارش‌های فوری"
+  },
+  {
+   "code": "CATER-STD",
+   "tier": "Standart",
+   "tierFa": "استاندارد",
+   "name": "Fabrika & Toplu Yemek Standart Paketi",
+   "nameFa": "پکیج استاندارد کارخانه و غذای جمعی",
+   "discount": 8,
+   "minKg": 220,
+   "minLabel": "220 Kg/hafta",
+   "blend": 655,
+   "items": [
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     598
+    ],
+    [
+     "Özel Çekim Kıyma",
+     "Kg",
+     690
+    ],
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     690
+    ]
+   ],
+   "delivery": "Günlük sabah 06:00'ya kadar teslim (vardiya başına)",
+   "payment": "15 gün vadeli kurumsal ödeme",
+   "extras": "Personel yemeği için maliyet düşürücü karışım planlaması (kasap mühendisliği)",
+   "targetFa": "کیترینگ‌های صنعتی و کارخانه‌ای با خرید ۲۲۰ تا ۲۹۰ کیلو در هفته",
+   "whyFa": "حجم تولید انبوه شما — تخفیف ۸٪، تحویل قبل از شیفت و برنامه کاهش هزینه"
+  },
+  {
+   "code": "CATER-MEGA",
+   "tier": "Mega",
+   "tierFa": "مگا",
+   "name": "Düğün & Organizasyon Mega Paketi",
+   "nameFa": "پکیج مگای عروسی و مراسم",
+   "discount": 10,
+   "minKg": 280,
+   "minLabel": "280 Kg/hafta",
+   "blend": 690,
+   "items": [
+    [
+     "Dana Kemikli Et",
+     "Kg",
+     585
+    ],
+    [
+     "Özel Çekim Kıyma",
+     "Kg",
+     675
+    ],
+    [
+     "Kuzu Et",
+     "Kg",
+     962
+    ],
+    [
+     "Dana Kuşbaşı",
+     "Kg",
+     675
+    ]
+   ],
+   "delivery": "Günlük + hafta sonu organizasyon sevkiyatı (gece dahil)",
+   "payment": "30 gün vade + SEZON FİYATI KİLİTLEME",
+   "extras": "Ramazan / düğün sezonu öncelikli kapasite rezervasyonu + organizasyon günü yedek araç",
+   "targetFa": "تالارهای عروسی، مراسم و کیترینگ‌های بزرگ با خرید بالای ۲۸۰ کیلو در هفته",
+   "whyFa": "حجم عظیم مراسم‌های شما — ۱۰٪ تخفیف، قفل قیمت فصلی و رزرو اولویت‌دار رمضان"
+  }
+ ],
+ "Ordinary People": [
+  {
+   "code": "FAMILY-START",
+   "tier": "Ekonomi",
+   "tierFa": "اقتصادی",
+   "name": "Komşu Aile Haftalık Sepeti",
+   "nameFa": "سبد هفتگی خانواده همسایه",
+   "discount": 3,
+   "minKg": 8,
+   "minLabel": "8 Kg / aile",
+   "blend": 760,
+   "items": [
+    [
+     "Dana Kuşbaşı / Kıyma (tanzim + %3)",
+     "Kg",
+     727
+    ],
+    [
+     "Dana Kemikli Et (tanzim + %3)",
+     "Kg",
+     630
+    ],
+    [
+     "Tavuk Çeşitleri",
+     "Kg",
+     118
+    ]
+   ],
+   "delivery": "Mağazadan gel-al + WhatsApp sipariş ile hazırlık",
+   "payment": "Nakit / kart",
+   "extras": "Her alışverişte mangal kömürü indirim kuponu",
+   "targetFa": "خانواده‌ها و گروه‌های همسایگی با خرید جمعی هفتگی",
+   "whyFa": "شروع همکاری محله‌ای — ۳٪ تخفیف تنظیمی و سبد هفتگی آماده"
+  },
+  {
+   "code": "FAMILY-MANGAL",
+   "tier": "Popüler",
+   "tierFa": "محبوب",
+   "name": "Hafta Sonu Mangal Keyfi Paketi",
+   "nameFa": "پکیج لذت منقل آخر هفته",
+   "discount": 5,
+   "minKg": 10,
+   "minLabel": "1 mangal paketi / aile",
+   "blend": 840,
+   "items": [
+    [
+     "Aykan Özel Mangal Paketi (1 Kg köfte/kuşbaşı + 1 Kg marine tavuk + kömür + sos)",
+     "Paket",
+     998
+    ],
+    [
+     "10 Dakikada Hazır Viral Tortilla Kebabı",
+     "Porsiyon",
+     399
+    ],
+    [
+     "Haftalık Tanzim Aile Et Kutusu",
+     "Kutu",
+     1472
+    ]
+   ],
+   "delivery": "Cumartesi sabahı toplu teslimat",
+   "payment": "Nakit / kart",
+   "extras": "Marinasyon hediye + 10 dakikada hazır viral Tortilla Kebabı",
+   "targetFa": "گروه‌های پیک‌نیک و منقل‌دوستان آخر هفته",
+   "whyFa": "برای منقل آخر هفته — پکیج ویژه ۹۹۸ لیر بجای ۱۰۵۰ لیر (۵٪ تخفیف گروهی)"
+  },
+  {
+   "code": "FAMILY-SITE",
+   "tier": "Grup Lideri",
+   "tierFa": "لیدر گروه",
+   "name": "Site & WhatsApp Grup İndirim Paketi",
+   "nameFa": "پکیج تخفیف مجتمع و گروه واتساپ",
+   "discount": 8,
+   "minKg": 60,
+   "minLabel": "60 Kg / grup toplamı",
+   "blend": 710,
+   "items": [
+    [
+     "Dana Kuşbaşı (site indirimi)",
+     "Kg",
+     690
+    ],
+    [
+     "Özel Çekim Kıyma (site indirimi)",
+     "Kg",
+     690
+    ],
+    [
+     "Dana Kemikli Et (site indirimi)",
+     "Kg",
+     598
+    ],
+    [
+     "Hafta Sonu Mangal Paketi",
+     "Adet",
+     998
+    ]
+   ],
+   "delivery": "Haftada 1 gün siteye ÜCRETSİZ toplu teslimat",
+   "payment": "Grup lideri toplu ödeme",
+   "extras": "Site yönetimine her 500 Kg'da 1 adet mangal seti HEDİYE",
+   "targetFa": "مدیریت مجتمع‌های مسکونی بزرگ و گروه‌های واتساپ",
+   "whyFa": "قدرت خرید جمعی مجموعه شما — ۸٪ تخفیف و تحویل رایگان درب مجتمع"
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Worker syntax check
+        run: |
+          for f in deploy/tgbot/worker.js deploy/panel/worker.js deploy/worker/worker.js; do
+            node --check "$f" && echo "OK $f"
+          done
+      - name: Python syntax check
+        run: python3 -m py_compile aykan_telegram_bot.py build_public.py make_brochure_v2.py && echo "OK python"
+      - name: Secret scan (must be CLEAN)
+        run: |
+          if grep -rEn "cfat_[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|hf_[A-Za-z0-9]{20,}|[0-9]{9,10}:AAG[A-Za-z0-9_-]{30,}" \
+            --include="*.js" --include="*.py" --include="*.json" --include="*.html" --include="*.toml" --include="*.yml" . ; then
+            echo "REAL SECRET FOUND IN REPO"; exit 1
+          else
+            echo "CLEAN"
+          fi

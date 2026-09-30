@@ -1,0 +1,11 @@
+name: Aykan Bot Heartbeat (24/7 autopost tick)
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tick Aykan TG Bot Worker
+        run: curl -fsS --max-time 30 "https://aykan-tgbot.elasa2next.workers.dev/api/tick?key=${{ secrets.TICK_KEY }}" || true

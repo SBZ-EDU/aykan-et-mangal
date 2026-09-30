@@ -1,0 +1,10 @@
+{
+  "token": "__BOT_TOKEN__",
+  "admin_pin": "__ADMIN_PIN__",
+  "owner_whatsapp": "905377325269",
+  "bot_username": "@AykanEtmangal_shapping_bot",
+  "channel": "@AykanEtmangal_shopping",
+  "post_interval": 10800,
+  "panel_url": "https://aykan-panel.elasa2next.workers.dev",
+  "panel_secret": "__PANEL_SECRET__"
+}

@@ -1,0 +1,54 @@
+name: Deploy Workers (Cloudflare)
+
+on:
+  workflow_dispatch:
+    inputs:
+      worker:
+        description: 'Which worker to deploy?'
+        type: choice
+        required: true
+        default: tgbot
+        options: [tgbot, panel, hizli, all]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inject secrets into placeholders
+        env:
+          HOOK_SECRET: ${{ secrets.HOOK_SECRET }}
+          PANEL_SECRET: ${{ secrets.PANEL_SECRET }}
+          ADMIN_PIN: ${{ secrets.ADMIN_PIN }}
+          WA_VERIFY: ${{ secrets.WA_VERIFY }}
+        run: |
+          for v in HOOK_SECRET PANEL_SECRET ADMIN_PIN WA_VERIFY; do
+            if [ -z "${!v}" ]; then echo "ERROR: GitHub secret $v is not set"; exit 1; fi
+          done
+          find deploy -type f \( -name '*.js' -o -name '*.toml' \) -print0 | xargs -0 sed -i \
+            -e "s/__HOOK_SECRET__/$HOOK_SECRET/g" \
+            -e "s/__PANEL_SECRET__/$PANEL_SECRET/g" \
+            -e "s/__ADMIN_PIN__/$ADMIN_PIN/g" \
+            -e "s/__WA_VERIFY__/$WA_VERIFY/g"
+
+      - name: Deploy tgbot
+        if: ${{ inputs.worker == 'tgbot' || inputs.worker == 'all' }}
+        run: cd deploy/tgbot && npx -y wrangler@3.100.0 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      - name: Deploy panel
+        if: ${{ inputs.worker == 'panel' || inputs.worker == 'all' }}
+        run: cd deploy/panel && npx -y wrangler@3.100.0 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      - name: Deploy hizli
+        if: ${{ inputs.worker == 'hizli' || inputs.worker == 'all' }}
+        run: cd deploy/worker && npx -y wrangler@3.100.0 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
