@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 AYKAN ET & MANGAL — Telegram Bot v2 (trilingual: TR / EN / FA)
-@AykanEtmangal_shapping_bot
+@Aykan_Et_mangal_shopping_bot
 - B2C order flow (menu, cart, checkout) in 3 languages
 - B2B wholesale packages (15 packages)
 - Admin panel (Persian) + order notifications
@@ -17,7 +17,7 @@ TOKEN = CFG["token"]
 API = "https://api.telegram.org/bot" + TOKEN
 ADMIN_PIN = str(CFG.get("admin_pin", "5269"))
 OWNER_WA = CFG.get("owner_whatsapp", "905377325269")
-BOT_USERNAME = CFG.get("bot_username", "AykanEtmangal_shapping_bot")
+BOT_USERNAME = CFG.get("bot_username", "Aykan_Et_mangal_shopping_bot")
 
 STATE_PATH = os.path.join(BASE, "telegram_bot_state.json")
 ORDERS_PATH = os.path.join(BASE, "telegram_orders.json")

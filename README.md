@@ -22,7 +22,7 @@
 ## 💬 İletişim
 - 📞 **Tel / WhatsApp: 0537 732 52 69** → https://wa.me/905377325269
 - 📸 Instagram: **@aykanetmangal**
-- ✈️ Telegram Sipariş Botu: **@AykanEtmangal_shapping_bot**
+- ✈️ Telegram Sipariş Botu: **@Aykan_Et_mangal_shopping_bot**
 - 📢 Kanal: **@AykanEtmangal_shopping**
 
 ## 🌐 Yayınlar / Deployments

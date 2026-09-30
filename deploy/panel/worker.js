@@ -547,7 +547,7 @@ textarea#so-text:focus,#so-img:focus{border-color:var(--or1)}
       <div class="card lnk"><h3>🔗 لینک‌ها و دستورهای ربات</h3>
         <a href="${SITE}" target="_blank">🌐 سایت + فرم خرید B2B <span>lively-mouse-0c7c.aykanet34.workers.dev</span></a>
         <a href="${SITE}/#b2bform" target="_blank">🤖 فرم خرید هوشمند رستوران <span>lively-mouse-0c7c…/#b2bform</span></a>
-        <a href="https://t.me/AykanEtmangal_shapping_bot" target="_blank">🤖 ربات تلگرام <span>@AykanEtmangal_shapping_bot</span></a>
+        <a href="https://t.me/Aykan_Et_mangal_shopping_bot" target="_blank">🤖 ربات تلگرام <span>@Aykan_Et_mangal_shopping_bot</span></a>
         <a href="https://t.me/AykanEtmangal_shopping" target="_blank">📢 کانال فروش <span>@AykanEtmangal_shopping</span></a>
         <a href="https://wa.me/905377325269" target="_blank">💬 واتساپ فروشگاه <span>0537 732 52 69</span></a>
         <p class="mut" style="margin-top:14px;line-height:2">دستورهای ربات: <b>/admin 5269</b> سپس <b>/plan</b> برنامه پست‌ها • <b>/aralik N</b> فاصله پست (ساعت) • <b>/postnow</b> ارسال فوری • <b>/lidedefteri</b> دفتر لیدها • <b>/yatirim</b> لیدرهای سرمایه‌گذاری • <b>/bolge 1..10</b> خلاصه منطقه</p>

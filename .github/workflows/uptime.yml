@@ -22,7 +22,7 @@ jobs:
             "https://lively-mouse-0c7c.elasa2next.workers.dev/health" \
             "https://lively-mouse-0c7c.elasa2next.workers.dev/aykan.vcf" \
             "https://aykan-panel.elasa2next.workers.dev/api/ping" \
-            "https://t.me/AykanEtmangal_shapping_bot"; do
+            "https://t.me/Aykan_Et_mangal_shopping_bot"; do
             code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 -A "AykanBot/1.0" "$u" || echo 000)
             echo "$u → $code"
             [ "$code" = "200" ] || FAIL="$FAIL $u($code)"
