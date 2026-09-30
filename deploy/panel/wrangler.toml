@@ -1,0 +1,12 @@
+name = "aykan-panel"
+main = "worker.js"
+compatibility_date = "2026-09-30"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "aykan-db"
+database_id = "2917135d-d1e4-4486-a826-286572bbef9a"
+
+[vars]
+ADMIN_PIN = "__ADMIN_PIN__"
+PANEL_SECRET = "__PANEL_SECRET__"
