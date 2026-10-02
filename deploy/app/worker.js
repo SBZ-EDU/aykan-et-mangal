@@ -1564,9 +1564,11 @@ async function panelApi(request, env, path) {
     }
     if (b.action === "refresh") {
       try {
-        const rr = await aiRadarSync(env);
-        const d = await rr.json();
-        return json({ ok: !!(d && d.ok), result: (d && d.result) || null });
+        // سردown ۱۰ دقیقه‌ای — محافظت از rate-limit منابع خبری
+        var lastR = Number((await getSetting(env, "ai_radar_ts")) || 0);
+        if (lastR && Date.now() - lastR < 600000) return json({ ok: true, result: { skipped: "cooldown", lastSync: lastR } });
+        const d = await aiRadarSync(env);
+        return json({ ok: true, result: d });
       } catch (e) { return json({ ok: false, error: "radar-unreachable" }, 502); }
     }
     return json({ ok: false, error: "unknown-action" }, 400);
