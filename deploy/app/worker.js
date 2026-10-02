@@ -1740,12 +1740,13 @@ async function doSetup(){
 }
 function panelHTML() {
   return `<!DOCTYPE html>
-<html lang="fa" dir="rtl"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex">
-<title>پنل مدیریت — Aykan Et &amp; Mangal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<html lang="tr" dir="ltr"><head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex" name="robots"/>
+<title data-i18n="p0">پنل مدیریت — Aykan Et &amp; Mangal</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&amp;display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#120f0e;--card:rgba(255,255,255,.045);--bd:rgba(255,255,255,.09);--tx:#f5efe9;--mut:#b8a89c;--or1:#e2621c;--or2:#f2833a;--gr:#25d366;--red:#ef4444}
@@ -1821,198 +1822,266 @@ textarea#so-text{width:100%;padding:12px;border-radius:12px;border:1px solid var
 textarea#so-text:focus,#so-img:focus{border-color:var(--or1)}
 #so-img{width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--bd);background:rgba(0,0,0,.35);color:var(--tx);font-family:inherit;font-size:12.5px;outline:none;margin-top:10px}
 @media(max-width:640px){.hw .t span{display:none}td,th{padding:7px 5px;font-size:11.8px}}
+
+/* ─── همبرگری + دراور ─── */
+.hbtn{position:fixed;top:14px;inset-inline-end:14px;z-index:10001;width:42px;height:42px;border-radius:12px;border:1px solid rgba(0,0,0,.18);background:#1c1917;color:#fff;font-size:20px;cursor:pointer;display:none;line-height:1}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9998;display:none}
+.drawer{position:fixed;top:0;bottom:0;inset-inline-start:-300px;width:284px;background:#fff;z-index:10000;transition:inset-inline-start .25s ease;display:flex;flex-direction:column;gap:2px;padding:18px 14px;overflow-y:auto;box-shadow:0 0 44px rgba(0,0,0,.28)}
+.drawer.open{inset-inline-start:0}
+.drawer .dtitle{font-weight:900;font-size:15px;margin-bottom:10px}
+.drawer button.dnav{display:block;width:100%;text-align:start;padding:12px 14px;border-radius:12px;border:0;background:transparent;font:inherit;font-weight:800;cursor:pointer;color:inherit}
+.drawer button.dnav.on{background:#fdeaea;color:#b91c1c}
+.dlang{display:flex;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,0,0,.08)}
+.dlang button{width:36px;height:36px;border-radius:50%;border:0;background:transparent;font-size:17px;cursor:pointer;filter:grayscale(.7);opacity:.75}
+.dlang button.on{filter:none;opacity:1;background:#fdeaea}
+.view{overflow-x:auto}
+@media(max-width:940px){.hbtn{display:block}nav{display:none}table{min-width:500px}.view .card{padding:14px}}
 </style></head><body>
-
 <div id="login">
-  <div class="lg">
-    <img src="${LOGO}" alt="Aykan">
-    <h1>AYKAN ET &amp; MANGAL</h1>
-    <p>پنل مدیریت — رمز ادمین را وارد کنید</p>
-    <input id="pin" type="password" inputmode="numeric" placeholder="••••" maxlength="8" autofocus>
-    <button onclick="doLogin()">🔐 ورود به پنل</button>
-    <div class="err" id="lgerr"></div>
-  </div>
+<div class="lg">
+<img alt="Aykan" src="${LOGO}"/>
+<h1 data-i18n="p1">AYKAN ET &amp; MANGAL</h1>
+<p data-i18n="p2">پنل مدیریت — رمز ادمین را وارد کنید</p>
+<input autofocus="" data-i18n="p109" data-i18n-attr="placeholder" id="pin" inputmode="numeric" maxlength="8" placeholder="••••" type="password"/>
+<button data-i18n="p3" onclick="doLogin()">🔐 ورود به پنل</button>
+<div class="err" id="lgerr"></div>
 </div>
-
-<div id="app" class="hide">
-  <header><div class="hw">
-    <img src="${LOGO}" alt="Aykan">
-    <div class="t"><b>پنل مدیریت آیکان ات و منگال</b><span>سفارش‌ها • لیدها • شبکه‌های اجتماعی — روی Cloudflare D1</span></div>
-    <nav>
-      <button id="tb-dash" class="on" onclick="go('dash')">📊 داشبورد</button>
-      <button id="tb-orders" onclick="go('orders')">🧾 سفارش‌ها</button>
-      <button id="tb-leads" onclick="go('leads')">🎯 لیدها</button>
-      <button id="tb-kart" onclick="go('kart')">💳 کارت ویزیت</button>
-      <button id="tb-b2b" onclick="go('b2b')">🏢 B2B</button>
-      <button id="tb-ai" onclick="go('ai')">🤖 AI</button>
-      <button id="tb-links" onclick="go('links')">🔗 لینک‌ها</button>
-      <button id="tb-social" onclick="go('social')">🌐 شبکه‌ها</button>
-      <button onclick="logout()" style="border-color:rgba(239,68,68,.4);color:#f87171;">خروج</button>
-    </nav>
-  </div></header>
-  <main>
-    <div id="v-dash" class="view">
-      <div class="grid">
-        <div class="stat"><div class="n" id="s-today">۰</div><div class="l">🧾 سفارش امروز</div></div>
-        <div class="stat"><div class="n" id="s-total">۰</div><div class="l">📦 کل سفارش‌ها</div></div>
-        <div class="stat"><div class="n" id="s-rev">۰</div><div class="l">💰 درآمد جمع (TL)</div></div>
-        <div class="stat"><div class="n" id="s-leads">۵۱۰</div><div class="l">🎯 لیدهای ثبت‌شده</div></div>
-      </div>
-      <div class="card"><h3>🕒 آخرین سفارش‌ها</h3><div id="dash-orders"></div></div>
-    </div>
-    <div id="v-orders" class="view hide">
-      <div class="card"><h3>🧾 همه سفارش‌ها <button class="refresh" onclick="loadOrders()">↻ تازه‌سازی</button></h3><div id="orders-body"></div></div>
-    </div>
-    <div id="v-leads" class="view hide">
-      <div class="card">
-        <h3>🎯 بانک ۵۱۰ لید (Cloudflare D1)</h3>
-        <div class="tools">
-          <input id="lq" placeholder="🔍 جستجو: نام، منطقه، تلفن، ایمیل..." oninput="renderLeads()">
-          <select id="lc" onchange="renderLeads()"><option value="">همه دسته‌ها</option></select>
-        </div>
-        <div class="mut" id="lcount" style="margin-bottom:10px"></div>
-        <div style="overflow-x:auto"><table id="ltable"></table></div>
-      </div>
-    </div>
-    <div id="v-b2b" class="view hide">
-      <div class="stats">
-        <div class="stat"><div class="n" id="b2-new">۰</div><div class="l">🆕 درخواست جدید</div></div>
-        <div class="stat"><div class="n" id="b2-quoted">۰</div><div class="l">🧾 پیش‌فاکتور داده شد</div></div>
-        <div class="stat"><div class="n" id="b2-won">۰</div><div class="l">✅ تبدیل به سفارش</div></div>
-        <div class="stat"><div class="n" id="b2-kg">۰</div><div class="l">⚖️ کیلو قراردادها</div></div>
-      </div>
-      <div class="card"><h3>📥 صندوق درخواست‌های خرید (RFQ) <button class="refresh" onclick="loadB2B()">↻ تازه‌سازی</button></h3>
-        <p class="mut" style="margin-bottom:10px">منبع: فرم «خرید هوشمند» سایت + دکمه‌ی ربات. مسیر: 🆕 جدید ← 🧾 پیش‌فاکتور ← ✅ سفارش / ⛔ از دست رفت.</p>
-        <div style="overflow-x:auto"><table id="b2table"></table></div>
-      </div>
-      <div id="b2qcard" class="card hide">
-        <h3>🧾 پیش‌فاکتور — <span id="b2q-firm"></span></h3>
-        <div style="overflow-x:auto"><table id="b2q-items"></table></div>
-        <div class="prow">تخفیف همکار: <input id="b2q-disc" type="number" value="0" min="0" max="30" step="1" style="width:64px;padding:8px 10px;border-radius:10px;border:1px solid var(--bd);background:rgba(0,0,0,.35);color:var(--tx);font-family:inherit">٪
+</div>
+<div class="hide" id="app">
+<header><div class="hw">
+<img alt="Aykan" src="${LOGO}"/>
+<div class="t"><b data-i18n="p4">پنل مدیریت آیکان ات و منگال</b><span data-i18n="p5">سفارش‌ها • لیدها • شبکه‌های اجتماعی — روی Cloudflare D1</span></div>
+<nav>
+<button class="on" data-i18n="p6" id="tb-dash" onclick="go('dash')">📊 داشبورد</button>
+<button data-i18n="p7" id="tb-orders" onclick="go('orders')">🧾 سفارش‌ها</button>
+<button data-i18n="p8" id="tb-leads" onclick="go('leads')">🎯 لیدها</button>
+<button data-i18n="p9" id="tb-kart" onclick="go('kart')">💳 کارت ویزیت</button>
+<button data-i18n="p10" id="tb-b2b" onclick="go('b2b')">🏢 B2B</button>
+<button data-i18n="p11" id="tb-ai" onclick="go('ai')">🤖 AI</button>
+<button data-i18n="p12" id="tb-links" onclick="go('links')">🔗 لینک‌ها</button>
+<button data-i18n="p13" id="tb-social" onclick="go('social')">🌐 شبکه‌ها</button>
+<button data-i18n="p14" onclick="logout()" style="border-color:rgba(239,68,68,.4);color:#f87171;">خروج</button>
+</nav>
+</div></header>
+<main>
+<div class="view" id="v-dash">
+<div class="grid">
+<div class="stat"><div class="n" data-i18n="p15" id="s-today">۰</div><div class="l" data-i18n="p16">🧾 سفارش امروز</div></div>
+<div class="stat"><div class="n" data-i18n="p17" id="s-total">۰</div><div class="l" data-i18n="p18">📦 کل سفارش‌ها</div></div>
+<div class="stat"><div class="n" data-i18n="p19" id="s-rev">۰</div><div class="l" data-i18n="p20">💰 درآمد جمع (TL)</div></div>
+<div class="stat"><div class="n" data-i18n="p21" id="s-leads">۵۱۰</div><div class="l" data-i18n="p22">🎯 لیدهای ثبت‌شده</div></div>
+</div>
+<div class="card"><h3 data-i18n="p23">🕒 آخرین سفارش‌ها</h3><div id="dash-orders"></div></div>
+</div>
+<div class="view hide" id="v-orders">
+<div class="card"><h3>🧾 همه سفارش‌ها <button class="refresh" data-i18n="p24" onclick="loadOrders()">↻ تازه‌سازی</button></h3><div id="orders-body"></div></div>
+</div>
+<div class="view hide" id="v-leads">
+<div class="card">
+<h3 data-i18n="p25">🎯 بانک ۵۱۰ لید (Cloudflare D1)</h3>
+<div class="tools">
+<input data-i18n="p110" data-i18n-attr="placeholder" id="lq" oninput="renderLeads()" placeholder="🔍 جستجو: نام، منطقه، تلفن، ایمیل..."/>
+<select id="lc" onchange="renderLeads()"><option data-i18n="p26" value="">همه دسته‌ها</option></select>
+</div>
+<div class="mut" id="lcount" style="margin-bottom:10px"></div>
+<div style="overflow-x:auto"><table id="ltable"></table></div>
+</div>
+</div>
+<div class="view hide" id="v-b2b">
+<div class="stats">
+<div class="stat"><div class="n" data-i18n="p27" id="b2-new">۰</div><div class="l" data-i18n="p28">🆕 درخواست جدید</div></div>
+<div class="stat"><div class="n" data-i18n="p29" id="b2-quoted">۰</div><div class="l" data-i18n="p30">🧾 پیش‌فاکتور داده شد</div></div>
+<div class="stat"><div class="n" data-i18n="p31" id="b2-won">۰</div><div class="l" data-i18n="p32">✅ تبدیل به سفارش</div></div>
+<div class="stat"><div class="n" data-i18n="p33" id="b2-kg">۰</div><div class="l" data-i18n="p34">⚖️ کیلو قراردادها</div></div>
+</div>
+<div class="card"><h3>📥 صندوق درخواست‌های خرید (RFQ) <button class="refresh" data-i18n="p35" onclick="loadB2B()">↻ تازه‌سازی</button></h3>
+<p class="mut" data-i18n="p36" style="margin-bottom:10px">منبع: فرم «خرید هوشمند» سایت + دکمه‌ی ربات. مسیر: 🆕 جدید ← 🧾 پیش‌فاکتور ← ✅ سفارش / ⛔ از دست رفت.</p>
+<div style="overflow-x:auto"><table id="b2table"></table></div>
+</div>
+<div class="card hide" id="b2qcard">
+<h3>🧾 پیش‌فاکتور — <span id="b2q-firm"></span></h3>
+<div style="overflow-x:auto"><table id="b2q-items"></table></div>
+<div class="prow">تخفیف همکار: <input id="b2q-disc" max="30" min="0" step="1" style="width:64px;padding:8px 10px;border-radius:10px;border:1px solid var(--bd);background:rgba(0,0,0,.35);color:var(--tx);font-family:inherit" type="number" value="0"/>٪
           <span id="b2q-total" style="font-weight:800;color:var(--or2)"></span></div>
-        <div class="prow">
-          <button class="refresh" onclick="smartQuote(true)">🤖 پیشنهاد هوشمند</button>
-          <button class="refresh" onclick="smartQuote(true)">🔄 بازتولید</button>
-          <button class="refresh" onclick="saveQuote()">💾 ذخیره پیش‌فاکتور</button>
-          <button class="refresh" style="border-color:var(--gr);color:var(--gr)" onclick="markWon()">✅ تأیید سفارش</button>
-          <button class="refresh" style="border-color:var(--red);color:var(--red)" onclick="markLost()">⛔ از دست رفت</button>
-        </div>
-        <div class="prow"><a id="b2q-wa" class="dl" style="background:var(--gr)" href="#" target="_blank">💬 ارسال پیش‌فاکتور با واتس‌اپ</a><span class="sttx" id="b2q-st"></span></div>
-        <p class="mut">🤖 پیشنهاد هوشمند: قیمت هر قلم از کاتالوگ روز + تخفیف حجمی خودکار (۶۰kg←۴٪ · ۱۰۰kg←۷٪ · ۱۵۰kg←۱۰٪). 🔄 بازتولید بعد از هر تغییر قیمت، دوباره از روی آخرین قیمت‌ها می‌سازد.</p>
-      </div>
-      <div class="card"><h3>📈 تحلیل مشتریان B2B و هشدارها</h3><div id="b2firms"></div></div>
-    </div>
-    <div id="v-ai" class="view hide">
-      <div class="stats">
-        <div class="stat"><div class="n" id="ai-new">۰</div><div class="l">🎯 لید جدید AI</div></div>
-        <div class="stat"><div class="n" id="ai-added">۰</div><div class="l">➕ افزوده به لیدها</div></div>
-        <div class="stat"><div class="n" id="ai-trends">۰</div><div class="l">📈 ترندهای ثبت‌شده</div></div>
-        <div class="stat"><div class="n" id="ai-sync">—</div><div class="l">🔄 آخرین همگام‌سازی</div></div>
-      </div>
-      <div class="card"><h3>🎯 رستوران‌های کاندیدا (کاشف لید AI) <button class="refresh" onclick="radarRefresh()">↻ اسکن جدید</button></h3>
-        <p class="mut" style="margin-bottom:10px">رادار AI رستوران‌های تازه‌افتتاح‌شده‌ی استانبول را از اخبار پیدا می‌کند و امتیاز می‌دهد. با «➕» به دفتر لیدها (تب 🎯) اضافه‌شان کنید.</p>
-        <div style="overflow-x:auto"><table id="aitable"></table></div>
-      </div>
-      <div class="card"><h3>📈 آخرین ترندهای غذایی (منتشرشده در بلاگ سایت)</h3><div id="aitrends"></div></div>
-    </div>
-    <div id="v-kart" class="view hide">
-      <div class="card"><h3>💳 کارت ویزیت — سه مدل نهایی (فقط ادمین)</h3>
-        <img class="big" src="/kart.png" alt="کارت ویزیت">
-        <a class="dl" href="/kart.png" download="aykan-kart-vizit.png">⬇️ دانلود تصویر کارت‌ها</a>
-        <p class="mut" style="margin-top:10px">فایل چاپ PDF (۶ صفحه) در پوشه کاری: <b>aykan_kart_final_baski.pdf</b> — سه مدل: İŞTAH (قرمز) • PREMIUM (طلایی) • TAZELİK (سبز)</p>
-      </div>
-    </div>
-    <div id="v-links" class="view hide">
-      <div class="card lnk"><h3>🔗 لینک‌ها و دستورهای ربات</h3>
-        <a href="${SITE}" target="_blank">🌐 سایت + فرم خرید B2B <span>lively-mouse-0c7c.aykanet34.workers.dev</span></a>
-        <a href="${SITE}/#b2bform" target="_blank">🤖 فرم خرید هوشمند رستوران <span>lively-mouse-0c7c…/#b2bform</span></a>
-        <a href="https://t.me/Aykan_Et_mangal_shopping_bot" target="_blank">🤖 ربات تلگرام <span>@Aykan_Et_mangal_shopping_bot</span></a>
-        <a href="https://t.me/AykanEtmangal_shopping" target="_blank">📢 کانال فروش <span>@AykanEtmangal_shopping</span></a>
-        <a href="https://wa.me/905377325269" target="_blank">💬 واتساپ فروشگاه <span>0537 732 52 69</span></a>
-        <p class="mut" style="margin-top:14px;line-height:2">دستورهای ربات: <b>/admin 5269</b> سپس <b>/plan</b> برنامه پست‌ها • <b>/aralik N</b> فاصله پست (ساعت) • <b>/postnow</b> ارسال فوری • <b>/lidedefteri</b> دفتر لیدها • <b>/yatirim</b> لیدرهای سرمایه‌گذاری • <b>/bolge 1..10</b> خلاصه منطقه</p>
-      </div>
-    </div>
-    <div id="v-social" class="view hide">
-      <div class="card">
-        <h3>🌐 شبکه‌های اجتماعی — پست خودکار هم‌زمان</h3>
-        <p class="mut" style="line-height:2.1;margin-bottom:16px">
-          هر پستی که ربات به کانال تلگرام می‌فرستد، <b>خودکار</b> به همه پلتفرم‌های فعال زیر هم ارسال می‌شود (سینک با تلگرام).<br>
+<div class="prow">
+<button class="refresh" data-i18n="p37" onclick="smartQuote(true)">🤖 پیشنهاد هوشمند</button>
+<button class="refresh" data-i18n="p38" onclick="smartQuote(true)">🔄 بازتولید</button>
+<button class="refresh" data-i18n="p39" onclick="saveQuote()">💾 ذخیره پیش‌فاکتور</button>
+<button class="refresh" data-i18n="p40" onclick="markWon()" style="border-color:var(--gr);color:var(--gr)">✅ تأیید سفارش</button>
+<button class="refresh" data-i18n="p41" onclick="markLost()" style="border-color:var(--red);color:var(--red)">⛔ از دست رفت</button>
+</div>
+<div class="prow"><a class="dl" data-i18n="p42" href="#" id="b2q-wa" style="background:var(--gr)" target="_blank">💬 ارسال پیش‌فاکتور با واتس‌اپ</a><span class="sttx" id="b2q-st"></span></div>
+<p class="mut" data-i18n="p43">🤖 پیشنهاد هوشمند: قیمت هر قلم از کاتالوگ روز + تخفیف حجمی خودکار (۶۰kg←۴٪ · ۱۰۰kg←۷٪ · ۱۵۰kg←۱۰٪). 🔄 بازتولید بعد از هر تغییر قیمت، دوباره از روی آخرین قیمت‌ها می‌سازد.</p>
+</div>
+<div class="card"><h3 data-i18n="p44">📈 تحلیل مشتریان B2B و هشدارها</h3><div id="b2firms"></div></div>
+</div>
+<div class="view hide" id="v-ai">
+<div class="stats">
+<div class="stat"><div class="n" data-i18n="p45" id="ai-new">۰</div><div class="l" data-i18n="p46">🎯 لید جدید AI</div></div>
+<div class="stat"><div class="n" data-i18n="p47" id="ai-added">۰</div><div class="l" data-i18n="p48">➕ افزوده به لیدها</div></div>
+<div class="stat"><div class="n" data-i18n="p49" id="ai-trends">۰</div><div class="l" data-i18n="p50">📈 ترندهای ثبت‌شده</div></div>
+<div class="stat"><div class="n" data-i18n="p51" id="ai-sync">—</div><div class="l" data-i18n="p52">🔄 آخرین همگام‌سازی</div></div>
+</div>
+<div class="card"><h3>🎯 رستوران‌های کاندیدا (کاشف لید AI) <button class="refresh" data-i18n="p53" onclick="radarRefresh()">↻ اسکن جدید</button></h3>
+<p class="mut" data-i18n="p54" style="margin-bottom:10px">رادار AI رستوران‌های تازه‌افتتاح‌شده‌ی استانبول را از اخبار پیدا می‌کند و امتیاز می‌دهد. با «➕» به دفتر لیدها (تب 🎯) اضافه‌شان کنید.</p>
+<div style="overflow-x:auto"><table id="aitable"></table></div>
+</div>
+<div class="card"><h3 data-i18n="p55">📈 آخرین ترندهای غذایی (منتشرشده در بلاگ سایت)</h3><div id="aitrends"></div></div>
+</div>
+<div class="view hide" id="v-kart">
+<div class="card"><h3 data-i18n="p56">💳 کارت ویزیت — سه مدل نهایی (فقط ادمین)</h3>
+<img alt="کارت ویزیت" class="big" src="/kart.png"/>
+<a class="dl" data-i18n="p57" download="aykan-kart-vizit.png" href="/kart.png">⬇️ دانلود تصویر کارت‌ها</a>
+<p class="mut" style="margin-top:10px">فایل چاپ PDF (۶ صفحه) در پوشه کاری: <b data-i18n="p58">aykan_kart_final_baski.pdf</b> — سه مدل: İŞTAH (قرمز) • PREMIUM (طلایی) • TAZELİK (سبز)</p>
+</div>
+</div>
+<div class="view hide" id="v-links">
+<div class="card lnk"><h3 data-i18n="p59">🔗 لینک‌ها و دستورهای ربات</h3>
+<a href="${SITE}" target="_blank">🌐 سایت + فرم خرید B2B <span data-i18n="p60">lively-mouse-0c7c.aykanet34.workers.dev</span></a>
+<a href="${SITE}/#b2bform" target="_blank">🤖 فرم خرید هوشمند رستوران <span data-i18n="p61">lively-mouse-0c7c…/#b2bform</span></a>
+<a href="https://t.me/Aykan_Et_mangal_shopping_bot" target="_blank">🤖 ربات تلگرام <span data-i18n="p62">@Aykan_Et_mangal_shopping_bot</span></a>
+<a href="https://t.me/AykanEtmangal_shopping" target="_blank">📢 کانال فروش <span data-i18n="p63">@AykanEtmangal_shopping</span></a>
+<a href="https://wa.me/905377325269" target="_blank">💬 واتساپ فروشگاه <span data-i18n="p64">0537 732 52 69</span></a>
+<p class="mut" style="margin-top:14px;line-height:2">دستورهای ربات: <b data-i18n="p65">/admin 5269</b> سپس <b data-i18n="p66">/plan</b> برنامه پست‌ها • <b data-i18n="p67">/aralik N</b> فاصله پست (ساعت) • <b data-i18n="p68">/postnow</b> ارسال فوری • <b data-i18n="p69">/lidedefteri</b> دفتر لیدها • <b data-i18n="p70">/yatirim</b> لیدرهای سرمایه‌گذاری • <b data-i18n="p71">/bolge 1..10</b> خلاصه منطقه</p>
+</div>
+</div>
+<div class="view hide" id="v-social">
+<div class="card">
+<h3 data-i18n="p72">🌐 شبکه‌های اجتماعی — پست خودکار هم‌زمان</h3>
+<p class="mut" style="line-height:2.1;margin-bottom:16px">
+          هر پستی که ربات به کانال تلگرام می‌فرستد، <b data-i18n="p73">خودکار</b> به همه پلتفرم‌های فعال زیر هم ارسال می‌شود (سینک با تلگرام).<br/>
           برای هر پلتفرم: توکن را وارد کنید ← «ذخیره» ← «تست اتصال». توکن‌ها فقط در دیتابیس امن Cloudflare D1 ذخیره می‌شوند.
         </p>
-        <div class="sgrid">
-          <div class="pcard">
-            <div class="ph">✈️ تلگرام <span class="tag gr">متصل — ربات فعال</span></div>
-            <label>توکن ربات (BotFather)</label><input id="so-tg-token" placeholder="123456:ABC-DEF...">
-            <label>شناسه کانال</label><input id="so-tg-channel" placeholder="@AykanEtmangal_shopping">
-            <label class="chk"><input type="checkbox" id="so-tg-enabled"> فعال</label>
-            <div class="prow"><button class="tst" onclick="testSocial('tg')">🔌 تست اتصال</button><span class="sttx" id="so-tg-st"></span></div>
-            <p class="hint">ربات فعلی فروشگاه — نیازی به تغییر نیست. با تست، اتصال ربات و کانال بررسی می‌شود.</p>
-          </div>
-          <div class="pcard">
-            <div class="ph">💬 واتساپ <span class="tag">نیاز به توکن</span></div>
-            <label>توکن دائمی (Permanent Access Token)</label><input id="so-wa-token" placeholder="EAAG...">
-            <label>شناسه شماره (Phone Number ID)</label><input id="so-wa-phone_id" placeholder="123456789012345">
-            <label>شماره دریافت پیام تست/سفارش (905...)</label><input id="so-wa-to" placeholder="905377325269">
-            <label>توکن تایید وبهوک (Verify Token)</label><input id="so-wa-verify_token" placeholder="aykan-wa-verify">
-            <label>پاسخ خودکار به مشتری</label><input id="so-wa-autoreply" placeholder="سلام! منو و قیمت‌ها: ...">
-            <label class="chk"><input type="checkbox" id="so-wa-enabled"> فعال (ارسال خودکار + پاسخ‌دهی ربات)</label>
-            <div class="prow"><button class="tst" onclick="testSocial('wa')">🔌 تست اتصال</button><span class="sttx" id="so-wa-st"></span></div>
-            <p class="hint">💰 رایگان و رسمی: در <b>business.facebook.com</b> یک Business Manager بسازید ← اپ WhatsApp Business API ← شماره جدید بگیرید ← توکن و Phone ID را از API Setup کپی کنید. سپس در WhatsApp ← Configuration آدرس وبهوک را بگذارید:<br><b dir="ltr">https://lively-mouse-0c7c.aykanet34.workers.dev/api/wa-webhook</b><br>با فعال‌کردن، پیام‌های مشتریان خودکار پاسخ می‌گیرند و در «لیدها» ثبت می‌شوند!</p>
-          </div>
-          <div class="pcard">
-            <div class="ph">📸 اینستاگرام <span class="tag">نیاز به توکن</span></div>
-            <label>توکن (Instagram API)</label><input id="so-ig-token" placeholder="IGQVJ...">
-            <label>شناسه اکانت (IG User ID)</label><input id="so-ig-user_id" placeholder="1784...">
-            <label class="chk"><input type="checkbox" id="so-ig-enabled"> فعال — هر پست کانال، پست اینستاگرام هم بشود</label>
-            <div class="prow"><button class="tst" onclick="testSocial('ig')">🔌 تست اتصال</button><span class="sttx" id="so-ig-st"></span></div>
-            <p class="hint">پیش‌نیاز: اکانت اینستاگرام <b>Business</b> متصل به یک صفحه فیسبوک. در <b>developers.facebook.com</b> اپ بسازید با مجوز instagram_basic + instagram_content_publish ← توکن از Graph API Explorer. ارسال پست اینستاگرام نیاز به <b>لینک عکس عمومی</b> دارد (در فرم پایین).</p>
-          </div>
-          <div class="pcard">
-            <div class="ph">🎬 تیک‌تاک <span class="tag">نیاز به توکن</span></div>
-            <label>توکن کاربر (user access token)</label><input id="so-tt-token" placeholder="act....">
-            <label class="chk"><input type="checkbox" id="so-tt-enabled"> فعال</label>
-            <div class="prow"><button class="tst" onclick="testSocial('tt')">🔌 تست اتصال</button><span class="sttx" id="so-tt-st"></span></div>
-            <p class="hint">در <b>developers.tiktok.com</b> اپ بسازید و محصول Login Kit + Content Posting API را اضافه کنید. نکته: انتشار ویدیو نیاز به تایید اپ توسط تیک‌تاک دارد؛ تا آن موقع تست توکن و ذخیره انجام می‌شود.</p>
-          </div>
-          <div class="pcard">
-            <div class="ph">👍 فیسبوک <span class="tag">نیاز به توکن</span></div>
-            <label>توکن صفحه (Page Access Token)</label><input id="so-fb-token" placeholder="EAAG...">
-            <label>شناسه صفحه (Page ID)</label><input id="so-fb-page_id" placeholder="1029384756">
-            <label class="chk"><input type="checkbox" id="so-fb-enabled"> فعال</label>
-            <div class="prow"><button class="tst" onclick="testSocial('fb')">🔌 تست اتصال</button><span class="sttx" id="so-fb-st"></span></div>
-            <p class="hint">در developers.facebook.com ← Graph API Explorer ← صفحه خود را انتخاب و مجوز pages_manage_posts بدهید ← توکن صفحه را کپی کنید. Page ID از بخش About صفحه.</p>
-          </div>
-        </div>
-        <div class="prow" style="margin-top:16px">
-          <button class="dl" onclick="saveSocial()">💾 ذخیره تنظیمات همه پلتفرم‌ها</button>
-          <span class="sttx" id="so-save-st"></span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>✍️ ارسال / زمان‌بندی پست از پنل</h3>
-        <p class="mut" style="margin-bottom:10px">متن دلخواه بنویسید و هم‌زمان به کانال تلگرام و شبکه‌های فعال بفرستید (مثلاً تخفیف لحظه‌ای).</p>
-        <textarea id="so-text" placeholder="🔥 تخفیف ویژه امروز آیکان! ..."></textarea>
-        <input id="so-img" placeholder="لینک عکس عمومی (اختیاری — برای اینستاگرام الزامی)">
-        <div class="tools" style="margin-top:12px">
-          <label class="chk"><input type="checkbox" id="sp-tg" checked> ✈️ تلگرام</label>
-          <label class="chk"><input type="checkbox" id="sp-wa"> 💬 واتساپ</label>
-          <label class="chk"><input type="checkbox" id="sp-ig"> 📸 اینستاگرام</label>
-          <label class="chk"><input type="checkbox" id="sp-fb"> 👍 فیسبوک</label>
-          <label class="chk"><input type="checkbox" id="sp-tt"> 🎬 تیک‌تاک</label>
-        </div>
-        <div class="prow"><button class="dl" onclick="sendSocial()">🚀 ارسال پست</button><span class="sttx" id="so-send-st"></span></div>
-      </div>
-      <div class="card"><h3>📜 گزارش ارسال‌ها و تست‌ها</h3><div style="overflow-x:auto"><table id="so-log"></table></div></div>
-    </div>
-  </main>
+<div class="sgrid">
+<div class="pcard">
+<div class="ph">✈️ تلگرام <span class="tag gr" data-i18n="p74">متصل — ربات فعال</span></div>
+<label data-i18n="p75">توکن ربات (BotFather)</label><input data-i18n="p111" data-i18n-attr="placeholder" id="so-tg-token" placeholder="123456:ABC-DEF..."/>
+<label data-i18n="p76">شناسه کانال</label><input data-i18n="p112" data-i18n-attr="placeholder" id="so-tg-channel" placeholder="@AykanEtmangal_shopping"/>
+<label class="chk"><input id="so-tg-enabled" type="checkbox"/> فعال</label>
+<div class="prow"><button class="tst" data-i18n="p77" onclick="testSocial('tg')">🔌 تست اتصال</button><span class="sttx" id="so-tg-st"></span></div>
+<p class="hint" data-i18n="p78">ربات فعلی فروشگاه — نیازی به تغییر نیست. با تست، اتصال ربات و کانال بررسی می‌شود.</p>
 </div>
+<div class="pcard">
+<div class="ph">💬 واتساپ <span class="tag" data-i18n="p79">نیاز به توکن</span></div>
+<label data-i18n="p80">توکن دائمی (Permanent Access Token)</label><input data-i18n="p113" data-i18n-attr="placeholder" id="so-wa-token" placeholder="EAAG..."/>
+<label data-i18n="p81">شناسه شماره (Phone Number ID)</label><input data-i18n="p114" data-i18n-attr="placeholder" id="so-wa-phone_id" placeholder="123456789012345"/>
+<label data-i18n="p82">شماره دریافت پیام تست/سفارش (905...)</label><input data-i18n="p115" data-i18n-attr="placeholder" id="so-wa-to" placeholder="905377325269"/>
+<label data-i18n="p83">توکن تایید وبهوک (Verify Token)</label><input data-i18n="p116" data-i18n-attr="placeholder" id="so-wa-verify_token" placeholder="aykan-wa-verify"/>
+<label data-i18n="p84">پاسخ خودکار به مشتری</label><input data-i18n="p117" data-i18n-attr="placeholder" id="so-wa-autoreply" placeholder="سلام! منو و قیمت‌ها: ..."/>
+<label class="chk"><input id="so-wa-enabled" type="checkbox"/> فعال (ارسال خودکار + پاسخ‌دهی ربات)</label>
+<div class="prow"><button class="tst" data-i18n="p85" onclick="testSocial('wa')">🔌 تست اتصال</button><span class="sttx" id="so-wa-st"></span></div>
+<p class="hint">💰 رایگان و رسمی: در <b data-i18n="p86">business.facebook.com</b> یک Business Manager بسازید ← اپ WhatsApp Business API ← شماره جدید بگیرید ← توکن و Phone ID را از API Setup کپی کنید. سپس در WhatsApp ← Configuration آدرس وبهوک را بگذارید:<br/><b data-i18n="p87" dir="ltr">https://lively-mouse-0c7c.aykanet34.workers.dev/api/wa-webhook</b><br/>با فعال‌کردن، پیام‌های مشتریان خودکار پاسخ می‌گیرند و در «لیدها» ثبت می‌شوند!</p>
+</div>
+<div class="pcard">
+<div class="ph">📸 اینستاگرام <span class="tag" data-i18n="p88">نیاز به توکن</span></div>
+<label data-i18n="p89">توکن (Instagram API)</label><input data-i18n="p118" data-i18n-attr="placeholder" id="so-ig-token" placeholder="IGQVJ..."/>
+<label data-i18n="p90">شناسه اکانت (IG User ID)</label><input data-i18n="p119" data-i18n-attr="placeholder" id="so-ig-user_id" placeholder="1784..."/>
+<label class="chk"><input id="so-ig-enabled" type="checkbox"/> فعال — هر پست کانال، پست اینستاگرام هم بشود</label>
+<div class="prow"><button class="tst" data-i18n="p91" onclick="testSocial('ig')">🔌 تست اتصال</button><span class="sttx" id="so-ig-st"></span></div>
+<p class="hint">پیش‌نیاز: اکانت اینستاگرام <b data-i18n="p92">Business</b> متصل به یک صفحه فیسبوک. در <b data-i18n="p93">developers.facebook.com</b> اپ بسازید با مجوز instagram_basic + instagram_content_publish ← توکن از Graph API Explorer. ارسال پست اینستاگرام نیاز به <b data-i18n="p94">لینک عکس عمومی</b> دارد (در فرم پایین).</p>
+</div>
+<div class="pcard">
+<div class="ph">🎬 تیک‌تاک <span class="tag" data-i18n="p95">نیاز به توکن</span></div>
+<label data-i18n="p96">توکن کاربر (user access token)</label><input data-i18n="p120" data-i18n-attr="placeholder" id="so-tt-token" placeholder="act...."/>
+<label class="chk"><input id="so-tt-enabled" type="checkbox"/> فعال</label>
+<div class="prow"><button class="tst" data-i18n="p97" onclick="testSocial('tt')">🔌 تست اتصال</button><span class="sttx" id="so-tt-st"></span></div>
+<p class="hint">در <b data-i18n="p98">developers.tiktok.com</b> اپ بسازید و محصول Login Kit + Content Posting API را اضافه کنید. نکته: انتشار ویدیو نیاز به تایید اپ توسط تیک‌تاک دارد؛ تا آن موقع تست توکن و ذخیره انجام می‌شود.</p>
+</div>
+<div class="pcard">
+<div class="ph">👍 فیسبوک <span class="tag" data-i18n="p99">نیاز به توکن</span></div>
+<label data-i18n="p100">توکن صفحه (Page Access Token)</label><input data-i18n="p121" data-i18n-attr="placeholder" id="so-fb-token" placeholder="EAAG..."/>
+<label data-i18n="p101">شناسه صفحه (Page ID)</label><input data-i18n="p122" data-i18n-attr="placeholder" id="so-fb-page_id" placeholder="1029384756"/>
+<label class="chk"><input id="so-fb-enabled" type="checkbox"/> فعال</label>
+<div class="prow"><button class="tst" data-i18n="p102" onclick="testSocial('fb')">🔌 تست اتصال</button><span class="sttx" id="so-fb-st"></span></div>
+<p class="hint" data-i18n="p103">در developers.facebook.com ← Graph API Explorer ← صفحه خود را انتخاب و مجوز pages_manage_posts بدهید ← توکن صفحه را کپی کنید. Page ID از بخش About صفحه.</p>
+</div>
+</div>
+<div class="prow" style="margin-top:16px">
+<button class="dl" data-i18n="p104" onclick="saveSocial()">💾 ذخیره تنظیمات همه پلتفرم‌ها</button>
+<span class="sttx" id="so-save-st"></span>
+</div>
+</div>
+<div class="card">
+<h3 data-i18n="p105">✍️ ارسال / زمان‌بندی پست از پنل</h3>
+<p class="mut" data-i18n="p106" style="margin-bottom:10px">متن دلخواه بنویسید و هم‌زمان به کانال تلگرام و شبکه‌های فعال بفرستید (مثلاً تخفیف لحظه‌ای).</p>
+<textarea data-i18n="p123" data-i18n-attr="placeholder" id="so-text" placeholder="🔥 تخفیف ویژه امروز آیکان! ..."></textarea>
+<input data-i18n="p124" data-i18n-attr="placeholder" id="so-img" placeholder="لینک عکس عمومی (اختیاری — برای اینستاگرام الزامی)"/>
+<div class="tools" style="margin-top:12px">
+<label class="chk"><input checked="" id="sp-tg" type="checkbox"/> ✈️ تلگرام</label>
+<label class="chk"><input id="sp-wa" type="checkbox"/> 💬 واتساپ</label>
+<label class="chk"><input id="sp-ig" type="checkbox"/> 📸 اینستاگرام</label>
+<label class="chk"><input id="sp-fb" type="checkbox"/> 👍 فیسبوک</label>
+<label class="chk"><input id="sp-tt" type="checkbox"/> 🎬 تیک‌تاک</label>
+</div>
+<div class="prow"><button class="dl" data-i18n="p107" onclick="sendSocial()">🚀 ارسال پست</button><span class="sttx" id="so-send-st"></span></div>
+</div>
+<div class="card"><h3 data-i18n="p108">📜 گزارش ارسال‌ها و تست‌ها</h3><div style="overflow-x:auto"><table id="so-log"></table></div></div>
+</div>
+</main>
+</div>
+<button class="hbtn" id="hbtn" aria-label="Menu">☰</button>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <div class="dtitle" data-i18n="p_menu">🥩 منوی پنل</div>
+  <button class="dnav" data-i18n="p6" onclick="go('dash');closeDrawer()">📊</button>
+  <button class="dnav" data-i18n="p7" onclick="go('orders');closeDrawer()">🧾</button>
+  <button class="dnav" data-i18n="p8" onclick="go('leads');closeDrawer()">🎯</button>
+  <button class="dnav" data-i18n="p10" onclick="go('b2b');closeDrawer()">🏢</button>
+  <button class="dnav" data-i18n="p11" onclick="go('ai');closeDrawer()">🤖</button>
+  <button class="dnav" data-i18n="p9" onclick="go('kart');closeDrawer()">💳</button>
+  <button class="dnav" data-i18n="p12" onclick="go('links');closeDrawer()">🔗</button>
+  <button class="dnav" data-i18n="p13" onclick="go('social');closeDrawer()">🌐</button>
+  <button class="dnav" data-i18n="p14" onclick="logout();closeDrawer()">🚪</button>
+  <div class="dlang">
+    <button data-l="tr" title="Türkçe">🇹🇷</button><button data-l="fa" title="فارسی">🇮🇷</button><button data-l="ar" title="العربية">🇸🇦</button><button data-l="en" title="English">🇬🇧</button>
+  </div>
+</aside>
+<script>
+// ─── i18n پنل: TR پیش‌فرض ───
+var I18N = {"fa": {"p0": "پنل مدیریت — Aykan Et & Mangal", "p1": "AYKAN ET & MANGAL", "p2": "پنل مدیریت — رمز ادمین را وارد کنید", "p3": "🔐 ورود به پنل", "p4": "پنل مدیریت آیکان ات و منگال", "p5": "سفارش‌ها • لیدها • شبکه‌های اجتماعی — روی Cloudflare D1", "p6": "📊 داشبورد", "p7": "🧾 سفارش‌ها", "p8": "🎯 لیدها", "p9": "💳 کارت ویزیت", "p10": "🏢 B2B", "p11": "🤖 AI", "p12": "🔗 لینک‌ها", "p13": "🌐 شبکه‌ها", "p14": "خروج", "p15": "۰", "p16": "🧾 سفارش امروز", "p17": "۰", "p18": "📦 کل سفارش‌ها", "p19": "۰", "p20": "💰 درآمد جمع (TL)", "p21": "۵۱۰", "p22": "🎯 لیدهای ثبت‌شده", "p23": "🕒 آخرین سفارش‌ها", "p24": "↻ تازه‌سازی", "p25": "🎯 بانک ۵۱۰ لید (Cloudflare D1)", "p26": "همه دسته‌ها", "p27": "۰", "p28": "🆕 درخواست جدید", "p29": "۰", "p30": "🧾 پیش‌فاکتور داده شد", "p31": "۰", "p32": "✅ تبدیل به سفارش", "p33": "۰", "p34": "⚖️ کیلو قراردادها", "p35": "↻ تازه‌سازی", "p36": "منبع: فرم «خرید هوشمند» سایت + دکمه‌ی ربات. مسیر: 🆕 جدید ← 🧾 پیش‌فاکتور ← ✅ سفارش / ⛔ از دست رفت.", "p37": "🤖 پیشنهاد هوشمند", "p38": "🔄 بازتولید", "p39": "💾 ذخیره پیش‌فاکتور", "p40": "✅ تأیید سفارش", "p41": "⛔ از دست رفت", "p42": "💬 ارسال پیش‌فاکتور با واتس‌اپ", "p43": "🤖 پیشنهاد هوشمند: قیمت هر قلم از کاتالوگ روز + تخفیف حجمی خودکار (۶۰kg←۴٪ · ۱۰۰kg←۷٪ · ۱۵۰kg←۱۰٪). 🔄 بازتولید بعد از هر تغییر قیمت، دوباره از روی آخرین قیمت‌ها می‌سازد.", "p44": "📈 تحلیل مشتریان B2B و هشدارها", "p45": "۰", "p46": "🎯 لید جدید AI", "p47": "۰", "p48": "➕ افزوده به لیدها", "p49": "۰", "p50": "📈 ترندهای ثبت‌شده", "p51": "—", "p52": "🔄 آخرین همگام‌سازی", "p53": "↻ اسکن جدید", "p54": "رادار AI رستوران‌های تازه‌افتتاح‌شده‌ی استانبول را از اخبار پیدا می‌کند و امتیاز می‌دهد. با «➕» به دفتر لیدها (تب 🎯) اضافه‌شان کنید.", "p55": "📈 آخرین ترندهای غذایی (منتشرشده در بلاگ سایت)", "p56": "💳 کارت ویزیت — سه مدل نهایی (فقط ادمین)", "p57": "⬇️ دانلود تصویر کارت‌ها", "p58": "aykan_kart_final_baski.pdf", "p59": "🔗 لینک‌ها و دستورهای ربات", "p60": "lively-mouse-0c7c.aykanet34.workers.dev", "p61": "lively-mouse-0c7c…/#b2bform", "p62": "@Aykan_Et_mangal_shopping_bot", "p63": "@AykanEtmangal_shopping", "p64": "0537 732 52 69", "p65": "/admin 5269", "p66": "/plan", "p67": "/aralik N", "p68": "/postnow", "p69": "/lidedefteri", "p70": "/yatirim", "p71": "/bolge 1..10", "p72": "🌐 شبکه‌های اجتماعی — پست خودکار هم‌زمان", "p73": "خودکار", "p74": "متصل — ربات فعال", "p75": "توکن ربات (BotFather)", "p76": "شناسه کانال", "p77": "🔌 تست اتصال", "p78": "ربات فعلی فروشگاه — نیازی به تغییر نیست. با تست، اتصال ربات و کانال بررسی می‌شود.", "p79": "نیاز به توکن", "p80": "توکن دائمی (Permanent Access Token)", "p81": "شناسه شماره (Phone Number ID)", "p82": "شماره دریافت پیام تست/سفارش (905...)", "p83": "توکن تایید وبهوک (Verify Token)", "p84": "پاسخ خودکار به مشتری", "p85": "🔌 تست اتصال", "p86": "business.facebook.com", "p87": "https://lively-mouse-0c7c.aykanet34.workers.dev/api/wa-webhook", "p88": "نیاز به توکن", "p89": "توکن (Instagram API)", "p90": "شناسه اکانت (IG User ID)", "p91": "🔌 تست اتصال", "p92": "Business", "p93": "developers.facebook.com", "p94": "لینک عکس عمومی", "p95": "نیاز به توکن", "p96": "توکن کاربر (user access token)", "p97": "🔌 تست اتصال", "p98": "developers.tiktok.com", "p99": "نیاز به توکن", "p100": "توکن صفحه (Page Access Token)", "p101": "شناسه صفحه (Page ID)", "p102": "🔌 تست اتصال", "p103": "در developers.facebook.com ← Graph API Explorer ← صفحه خود را انتخاب و مجوز pages_manage_posts بدهید ← توکن صفحه را کپی کنید. Page ID از بخش About صفحه.", "p104": "💾 ذخیره تنظیمات همه پلتفرم‌ها", "p105": "✍️ ارسال / زمان‌بندی پست از پنل", "p106": "متن دلخواه بنویسید و هم‌زمان به کانال تلگرام و شبکه‌های فعال بفرستید (مثلاً تخفیف لحظه‌ای).", "p107": "🚀 ارسال پست", "p108": "📜 گزارش ارسال‌ها و تست‌ها", "p109": "••••", "p110": "🔍 جستجو: نام، منطقه، تلفن، ایمیل...", "p111": "123456:ABC-DEF...", "p112": "@AykanEtmangal_shopping", "p113": "EAAG...", "p114": "123456789012345", "p115": "905377325269", "p116": "aykan-wa-verify", "p117": "سلام! منو و قیمت‌ها: ...", "p118": "IGQVJ...", "p119": "1784...", "p120": "act....", "p121": "EAAG...", "p122": "1029384756", "p123": "🔥 تخفیف ویژه امروز آیکان! ...", "p124": "لینک عکس عمومی (اختیاری — برای اینستاگرام الزامی)", "p_menu": "🥩 منوی پنل", "cats2": {"Big Restaurant": "🥩 رستوران بزرگ", "Ordinary Fast Food": "🍔 فست‌فود و دونر", "Hotel": "🏨 هتل", "Catering": "🍲 کیترینگ و کارخانه", "Ordinary People": "👨‍👩‍👧‍👦 مجتمع و گروه محلی", "Investment Leader": "💼 سرمایه‌گذاری"}, "d_lead": "لید", "d_now": "الان", "d_h_ago": " ساعت پیش", "d_added": "➕ افزوده", "d_new": "🆕 جدید", "d_quoted": "🧾 پیش‌فاکتور", "d_won": "✅ سفارش", "d_lost": "⛔ رد", "d_sale": "🛒 فروش", "d_ok": "✅ موفق", "d_err": "❌ خطا", "d_wa": "💬 واتس‌اپ", "th_code": "کد", "th_cust": "مشتری", "th_amt": "مبلغ", "th_items": "اقلام", "th_time": "زمان", "th_action": "اقدام", "th_cat": "دسته", "th_news": "خبر", "th_src": "منبع", "th_name": "نام", "th_area": "منطقه", "th_status": "وضعیت", "th_score": "امتیاز", "th_platform": "پلتفرم", "th_details": "جزئیات", "th_prod": "محصول", "th_last": "آخرین قیمت", "th_total": "جمع", "th_firm": "مجموعه", "th_kg": "کیلو", "th_contact": "تماس", "th_web": "وب‌سایت", "e_orders": "هنوز سفارشی ثبت نشده — اولین سفارش از ربات تلگرام اینجا ظاهر می‌شود 🛒", "e_orders2": "هنوز سفارشی ثبت نشده است", "e_none": "موردی یافت نشد", "e_ai": "با اولین درخواست، تحلیل مشتریان اینجا ساخته می‌شود 📈", "e_radar": "هنوز کاندیدایی پیدا نشده — دکمه «↻ اسکن جدید» را بزنید 🤖", "e_rfq": "هنوز درخواستی ثبت نشده — از فرم «خرید هوشمند» سایت یا دکمه‌ی ربات می‌آید 🏢", "th_req": "درخواست", "th_wr": "نرخ برد", "th_av": "میانگین حجم", "th_la": "آخرین فعالیت", "a_lost": "⛔ از دست رفت", "e_social": "هنوز ارسال یا تستی ثبت نشده", "e_trends": "ترندی ثبت نشده — «↻ اسکن جدید» را بزنید", "a_confirm": "تأیید می‌کنید؟", "a_convert": "تبدیل به سفارش؟ در تب سفارش‌ها با کد B2B ثبت می‌شود.", "a_disc": "تخفیف همکار: ", "a_sum": "جمع: ", "a_err": "خطا", "a_save_err": "خطا در ذخیره", "a_prev": "قبلی: ", "a_q_no": "پیش‌فاکتور آیکان #", "a_sending": "⏳ در حال ارسال...", "a_testing": "⏳ در حال تست اتصال...", "a_saving": "⏳ در حال ذخیره...", "a_net": "⛔ خطای شبکه", "a_radar": "⛔ رادار در دسترس نیست — چند دقیقه بعد دوباره", "a_no_items": "⛔ قلمی نمانده است", "a_need_post": "⛔ متن پست و حداقل یک پلتفرم لازم است", "a_saved": "✅ ذخیره شد — توکن‌ها در دیتابیس امن ذخیره شدند", "a_order_ok": "✅ سفارش ثبت شد", "a_code": " — کد: ", "a_regen": "✅ پیشنهاد هوشمند بازتولید شد — قیمت‌ها از کاتالوگ روز + تخفیف حجمی خودکار", "a_quote_saved": "✅ پیش‌فاکتور ذخیره شد (", "a_saved_hist": ") و در تاریخچه قیمت ثبت شد", "a_after_disc": " (پس از تخفیف از ", "a_days_nobuy": " روز بی‌خرید", "a_20plus": "۲۰+"}, "tr": {"p0": "Yönetim Paneli — Aykan Et & Mangal", "p2": "Yönetim Paneli — yönetici şifresini girin", "p3": "🔐 Panele Giriş", "p4": "Aykan Et & Mangal Yönetim Paneli", "p5": "Siparişler • Müşteri adayları • Sosyal medya — Cloudflare D1 üzerinde", "p6": "📊 Dashboard", "p7": "🧾 Siparişler", "p8": "🎯 Müşteri Adayları", "p9": "💳 Kartvizit", "p10": "🏢 B2B", "p11": "🤖 AI", "p12": "🔗 Bağlantılar", "p13": "🌐 Sosyal", "p14": "Çıkış", "p15": "0", "p16": "🧾 Bugünün siparişi", "p17": "0", "p18": "📦 Toplam sipariş", "p19": "0", "p20": "💰 Toplam ciro (TL)", "p21": "510", "p22": "🎯 Kayıtlı müşteri adayı", "p23": "🕒 Son siparişler", "p24": "↻ Yenile", "p25": "🎯 510 müşteri adayı bankası (Cloudflare D1)", "p26": "Tüm kategoriler", "p27": "0", "p28": "🆕 Yeni talep", "p29": "0", "p30": "🧾 Proforma verildi", "p31": "0", "p32": "✅ Siparişe dönüştü", "p33": "0", "p34": "⚖️ Sözleşme kilosu", "p35": "↻ Yenile", "p36": "Kaynak: sitenin «Akıllı Alım» formu + bottaki buton. Akış: 🆕 Yeni ← 🧾 Proforma ← ✅ Sipariş / ⛔ Kayıp.", "p37": "🤖 Akıllı öneri", "p38": "🔄 Yeniden oluştur", "p39": "💾 Proformayı kaydet", "p40": "✅ Siparişi onayla", "p41": "⛔ Kayıp", "p42": "💬 Proformayı WhatsApp ile gönder", "p43": "🤖 Akıllı öneri: kalemlerin fiyatı günlük katalogdan + otomatik hacim indirimi (60kg←%4 · 100kg←%7 · 150kg←%10). 🔄 Yeniden oluştur, son fiyatlarla yeniden hesaplar.", "p44": "📈 B2B müşteri analizi ve uyarılar", "p45": "0", "p46": "🎯 Yeni AI müşteri adayı", "p47": "0", "p48": "➕ Leadlere eklendi", "p49": "0", "p50": "📈 Kayıtlı trendler", "p51": "—", "p52": "🔄 Son eşitleme", "p53": "↻ Yeni tarama", "p54": "AI radarı İstanbul'da yeni açılan restoranları haberlerden bulur ve puanlar. «➕» ile müşteri adayı defterine (🎯 sekmesi) ekleyin.", "p55": "📈 Son yemek trendleri (sitenin blogunda yayında)", "p56": "💳 Kartvizit — üç final modeli (yalnızca yönetici)", "p57": "⬇️ Kart görsellerini indir", "p59": "🔗 Bağlantılar ve bot komutları", "p72": "🌐 Sosyal medya — eşzamanlı otomatik gönderi", "p73": "Otomatik", "p74": "Bağlı — bot aktif", "p75": "Bot tokeni (BotFather)", "p76": "Kanal kimliği", "p77": "🔌 Bağlantıyı test et", "p78": "Mağazanın mevcut botu — değiştirmek gerekmez. Testle bot ve kanal bağlantısı kontrol edilir.", "p79": "Token gerekli", "p80": "Kalıcı erişim tokeni (Permanent Access Token)", "p81": "Telefon numarası kimliği (Phone Number ID)", "p82": "Test/sipariş mesajı alınacak numara (905...)", "p83": "Webhook doğrulama tokeni (Verify Token)", "p84": "Müşteriye otomatik yanıt", "p85": "🔌 Bağlantıyı test et", "p88": "Token gerekli", "p89": "Token (Instagram API)", "p90": "Hesap kimliği (IG User ID)", "p91": "🔌 Bağlantıyı test et", "p94": "Herkese açık görsel bağlantısı", "p95": "Token gerekli", "p96": "Kullanıcı tokeni (user access token)", "p97": "🔌 Bağlantıyı test et", "p99": "Token gerekli", "p100": "Sayfa tokeni (Page Access Token)", "p101": "Sayfa kimliği (Page ID)", "p102": "🔌 Bağlantıyı test et", "p103": "developers.facebook.com ← Graph API Explorer ← sayfanızı seçin ve pages_manage_posts iznini verin ← sayfa tokenini kopyalayın. Page ID, sayfanın About bölümünde.", "p104": "💾 Tüm platform ayarlarını kaydet", "p105": "✍️ Panelden gönderi gönder / zamanla", "p106": "İstediğiniz metni yazın ve aynı anda Telegram kanalına ve aktif sosyal platformlara gönderin (örn. anlık indirim).", "p107": "🚀 Gönderiyi gönder", "p108": "📜 Gönderim ve test geçmişi", "p110": "🔍 Ara: isim, bölge, telefon, e-posta...", "p117": "Selam! Menü ve fiyatlar: ...", "p123": "🔥 Aykan'ın günün özel indirimi! ...", "p124": "Herkese açık görsel bağlantısı (isteğe bağlı — Instagram için zorunlu)", "p_menu": "🥩 Panel Menüsü", "d_lead": "müşteri adayı", "d_now": "şimdi", "d_h_ago": " saat önce", "d_added": "➕ Eklendi", "d_new": "🆕 Yeni", "d_quoted": "🧾 Proforma", "d_won": "✅ Sipariş", "d_lost": "⛔ Kayıp", "d_sale": "🛒 Satış", "d_ok": "✅ Başarılı", "d_err": "❌ Hata", "d_wa": "💬 WhatsApp", "th_code": "Kod", "th_cust": "Müşteri", "th_amt": "Tutar", "th_items": "Kalemler", "th_time": "Zaman", "th_action": "İşlem", "th_cat": "Kategori", "th_news": "Haber", "th_src": "Kaynak", "th_name": "İsim", "th_area": "Bölge", "th_status": "Durum", "th_score": "Puan", "th_platform": "Platform", "th_details": "Detay", "th_prod": "Ürün", "th_last": "Son Fiyat", "th_total": "Toplam", "th_firm": "İşletme", "th_kg": "Kg", "th_contact": "İletişim", "th_web": "Web", "e_orders": "Henüz sipariş yok — ilk sipariş Telegram botundan burada görünür 🛒", "e_orders2": "Henüz sipariş kaydı yok", "e_none": "Kayıt bulunamadı", "e_ai": "İlk taleple müşteri analizi burada oluşur 📈", "e_radar": "Henüz aday yok — «↻ Yeni tarama» düğmesine basın 🤖", "e_rfq": "Henüz talep yok — sitenin «Akıllı Alım» formundan veya bot düğmesinden gelir 🏢", "th_req": "Talep", "th_wr": "Kazanma oranı", "th_av": "Ortalama hacim", "th_la": "Son etkinlik", "a_lost": "⛔ Kaybedildi", "e_social": "Henüz gönderim/test kaydı yok", "e_trends": "Kayıtlı trend yok — «↻ Yeni tarama» ya basın", "a_confirm": "Onaylıyor musunuz?", "a_convert": "Siparişe çevrilsin mi? Siparişler sekmesinde B2B koduyla kaydedilir.", "a_disc": "Ortak indirimi: ", "a_sum": "Toplam: ", "a_err": "Hata", "a_save_err": "Kaydetme hatası", "a_prev": "Önceki: ", "a_q_no": "Aykan Proforma #", "a_sending": "⏳ Gönderiliyor...", "a_testing": "⏳ Bağlantı test ediliyor...", "a_saving": "⏳ Kaydediliyor...", "a_net": "⛔ Ağ hatası", "a_radar": "⛔ Radar erişilemiyor — birkaç dakika sonra tekrar deneyin", "a_no_items": "⛔ Kalem kalmadı", "a_need_post": "⛔ Gönderi metni ve en az bir platform gerekli", "a_saved": "✅ Kaydedildi — tokenlar güvenli veritabanında saklandı", "a_order_ok": "✅ Sipariş kaydedildi", "a_code": " — Kod: ", "a_regen": "✅ Akıllı öneri yenilendi — fiyatlar günlük katalogdan + otomatik hacim indirimi", "a_quote_saved": "✅ Proforma kaydedildi (", "a_saved_hist": ") ve fiyat geçmişine kaydedildi", "a_after_disc": " (indirim sonrası, ", "a_days_nobuy": " gün siparişsiz", "a_20plus": "20+", "cats2": {"Big Restaurant": "🥩 Büyük Restoran", "Ordinary Fast Food": "🍔 Fast Food & Döner", "Hotel": "🏨 Otel", "Catering": "🍲 Catering & Fabrika", "Ordinary People": "👨‍👩‍👧‍👦 Site & Aile Grubu", "Investment Leader": "💼 Yatırımcı"}, "p67": "/aralik N", "p120": "act....", "p118": "IGQVJ...", "p1": "AYKAN ET & MANGAL", "p63": "@AykanEtmangal_shopping", "p98": "developers.tiktok.com", "p122": "1029384756", "p60": "lively-mouse-0c7c.aykanet34.workers.dev", "p87": "https://lively-mouse-0c7c.aykanet34.workers.dev/api/wa-webhook", "p119": "1784...", "p113": "EAAG...", "p111": "123456:ABC-DEF...", "p65": "/admin 5269", "p58": "aykan_kart_final_baski.pdf", "p115": "905377325269", "p86": "business.facebook.com", "p62": "@Aykan_Et_mangal_shopping_bot", "p114": "123456789012345", "p121": "EAAG...", "p68": "/postnow", "p70": "/yatirim", "p69": "/lidedefteri", "p109": "••••", "p71": "/bolge 1..10", "p92": "Business", "p61": "lively-mouse-0c7c…/#b2bform", "p112": "@AykanEtmangal_shopping", "p93": "developers.facebook.com", "p66": "/plan", "p64": "0537 732 52 69", "p116": "aykan-wa-verify"}, "ar": {"p0": "لوحة الإدارة — Aykan Et & Mangal", "p2": "لوحة الإدارة — أدخل كلمة مرور المدير", "p3": "🔐 دخول اللوحة", "p4": "لوحة إدارة أيكان للحوم والمشاوي", "p5": "الطلبات • العملاء المحتملون • وسائل التواصل — على Cloudflare D1", "p6": "📊 لوحة التحكم", "p7": "🧾 الطلبات", "p8": "🎯 العملاء المحتملون", "p9": "💳 بطاقة العمل", "p10": "🏢 B2B", "p11": "🤖 AI", "p12": "🔗 الروابط", "p13": "🌐 الشبكات", "p14": "خروج", "p15": "٠", "p16": "🧾 طلب اليوم", "p17": "٠", "p18": "📦 إجمالي الطلبات", "p19": "٠", "p20": "💰 الإيراد الإجمالي (ليرة)", "p21": "٥١٠", "p22": "🎯 عميل محتمل مسجل", "p23": "🕒 آخر الطلبات", "p24": "↻ تحديث", "p25": "🎯 بنك ٥١٠ عميل محتمل (Cloudflare D1)", "p26": "كل الفئات", "p27": "٠", "p28": "🆕 طلب جديد", "p29": "٠", "p30": "🧾 أُعطيت فاتورة مبدئية", "p31": "٠", "p32": "✅ حُوّل إلى طلب", "p33": "٠", "p34": "⚖️ كيلوغرامات العقود", "p35": "↻ تحديث", "p36": "المصدر: نموذج «الشراء الذكي» في الموقع + زر البوت. المسار: 🆕 جديد ← 🧾 فاتورة ← ✅ طلب / ⛔ خسارة.", "p37": "🤖 اقتراح ذكي", "p38": "🔄 إعادة توليد", "p39": "💾 حفظ الفاتورة", "p40": "✅ تأكيد الطلب", "p41": "⛔ خسارة", "p42": "💬 إرسال الفاتورة عبر واتساب", "p43": "🤖 الاقتراح الذكي: سعر كل بند من كتالوج اليوم + خصم الكمية التلقائي (60كغ←4٪ · 100كغ←7٪ · 150كغ←10٪). 🔄 إعادة التوليد تعيد الحساب بآخر الأسعار.", "p44": "📈 تحليل عملاء B2B والتنبيهات", "p45": "٠", "p46": "🎯 عميل AI جديد", "p47": "٠", "p48": "➕ أُضيف إلى العملاء", "p49": "٠", "p50": "📈 الترندات المسجلة", "p51": "—", "p52": "🔄 آخر مزامنة", "p53": "↻ مسح جديد", "p54": "رادار AI يكتشف المطاعم المنشورة حديثاً في إستانبول من الأخبار ويقيّمها. أضفها بـ «➕» إلى دفتر العملاء (تب 🎯).", "p55": "📈 أحدث ترندات الطعام (منشورة في مدونة الموقع)", "p56": "💳 بطاقة العمل — ثلاثة نماذج نهائية (للمدير فقط)", "p57": "⬇️ تنزيل صور البطاقات", "p59": "🔗 الروابط وأوامر البوت", "p72": "🌐 وسائل التواصل — نشر تلقائي متزامن", "p73": "تلقائي", "p74": "متصل — البوت نشط", "p75": "توكن البوت (BotFather)", "p76": "معرّف القناة", "p77": "🔌 اختبار الاتصال", "p78": "بوت المتجر الحالي — لا حاجة للتغيير. بالاختبار يُفحص اتصال البوت والقناة.", "p79": "يلزم توكن", "p80": "توكن وصول دائم (Permanent Access Token)", "p81": "معرّف رقم الهاتف (Phone Number ID)", "p82": "رقم استلام رسائل الاختبار/الطلبات (905...)", "p83": "توكن تحقق الويبهوك (Verify Token)", "p84": "رد تلقائي على العميل", "p85": "🔌 اختبار الاتصال", "p88": "يلزم توكن", "p89": "التوكن (Instagram API)", "p90": "معرّف الحساب (IG User ID)", "p91": "🔌 اختبار الاتصال", "p94": "رابط صورة عام", "p95": "يلزم توكن", "p96": "توكن المستخدم (user access token)", "p97": "🔌 اختبار الاتصال", "p99": "يلزم توكن", "p100": "توكن الصفحة (Page Access Token)", "p101": "معرّف الصفحة (Page ID)", "p102": "🔌 اختبار الاتصال", "p103": "في developers.facebook.com ← Graph API Explorer ← اختر صفحتك وامنح إذن pages_manage_posts ← انسخ توكن الصفحة. معرّف الصفحة من قسم About.", "p104": "💾 حفظ إعدادات كل المنصات", "p105": "✍️ نشر/جدولة منشور من اللوحة", "p106": "اكتب أي نص وأرسله في آن واحد إلى قناة تيليغرام والمنصات النشطة (مثلاً خصم لحظي).", "p107": "🚀 إرسال المنشور", "p108": "📜 سجل الإرسالات والاختبارات", "p110": "🔍 بحث: الاسم، المنطقة، الهاتف، البريد...", "p117": "مرحباً! القائمة والأسعار: ...", "p123": "🔥 عرض أيكان الخاص لليوم! ...", "p124": "رابط صورة عام (اختياري — إلزامي لإنستغرام)", "p_menu": "🥩 قائمة اللوحة", "d_lead": "عميل محتمل", "d_now": "الآن", "d_h_ago": " ساعة مضت", "d_added": "➕ مضاف", "d_new": "🆕 جديد", "d_quoted": "🧾 فاتورة مبدئية", "d_won": "✅ طلب", "d_lost": "⛔ خسارة", "d_sale": "🛒 بيع", "d_ok": "✅ ناجح", "d_err": "❌ خطأ", "d_wa": "💬 واتساب", "th_code": "الرمز", "th_cust": "العميل", "th_amt": "المبلغ", "th_items": "البنود", "th_time": "الوقت", "th_action": "إجراء", "th_cat": "الفئة", "th_news": "الخبر", "th_src": "المصدر", "th_name": "الاسم", "th_area": "المنطقة", "th_status": "الحالة", "th_score": "النقاط", "th_platform": "المنصة", "th_details": "التفاصيل", "th_prod": "المنتج", "th_last": "آخر سعر", "th_total": "المجموع", "th_firm": "الجهة", "th_kg": "كغ", "th_contact": "التواصل", "th_web": "الموقع", "e_orders": "لا طلبات بعد — أول طلب من بوت تيليغرام يظهر هنا 🛒", "e_orders2": "لا طلبات مسجلة بعد", "e_none": "لا نتائج", "e_ai": "مع أول طلب، يُبنى تحليل العملاء هنا 📈", "e_radar": "لا مرشحين بعد — اضغط زر «↻ مسح جديد» 🤖", "e_rfq": "لا طلبات بعد — تأتي من نموذج «الشراء الذكي» في الموقع أو زر البوت 🏢", "th_req": "طلب", "th_wr": "معدل الفوز", "th_av": "متوسط الحجم", "th_la": "آخر نشاط", "a_lost": "⛔ خسارة", "e_social": "لا إرسالات أو اختبارات بعد", "e_trends": "لا ترندات — اضغط «↻ مسح جديد»", "a_confirm": "هل تأكد؟", "a_convert": "تحويل إلى طلب؟ يُسجل في تب الطلبات برمز B2B.", "a_disc": "خصم الشريك: ", "a_sum": "المجموع: ", "a_err": "خطأ", "a_save_err": "خطأ في الحفظ", "a_prev": "السابق: ", "a_q_no": "فاتورة أيكان #", "a_sending": "⏳ جارٍ الإرسال...", "a_testing": "⏳ جارٍ اختبار الاتصال...", "a_saving": "⏳ جارٍ الحفظ...", "a_net": "⛔ خطأ في الشبكة", "a_radar": "⛔ الرادار غير متاح — حاول بعد دقائق", "a_no_items": "⛔ لا بنود متبقية", "a_need_post": "⛔ يلزم نص المنشور ومنصة واحدة على الأقل", "a_saved": "✅ تم الحفظ — الرموز محفوظة في قاعدة البيانات الآمنة", "a_order_ok": "✅ تم تسجيل الطلب", "a_code": " — الرمز: ", "a_regen": "✅ تم تجديد الاقتراح الذكي — الأسعار من كتالوج اليوم + خصم الكمية التلقائي", "a_quote_saved": "✅ حُفظت الفاتورة (", "a_saved_hist": ") وحُفظ في سجل الأسعار", "a_after_disc": " (بعد الخصم من ", "a_days_nobuy": " يوماً بدون شراء", "a_20plus": "+٢٠", "cats2": {"Big Restaurant": "🥩 مطعم كبير", "Ordinary Fast Food": "🍔 وجبات سريعة ودونر", "Hotel": "🏨 فندق", "Catering": "🍲 تموين ومصانع", "Ordinary People": "👨‍👩‍👧‍👦 مجمعات وعائلات", "Investment Leader": "💼 مستثمر"}, "p67": "/aralik N", "p120": "act....", "p118": "IGQVJ...", "p1": "AYKAN ET & MANGAL", "p63": "@AykanEtmangal_shopping", "p98": "developers.tiktok.com", "p122": "1029384756", "p60": "lively-mouse-0c7c.aykanet34.workers.dev", "p87": "https://lively-mouse-0c7c.aykanet34.workers.dev/api/wa-webhook", "p119": "1784...", "p113": "EAAG...", "p111": "123456:ABC-DEF...", "p65": "/admin 5269", "p58": "aykan_kart_final_baski.pdf", "p115": "905377325269", "p86": "business.facebook.com", "p62": "@Aykan_Et_mangal_shopping_bot", "p114": "123456789012345", "p121": "EAAG...", "p68": "/postnow", "p70": "/yatirim", "p69": "/lidedefteri", "p109": "••••", "p71": "/bolge 1..10", "p92": "Business", "p61": "lively-mouse-0c7c…/#b2bform", "p112": "@AykanEtmangal_shopping", "p93": "developers.facebook.com", "p66": "/plan", "p64": "0537 732 52 69", "p116": "aykan-wa-verify"}, "en": {"p0": "Admin Panel — Aykan Et & Mangal", "p2": "Admin Panel — enter the admin password", "p3": "🔐 Panel Login", "p4": "Aykan Et & Mangal Admin Panel", "p5": "Orders • Leads • Social — on Cloudflare D1", "p6": "📊 Dashboard", "p7": "🧾 Orders", "p8": "🎯 Leads", "p9": "💳 Card", "p10": "🏢 B2B", "p11": "🤖 AI", "p12": "🔗 Links", "p13": "🌐 Social", "p14": "Logout", "p15": "0", "p16": "🧾 Today's orders", "p17": "0", "p18": "📦 Total orders", "p19": "0", "p20": "💰 Total revenue (TL)", "p21": "510", "p22": "🎯 Registered leads", "p23": "🕒 Latest orders", "p24": "↻ Refresh", "p25": "🎯 Bank of 510 leads (Cloudflare D1)", "p26": "All categories", "p27": "0", "p28": "🆕 New request", "p29": "0", "p30": "🧾 Quoted", "p31": "0", "p32": "✅ Converted to order", "p33": "0", "p34": "⚖️ Contract kilos", "p35": "↻ Refresh", "p36": "Source: the site's «Smart Buying» form + the bot button. Flow: 🆕 New ← 🧾 Quote ← ✅ Order / ⛔ Lost.", "p37": "🤖 Smart suggestion", "p38": "🔄 Regenerate", "p39": "💾 Save quote", "p40": "✅ Confirm order", "p41": "⛔ Lost", "p42": "💬 Send quote via WhatsApp", "p43": "🤖 Smart suggestion: item prices from today's catalog + automatic volume discount (60kg←4% · 100kg←7% · 150kg←10%). 🔄 Regenerate recalculates from the latest prices.", "p44": "📈 B2B customer analytics & alerts", "p45": "0", "p46": "🎯 New AI lead", "p47": "0", "p48": "➕ Added to leads", "p49": "0", "p50": "📈 Recorded trends", "p51": "—", "p52": "🔄 Last sync", "p53": "↻ New scan", "p54": "The AI radar finds newly opened Istanbul restaurants in the news and scores them. Add them to the leads book (🎯 tab) with «➕».", "p55": "📈 Latest food trends (published on the site blog)", "p56": "💳 Business card — three final models (admin only)", "p57": "⬇️ Download card images", "p59": "🔗 Links & bot commands", "p72": "🌐 Social media — simultaneous auto-posting", "p73": "Automatic", "p74": "Connected — bot active", "p75": "Bot token (BotFather)", "p76": "Channel ID", "p77": "🔌 Test connection", "p78": "The store's current bot — no need to change. The test checks bot and channel connectivity.", "p79": "Token needed", "p80": "Permanent Access Token", "p81": "Phone Number ID", "p82": "Number to receive test/order messages (905...)", "p83": "Webhook verify token", "p84": "Auto-reply to customers", "p85": "🔌 Test connection", "p88": "Token needed", "p89": "Token (Instagram API)", "p90": "Account ID (IG User ID)", "p91": "🔌 Test connection", "p94": "Public image URL", "p95": "Token needed", "p96": "User access token", "p97": "🔌 Test connection", "p99": "Token needed", "p100": "Page Access Token", "p101": "Page ID", "p102": "🔌 Test connection", "p103": "On developers.facebook.com ← Graph API Explorer ← select your page and grant pages_manage_posts ← copy the page token. Page ID is in the page's About section.", "p104": "💾 Save all platform settings", "p105": "✍️ Send / schedule a post from the panel", "p106": "Write any text and send it simultaneously to the Telegram channel and active social platforms (e.g. a flash deal).", "p107": "🚀 Send post", "p108": "📜 Send & test log", "p110": "🔍 Search: name, area, phone, email...", "p117": "Hi! Menu & prices: ...", "p123": "🔥 Aykan's special deal of the day! ...", "p124": "Public image URL (optional — required for Instagram)", "p_menu": "🥩 Panel Menu", "d_lead": "leads", "d_now": "now", "d_h_ago": "h ago", "d_added": "➕ Added", "d_new": "🆕 New", "d_quoted": "🧾 Quote", "d_won": "✅ Order", "d_lost": "⛔ Lost", "d_sale": "🛒 Sale", "d_ok": "✅ OK", "d_err": "❌ Error", "d_wa": "💬 WhatsApp", "th_code": "Code", "th_cust": "Customer", "th_amt": "Amount", "th_items": "Items", "th_time": "Time", "th_action": "Action", "th_cat": "Category", "th_news": "News", "th_src": "Source", "th_name": "Name", "th_area": "Area", "th_status": "Status", "th_score": "Score", "th_platform": "Platform", "th_details": "Details", "th_prod": "Product", "th_last": "Last Price", "th_total": "Total", "th_firm": "Business", "th_kg": "Kg", "th_contact": "Contact", "th_web": "Web", "e_orders": "No orders yet — the first order from the Telegram bot appears here 🛒", "e_orders2": "No orders recorded yet", "e_none": "No results", "e_ai": "Customer analysis appears here with the first request 📈", "e_radar": "No candidates yet — hit the «↻ New scan» button 🤖", "e_rfq": "No requests yet — they come from the site's «Smart Buying» form or the bot button 🏢", "th_req": "Requests", "th_wr": "Win rate", "th_av": "Avg volume", "th_la": "Last activity", "a_lost": "⛔ Lost", "e_social": "No sends or tests yet", "e_trends": "No trends recorded — hit «↻ New scan»", "a_confirm": "Confirm?", "a_convert": "Convert to order? Registered in the Orders tab with a B2B code.", "a_disc": "Partner discount: ", "a_sum": "Total: ", "a_err": "Error", "a_save_err": "Save error", "a_prev": "Prev: ", "a_q_no": "Aykan Quote #", "a_sending": "⏳ Sending...", "a_testing": "⏳ Testing connection...", "a_saving": "⏳ Saving...", "a_net": "⛔ Network error", "a_radar": "⛔ Radar unavailable — try again in a few minutes", "a_no_items": "⛔ No items left", "a_need_post": "⛔ Post text and at least one platform required", "a_saved": "✅ Saved — tokens stored in the secure database", "a_order_ok": "✅ Order registered", "a_code": " — Code: ", "a_regen": "✅ Smart suggestion regenerated — prices from today's catalog + auto volume discount", "a_quote_saved": "✅ Quote saved (", "a_saved_hist": ") and saved to price history", "a_after_disc": " (after discount from ", "a_days_nobuy": " days no purchase", "a_20plus": "20+", "cats2": {"Big Restaurant": "🥩 Big Restaurant", "Ordinary Fast Food": "🍔 Fast Food & Döner", "Hotel": "🏨 Hotel", "Catering": "🍲 Catering & Factory", "Ordinary People": "👨‍👩‍👧‍👦 Family & Community", "Investment Leader": "💼 Investor"}, "p67": "/aralik N", "p120": "act....", "p118": "IGQVJ...", "p1": "AYKAN ET & MANGAL", "p63": "@AykanEtmangal_shopping", "p98": "developers.tiktok.com", "p122": "1029384756", "p60": "lively-mouse-0c7c.aykanet34.workers.dev", "p87": "https://lively-mouse-0c7c.aykanet34.workers.dev/api/wa-webhook", "p119": "1784...", "p113": "EAAG...", "p111": "123456:ABC-DEF...", "p65": "/admin 5269", "p58": "aykan_kart_final_baski.pdf", "p115": "905377325269", "p86": "business.facebook.com", "p62": "@Aykan_Et_mangal_shopping_bot", "p114": "123456789012345", "p121": "EAAG...", "p68": "/postnow", "p70": "/yatirim", "p69": "/lidedefteri", "p109": "••••", "p71": "/bolge 1..10", "p92": "Business", "p61": "lively-mouse-0c7c…/#b2bform", "p112": "@AykanEtmangal_shopping", "p93": "developers.facebook.com", "p66": "/plan", "p64": "0537 732 52 69", "p116": "aykan-wa-verify"}};
+var CUR = "tr";
+function t(k){var d=I18N[CUR]||{};if(d[k]!=null)return d[k];var f=I18N.fa[k];return f!=null?f:k}
+function applyLang(l){
+  CUR=l;
+  var rtl=(l==="fa"||l==="ar");
+  document.documentElement.lang=l;
+  document.documentElement.dir=rtl?"rtl":"ltr";
+  document.title=t("p0");
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var k=el.getAttribute("data-i18n");
+    if(el.hasAttribute("data-i18n-attr")){el.setAttribute(el.getAttribute("data-i18n-attr"),t(k));}
+    else{el.textContent=t(k);}
+  });
+  document.querySelectorAll(".dlang button").forEach(function(b){b.classList.toggle("on",b.dataset.l===l)});
+  if(typeof CATS!=="undefined"&&I18N[CUR]&&I18N[CUR].cats2){try{CATS=I18N[CUR].cats2}catch(e){}}
+  if(typeof TOK!=="undefined"&&TOK){try{loadStats();loadOrders();loadLeads();loadB2B();loadAI();}catch(e){}}
+  syncDrawer();
+}
+function setLangP(l){applyLang(l);try{localStorage.setItem("aykan_panel_lang",l)}catch(e){}}
+document.querySelectorAll(".dlang button").forEach(function(b){b.onclick=function(){setLangP(b.dataset.l)}});
+function openDrawer(){syncDrawer();document.getElementById("drawer").classList.add("open");document.getElementById("scrim").style.display="block"}
+function closeDrawer(){document.getElementById("drawer").classList.remove("open");document.getElementById("scrim").style.display="none"}
+function syncDrawer(){
+  var cur=null;
+  document.querySelectorAll("nav button").forEach(function(b){if(b.classList.contains("on"))cur=b.id.replace("tb-","")});
+  document.querySelectorAll(".drawer .dnav").forEach(function(b){
+    b.classList.toggle("on",b.getAttribute("onclick").indexOf("'"+cur+"'")>-1);
+  });
+}
+document.getElementById("hbtn").onclick=openDrawer;
+document.getElementById("scrim").onclick=closeDrawer;
+(function(){
+  var sv=null;try{sv=localStorage.getItem("aykan_panel_lang")}catch(e){}
+  applyLang(sv&&I18N[sv]?sv:"tr");
+})();
+</script>
 
 <script>
 const API = location.origin;
 let TOK = localStorage.getItem("aykan_panel_token") || "";
 let LEADS = [], ORDERS = [];
-const fa = n => Number(n || 0).toLocaleString("fa-IR");
-const en = n => Number(n || 0).toLocaleString("en-US");
+const fa = n => Number(n || 0).toLocaleString(({fa:"fa-IR",ar:"ar-EG",tr:"tr-TR",en:"en-US"})[CUR] || "tr-TR");
+const en = n => Number(n || 0).toLocaleString(({fa:"fa-IR",ar:"ar-EG",tr:"tr-TR",en:"en-US"})[CUR] || "en-US");
 const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 async function api(path, opts) {
@@ -2053,8 +2122,8 @@ async function loadStats() {
   } catch (e) {}
 }
 function orderRow(o, dash) {
-  const wa = o.phone && /^\\+?90?5/.test(o.phone.replace(/\\D/g, "").replace(/^90?/, "90")) ? '<a class="wa" href="https://wa.me/' + o.phone.replace(/\\D/g, "").replace(/^0/, "90") + '" target="_blank">💬 واتساپ</a>' : "";
-  const kind = o.kind === "b2b" ? '<span class="tag">🏢 B2B</span>' : '<span class="tag or">🛒 فروش</span>';
+  const wa = o.phone && /^\\+?90?5/.test(o.phone.replace(/\\D/g, "").replace(/^90?/, "90")) ? '<a class="wa" href="https://wa.me/' + o.phone.replace(/\\D/g, "").replace(/^0/, "90") + '" target="_blank">' + t("d_wa") + '</a>' : "";
+  const kind = o.kind === "b2b" ? '<span class="tag">🏢 B2B</span>' : '<span class="tag or">' + t("d_sale") + '</span>';
   return "<tr><td><b>" + esc(o.code || "—") + "</b><br>" + kind + "</td><td>" + esc(o.name || "—") +
     "<br><span class='mut' dir='ltr'>" + esc(o.phone || "") + "</span></td><td>" + (o.total ? "<b>" + en(o.total) + " TL</b>" : "—") +
     "</td><td class='mut'>" + esc((o.items && o.items.length ? JSON.stringify(o.items).slice(0, 80) : "") || "") +
@@ -2066,16 +2135,16 @@ async function loadOrders() {
     const d = await api("/api/orders?limit=200");
     ORDERS = d.orders || [];
     const body = ORDERS.length
-      ? "<table><tr><th>کد</th><th>مشتری</th><th>مبلغ</th><th>اقلام</th>" + (location.hash === "#dash" ? "" : "<th>زمان</th>") + "<th>اقدام</th></tr>" +
+      ? "<table><tr><th>"+t("th_code")+"</th><th>"+t("th_cust")+"</th><th>"+t("th_amt")+"</th><th>"+t("th_items")+"</th>" + (location.hash === "#dash" ? "" : "<th>"+t("th_time")+"</th>") + "<th>"+t("th_action")+"</th></tr>" +
         ORDERS.slice(0, 200).map(o => orderRow(o)).join("") + "</table>"
-      : '<div class="empty">هنوز سفارشی ثبت نشده — اولین سفارش از ربات تلگرام اینجا ظاهر می‌شود 🛒</div>';
+      : '<div class="empty">' + t("e_orders") + '</div>';
     document.getElementById("orders-body").innerHTML = body;
     document.getElementById("dash-orders").innerHTML = ORDERS.length
-      ? "<table><tr><th>کد</th><th>مشتری</th><th>مبلغ</th><th>اقلام</th><th>اقدام</th></tr>" + ORDERS.slice(0, 8).map(o => orderRow(o, true)).join("") + "</table>"
-      : '<div class="empty">هنوز سفارشی ثبت نشده است</div>';
+      ? "<table><tr><th>"+t("th_code")+"</th><th>"+t("th_cust")+"</th><th>"+t("th_amt")+"</th><th>"+t("th_items")+"</th><th>"+t("th_action")+"</th></tr>" + ORDERS.slice(0, 8).map(o => orderRow(o, true)).join("") + "</table>"
+      : '<div class="empty">' + t("e_orders2") + '</div>';
   } catch (e) {}
 }
-const CATS = { "Big Restaurant": "🥩 رستوران بزرگ", "Ordinary Fast Food": "🍔 فست‌فود و دونر", "Hotel": "🏨 هتل", "Catering": "🍲 کیترینگ و کارخانه", "Ordinary People": "👨‍👩‍👧‍👦 مجتمع و گروه محلی", "Investment Leader": "💼 سرمایه‌گذاری" };
+let CATS = (I18N[CUR] && I18N[CUR].cats2) || I18N.fa.cats2;
 async function loadLeads() {
   try {
     const d = await api("/api/data");
@@ -2089,8 +2158,8 @@ function renderLeads() {
   const q = (document.getElementById("lq").value || "").toLowerCase();
   const c = document.getElementById("lc").value;
   const rows = LEADS.filter(l => (!c || l.category === c) && (!q || (l.name + " " + l.area + " " + (l.phone || "") + " " + (l.email || "") + " " + (l.website || "")).toLowerCase().includes(q)));
-  document.getElementById("lcount").textContent = "نمایش " + fa(rows.length) + " از " + fa(LEADS.length) + " لید";
-  const head = "<tr><th>نام</th><th>دسته</th><th>منطقه</th><th>تماس</th><th>وب‌سایت</th><th>امتیاز</th></tr>";
+  document.getElementById("lcount").textContent = fa(rows.length) + " / " + fa(LEADS.length) + " " + t("d_lead");
+  const head = "<tr><th>"+t("th_name")+"</th><th>"+t("th_cat")+"</th><th>"+t("th_area")+"</th><th>"+t("th_contact")+"</th><th>"+t("th_web")+"</th><th>"+t("th_score")+"</th></tr>";
   const body = rows.slice(0, 120).map(l => {
     const dig = (l.phone || "").replace(/\\D/g, "");
     const wa = dig.startsWith("5") || dig.startsWith("905") ? '<a class="wa" href="https://wa.me/' + (dig.startsWith("905") ? dig : "90" + dig.replace(/^0/, "")) + '">💬</a>' : "";
@@ -2099,7 +2168,7 @@ function renderLeads() {
       "<td class='mut' dir='ltr'>" + (l.website ? '<a href="' + esc(l.website) + '" target="_blank" style="color:#f2833a">' + esc(String(l.website).replace(/^https?:\\/\\//, "")).slice(0, 28) + "</a>" : "—") +
       "</td><td><span class='tag or'>" + fa(l.opportunity) + "</span></td></tr>";
   }).join("");
-  document.getElementById("ltable").innerHTML = head + (body || '<tr><td colspan="6" class="empty">موردی یافت نشد</td></tr>');
+  document.getElementById("ltable").innerHTML = head + (body || '<tr><td colspan="6" class="empty">' + t("e_none") + '</td></tr>');
 }
 let SOC = {};
 const SO_FIELDS = ["token", "channel", "phone_id", "to", "verify_token", "autoreply", "user_id", "page_id"];
@@ -2120,12 +2189,12 @@ async function loadSocial() {
     });
     const log = d.posts || [];
     document.getElementById("so-log").innerHTML = log.length
-      ? "<tr><th>زمان</th><th>پلتفرم</th><th>وضعیت</th><th>جزئیات</th></tr>" + log.map(function(r) {
+      ? "<tr><th>" + t("th_time") + "</th><th>" + t("th_platform") + "</th><th>" + t("th_status") + "</th><th>" + t("th_details") + "</th></tr>" + log.map(function(r) {
           return "<tr><td class='mut' dir='ltr'>" + esc(r.created_at) + "</td><td><span class='tag or'>" + esc(r.platform) + "</span></td><td>" +
-            (r.ok ? "<span class='tag gr'>✅ موفق</span>" : "<span class='tag' style='border-color:#ef4444;color:#f87171'>❌ خطا</span>") +
+            (r.ok ? "<span class='tag gr'>" + t("d_ok") + "</span>" : "<span class='tag' style='border-color:#ef4444;color:#f87171'>" + t("d_err") + "</span>") +
             "</td><td class='mut'>" + esc(r.detail) + "</td></tr>";
         }).join("")
-      : "<tr><td colspan='4' class='empty'>هنوز ارسال یا تستی ثبت نشده</td></tr>";
+      : "<tr><td colspan='4' class='empty'>" + t("e_social") + "</td></tr>";
   } catch (e) {}
 }
 function collectSocial() {
@@ -2144,17 +2213,17 @@ function collectSocial() {
 }
 async function saveSocial() {
   const st = document.getElementById("so-save-st");
-  st.textContent = "⏳ در حال ذخیره...";
+  st.textContent = t("a_saving");
   try {
     const r = await fetch(API + "/api/social", { method: "POST", headers: { authorization: "Bearer " + TOK, "content-type": "application/json" }, body: JSON.stringify(collectSocial()) });
     const d = await r.json();
-    st.textContent = d.ok ? "✅ ذخیره شد — توکن‌ها در دیتابیس امن ذخیره شدند" : "⛔ " + (d.error || "خطا در ذخیره");
+    st.textContent = d.ok ? t("a_saved") : "⛔ " + (d.error || t("a_save_err"));
     loadSocial();
-  } catch (e) { st.textContent = "⛔ خطای شبکه"; }
+  } catch (e) { st.textContent = t("a_net"); }
 }
 async function testSocial(p) {
   const st = document.getElementById("so-" + p + "-st");
-  st.textContent = "⏳ در حال تست اتصال...";
+  st.textContent = t("a_testing");
   st.style.color = "var(--mut)";
   try {
     const r = await fetch(API + "/api/social/test", { method: "POST", headers: { authorization: "Bearer " + TOK, "content-type": "application/json" }, body: JSON.stringify({ platform: p }) });
@@ -2162,15 +2231,15 @@ async function testSocial(p) {
     st.textContent = (d.ok ? "✅ " : "⛔ ") + (d.detail || "");
     st.style.color = d.ok ? "var(--gr)" : "#f87171";
     loadSocial();
-  } catch (e) { st.textContent = "⛔ خطای شبکه"; st.style.color = "#f87171"; }
+  } catch (e) { st.textContent = t("a_net"); st.style.color = "#f87171"; }
 }
 async function sendSocial() {
   const st = document.getElementById("so-send-st");
   const plats = ["tg", "wa", "ig", "fb", "tt"].filter(function(p) { return document.getElementById("sp-" + p) && document.getElementById("sp-" + p).checked; });
   const text = document.getElementById("so-text").value.trim();
   const img = document.getElementById("so-img").value.trim();
-  if (!plats.length || !text) { st.textContent = "⛔ متن پست و حداقل یک پلتفرم لازم است"; st.style.color = "#f87171"; return; }
-  st.textContent = "⏳ در حال ارسال...";
+  if (!plats.length || !text) { st.textContent = t("a_need_post"); st.style.color = "#f87171"; return; }
+  st.textContent = t("a_sending");
   st.style.color = "var(--mut)";
   try {
     const r = await fetch(API + "/api/social/send", { method: "POST", headers: { authorization: "Bearer " + TOK, "content-type": "application/json" }, body: JSON.stringify({ text: text, image_url: img, platforms: plats }) });
@@ -2180,7 +2249,7 @@ async function sendSocial() {
       return (res[p] && res[p].ok ? "✅ " : "⛔ ") + p + ": " + (res[p] ? esc(res[p].detail) : "—");
     }).join("<br>");
     loadSocial();
-  } catch (e) { st.textContent = "⛔ خطای شبکه"; st.style.color = "#f87171"; }
+  } catch (e) { st.textContent = t("a_net"); st.style.color = "#f87171"; }
 }
 // ─── AI رادار: لید + ترند ───
 let AID = { aiLeads: [], trends: [], lastSync: 0 };
@@ -2191,21 +2260,21 @@ function renderAI() {
   const L = AID.aiLeads || [];
   document.getElementById("ai-new").textContent = fa(L.filter(x => x.status === "new").length);
   document.getElementById("ai-added").textContent = fa(L.filter(x => x.status === "added").length);
-  document.getElementById("ai-trends").textContent = fa((AID.trends || []).length >= 20 ? "۲۰+" : (AID.trends || []).length);
+  document.getElementById("ai-trends").textContent = ((AID.trends || []).length >= 20 ? t("a_20plus") : fa((AID.trends || []).length));
   const ago = AID.lastSync ? Math.round((Date.now() - AID.lastSync) / 3600000) : 0;
-  document.getElementById("ai-sync").textContent = AID.lastSync ? (ago < 1 ? "الان" : fa(ago) + " ساعت پیش") : "—";
-  const head = "<tr><th>امتیاز</th><th>نام</th><th>منطقه</th><th>منبع</th><th>وضعیت</th><th></th></tr>";
+  document.getElementById("ai-sync").textContent = AID.lastSync ? (ago < 1 ? t("d_now") : fa(ago) + t("d_h_ago")) : "—";
+  const head = "<tr><th>"+t("th_score")+"</th><th>"+t("th_name")+"</th><th>"+t("th_area")+"</th><th>"+t("th_src")+"</th><th>"+t("th_status")+"</th><th></th></tr>";
   const rows = L.slice(0, 60).map(r => {
-    const st = r.status === "added" ? '<span class="tag gr">➕ افزوده</span>' : '<span class="tag">🆕 جدید</span>';
+    const st = r.status === "added" ? '<span class="tag gr">' + t("d_added") + '</span>' : '<span class="tag">' + t("d_new") + '</span>';
     const act = r.status === "added" ? "" : "<button class='refresh' onclick='convertAI(" + r.id + ")'>➕</button>";
     return "<tr><td><b>" + fa(r.score) + "</b></td><td><b>" + esc(r.name) + "</b><br><span class='mut' style='font-size:11px'>" + esc(String(r.title || "").slice(0, 60)) + "</span></td><td>" + esc(r.area) +
       "</td><td class='mut' dir='ltr'><a href='" + esc(r.url) + "' target='_blank' style='color:#f2833a'>" + esc(r.source) + " ↗</a></td><td>" + st + "</td><td>" + act + "</td></tr>";
   }).join("");
-  document.getElementById("aitable").innerHTML = head + (rows || '<tr><td colspan="6" class="empty">هنوز کاندیدایی پیدا نشده — دکمه «↻ اسکن جدید» را بزنید 🤖</td></tr>');
+  document.getElementById("aitable").innerHTML = head + (rows || '<tr><td colspan="6" class="empty">' + t("e_radar") + '</td></tr>');
   const T = AID.trends || [];
   document.getElementById("aitrends").innerHTML = T.length
-    ? "<table><tr><th>دسته</th><th>خبر</th><th>منبع</th></tr>" + T.map(t => "<tr><td><span class='tag or'>" + esc(t.category || "📡") + "</span></td><td><a href='" + esc(t.url) + "' target='_blank' style='color:#f5efe9'>" + esc(String(t.title).slice(0, 90)) + " ↗</a></td><td class='mut' dir='ltr'>" + esc(t.source) + "</td></tr>").join("") + "</table>"
-    : '<div class="empty">ترندی ثبت نشده — «↻ اسکن جدید» را بزنید</div>';
+    ? "<table><tr><th>" + t("th_cat") + "</th><th>" + t("th_news") + "</th><th>" + t("th_src") + "</th></tr>" + T.map(t => "<tr><td><span class='tag or'>" + esc(t.category || "📡") + "</span></td><td><a href='" + esc(t.url) + "' target='_blank' style='color:#f5efe9'>" + esc(String(t.title).slice(0, 90)) + " ↗</a></td><td class='mut' dir='ltr'>" + esc(t.source) + "</td></tr>").join("") + "</table>"
+    : '<div class="empty">' + t("e_trends") + '</div>';
 }
 async function convertAI(id) {
   try { const d = await b2post({ action: "convert", id: id }); if (d.ok) { loadAI(); loadLeads(); } } catch (e) {}
@@ -2213,8 +2282,8 @@ async function convertAI(id) {
 async function radarRefresh() {
   try {
     const d = await b2post({ action: "refresh" });
-    if (d.ok) { await loadAI(); } else { alert("⛔ رادار در دسترس نیست — چند دقیقه بعد دوباره"); }
-  } catch (e) { alert("⛔ خطای شبکه"); }
+    if (d.ok) { await loadAI(); } else { alert(t("a_radar")); }
+  } catch (e) { alert(t("a_net")); }
 }
 // ─── B2B: صندوق RFQ + پیش‌فاکتور هوشمند ───
 let B2B = { requests: [], firms: [], prices: [], catalog: [] }, B2SEL = null, QITEMS = [];
@@ -2227,8 +2296,8 @@ async function b2post(body) {
   return r.json();
 }
 function b2badge(st) {
-  return { new: '<span class="tag">🆕 جدید</span>', quoted: '<span class="tag or">🧾 پیش‌فاکتور</span>',
-    won: '<span class="tag gr">✅ سفارش</span>', lost: '<span class="tag" style="opacity:.5">⛔ رد</span>' }[st] || esc(st);
+  return { new: '<span class="tag">' + t("d_new") + '</span>', quoted: '<span class="tag or">' + t("d_quoted") + '</span>',
+    won: '<span class="tag gr">' + t("d_won") + '</span>', lost: '<span class="tag" style="opacity:.5">' + t("d_lost") + '</span>' }[st] || esc(st);
 }
 function b2items(r) { try { return JSON.parse(r.items || "[]"); } catch (e) { return []; } }
 function daysSince(ts) { try { return Math.max(0, Math.floor((Date.now() - new Date(String(ts).replace(" ", "T") + "Z").getTime()) / 86400000)); } catch (e) { return 0; } }
@@ -2243,7 +2312,7 @@ function renderB2B() {
   document.getElementById("b2-quoted").textContent = fa(R.filter(r => r.status === "quoted").length);
   document.getElementById("b2-won").textContent = fa(R.filter(r => r.status === "won").length);
   document.getElementById("b2-kg").textContent = fa(Math.round(R.filter(r => r.status === "won").reduce((a, r) => a + Number(r.total_kg || 0), 0)));
-  const head = "<tr><th>#</th><th>زمان</th><th>مجموعه</th><th>اقلام</th><th>کیلو</th><th>تخمین ₺</th><th>وضعیت</th><th></th></tr>";
+  const head = "<tr><th>#</th><th>"+t("th_time")+"</th><th>"+t("th_firm")+"</th><th>"+t("th_items")+"</th><th>"+t("th_kg")+"</th><th>₺</th><th>"+t("th_status")+"</th><th></th></tr>";
   const rows = R.map(r => {
     const its = b2items(r);
     const wn = waNum(r.phone);
@@ -2254,17 +2323,17 @@ function renderB2B() {
       "</td><td>" + fa(r.total_kg) + "</td><td>" + en(r.est_total) + "</td><td>" + b2badge(r.status) +
       "</td><td><button class='refresh' onclick='openQuote(" + r.id + ")'>🧾</button></td></tr>";
   }).join("");
-  document.getElementById("b2table").innerHTML = head + (rows || '<tr><td colspan="8" class="empty">هنوز درخواستی ثبت نشده — از فرم «خرید هوشمند» سایت یا دکمه‌ی ربات می‌آید 🏢</td></tr>');
+  document.getElementById("b2table").innerHTML = head + (rows || '<tr><td colspan="8" class="empty">' + t("e_rfq") + '</td></tr>');
   const F = B2B.firms || [];
   const frows = F.map(f => {
     const d = daysSince(f.last);
-    const alert = (f.won > 0 && d > 14) ? ' <span class="tag" style="border-color:var(--red);color:var(--red)">⚠️ ' + fa(d) + ' روز بی‌خرید</span>' : "";
+    const alert = (f.won > 0 && d > 14) ? ' <span class="tag" style="border-color:var(--red);color:var(--red)">⚠️ ' + fa(d) + '' + t("a_days_nobuy") + '</span>' : "";
     const rate = f.n ? Math.round(100 * f.won / f.n) : 0;
     return "<tr><td><b>" + esc(f.firm || "—") + "</b>" + alert + "</td><td>" + fa(f.n) + "</td><td>" + fa(f.won) + " (" + fa(rate) + "٪)</td><td>" + fa(f.n ? Math.round(f.kg / f.n) : 0) + " kg</td><td class='mut' dir='ltr'>" + esc(String(f.last || "").slice(5, 16)) + "</td></tr>";
   }).join("");
   document.getElementById("b2firms").innerHTML = F.length
-    ? "<table><tr><th>مجموعه</th><th>درخواست</th><th>نرخ برد</th><th>میانگین حجم</th><th>آخرین فعالیت</th></tr>" + frows + "</table>"
-    : '<div class="empty">با اولین درخواست، تحلیل مشتریان اینجا ساخته می‌شود 📈</div>';
+    ? "<table><tr><th>"+t("th_firm")+"</th><th>"+t("th_req")+"</th><th>"+t("th_wr")+"</th><th>"+t("th_av")+"</th><th>"+t("th_la")+"</th></tr>" + frows + "</table>"
+    : '<div class="empty">' + t("e_ai") + '</div>';
 }
 function openQuote(id) {
   B2SEL = (B2B.requests || []).find(r => r.id === id); if (!B2SEL) return;
@@ -2293,7 +2362,7 @@ function smartQuote(notify) {
   const kg = QITEMS.reduce((a, x) => a + x.qty, 0);
   document.getElementById("b2q-disc").value = kg >= 150 ? 10 : kg >= 100 ? 7 : kg >= 60 ? 4 : 0;
   renderQ();
-  if (notify) document.getElementById("b2q-st").textContent = "✅ پیشنهاد هوشمند بازتولید شد — قیمت‌ها از کاتالوگ روز + تخفیف حجمی خودکار";
+  if (notify) document.getElementById("b2q-st").textContent = t("a_regen");
 }
 const QIN = "padding:7px 9px;border-radius:9px;border:1px solid var(--bd);background:rgba(0,0,0,.35);color:var(--tx);font-family:inherit;font-size:12.5px;outline:none;width:100%;min-width:60px";
 function renderQ() {
@@ -2305,17 +2374,17 @@ function renderQ() {
     return "<tr><td><input data-i='" + i + "' data-k='name' class='qin' value='" + esc(it.name) + "' style='" + QIN + ";min-width:130px'></td>" +
       "<td><input type='number' min='0' step='0.5' data-i='" + i + "' data-k='qty' class='qin' value='" + it.qty + "' style='" + QIN + "'></td>" +
       "<td><input type='number' min='0' data-i='" + i + "' data-k='price' class='qin' value='" + it.price + "' style='" + QIN + "'></td>" +
-      "<td class='mut'>" + (lp != null && Math.abs(lp - (it.price || 0)) > 0.01 ? "قبلی: " + en(lp) : "—") + "</td>" +
+      "<td class='mut'>" + (lp != null && Math.abs(lp - (it.price || 0)) > 0.01 ? t("a_prev") + en(lp) : "—") + "</td>" +
       "<td><b>" + en(Math.round(line)) + "</b></td></tr>";
   }).join("");
-  document.getElementById("b2q-items").innerHTML = "<tr><th>محصول</th><th>kg</th><th>₺/kg</th><th>آخرین قیمت</th><th>جمع</th></tr>" + rows;
+  document.getElementById("b2q-items").innerHTML = "<tr><th>"+t("th_prod")+"</th><th>kg</th><th>₺/kg</th><th>"+t("th_last")+"</th><th>"+t("th_total")+"</th></tr>" + rows;
   const total = Math.round(gross * (1 - disc / 100));
-  document.getElementById("b2q-total").textContent = "جمع: " + en(total) + " ₺" + (disc ? " (پس از تخفیف از " + en(Math.round(gross)) + ")" : "");
+  document.getElementById("b2q-total").textContent = t("a_sum") + en(total) + " ₺" + (disc ? t("a_after_disc") + en(Math.round(gross)) + ")" : "");
   const NL = String.fromCharCode(10);
-  let msg = "پیش‌فاکتور آیکان #" + (B2SEL ? B2SEL.id : "") + ":" + NL;
+  let msg = t("a_q_no") + (B2SEL ? B2SEL.id : "") + ":" + NL;
   QITEMS.forEach(it => { if (it.qty > 0) msg += "• " + it.name + " — " + it.qty + " kg × " + it.price + " TL" + NL; });
-  if (disc) msg += "تخفیف همکار: " + disc + "٪" + NL;
-  msg += "جمع: " + total + " TL" + NL + "تأیید می‌کنید؟";
+  if (disc) msg += t("a_disc") + disc + "٪" + NL;
+  msg += t("a_sum") + total + " TL" + NL + t("a_confirm");
   const wn = B2SEL ? waNum(B2SEL.phone) : "";
   document.getElementById("b2q-wa").href = wn ? "https://wa.me/" + wn + "?text=" + encodeURIComponent(msg) : "#";
 }
@@ -2331,25 +2400,25 @@ async function saveQuote() {
   if (!B2SEL) return;
   const disc = parseFloat(document.getElementById("b2q-disc").value) || 0;
   const items = QITEMS.filter(x => x.qty > 0);
-  if (!items.length) { document.getElementById("b2q-st").textContent = "⛔ قلمی نمانده است"; return; }
+  if (!items.length) { document.getElementById("b2q-st").textContent = t("a_no_items"); return; }
   try {
     const d = await b2post({ id: B2SEL.id, action: "quote", quote: { items: items, discount: disc, firm: B2SEL.firm } });
-    document.getElementById("b2q-st").textContent = d.ok ? "✅ پیش‌فاکتور ذخیره شد (" + en(d.total) + " TL) و در تاریخچه قیمت ثبت شد" : "⛔ " + (d.error || "خطا");
+    document.getElementById("b2q-st").textContent = d.ok ? t("a_quote_saved") + en(d.total) + " TL" + t("a_saved_hist") : "⛔ " + (d.error || "خطا");
     loadB2B();
-  } catch (e) { document.getElementById("b2q-st").textContent = "⛔ خطای شبکه"; }
+  } catch (e) { document.getElementById("b2q-st").textContent = t("a_net"); }
 }
 async function markWon() {
   if (!B2SEL) return;
-  if (!confirm("تبدیل به سفارش؟ در تب سفارش‌ها با کد B2B ثبت می‌شود.")) return;
+  if (!confirm(t("a_convert"))) return;
   try {
     const d = await b2post({ id: B2SEL.id, action: "won" });
-    document.getElementById("b2q-st").textContent = d.ok ? "✅ سفارش ثبت شد" + (d.code ? " — کد: " + d.code : "") : "⛔ " + (d.error || "خطا");
+    document.getElementById("b2q-st").textContent = d.ok ? t("a_order_ok") + (d.code ? t("a_code") + d.code : "") : "⛔ " + (d.error || "خطا");
     loadB2B(); loadOrders(); loadStats();
   } catch (e) {}
 }
 async function markLost() {
   if (!B2SEL) return;
-  try { await b2post({ id: B2SEL.id, action: "lost" }); document.getElementById("b2q-st").textContent = "⛔ از دست رفت"; loadB2B(); } catch (e) {}
+  try { await b2post({ id: B2SEL.id, action: "lost" }); document.getElementById("b2q-st").textContent = t("a_lost"); loadB2B(); } catch (e) {}
 }
 if (TOK) startApp();
 </script>
