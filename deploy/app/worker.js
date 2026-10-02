@@ -703,7 +703,7 @@ async function handleAdminCommand(env, cid, text) {
     var rsy2 = (lastR && Date.now() - lastR < 10800000) ? { newTrends: 0, newLeads: 0, fetchedTrends: 0, fetchedLeads: 0, fresh: true } : await aiRadarSync(env);
     var trows = [];
     try { trows = (await env.DB.prepare("SELECT category, title, source FROM trend_news ORDER BY id DESC LIMIT 5").all()).results || []; } catch (e) {}
-    var tm = "📡 AYKAN RADAR — SON TRENDLER:\n\n";
+    var tm = "📡 رادار آیکان — آخرین ترندها:\n\n";
     trows.forEach(function (r) { tm += r.category + " | " + String(r.title).slice(0, 70) + " (" + r.source + ")\n"; });
     tm += "\n📊 این دور: " + rsy2.fetchedTrends + " ترند اسکن → " + rsy2.newTrends + " جدید\n🌐 بلاگ سایت هم به‌روز شد.";
     await send(env, cid, tm);
@@ -714,7 +714,7 @@ async function handleAdminCommand(env, cid, text) {
     var rsy3 = (lastR3 && Date.now() - lastR3 < 10800000) ? { newTrends: 0, newLeads: 0, fetchedTrends: 0, fetchedLeads: 0, fresh: true } : await aiRadarSync(env);
     var lrows = [];
     try { lrows = (await env.DB.prepare("SELECT name, area, score, source FROM ai_leads WHERE status='new' ORDER BY score DESC, id DESC LIMIT 8").all()).results || []; } catch (e) {}
-    var lm = "🎯 AYKAN RADAR — YENİ RESTORAN LİDLERİ:\n\n";
+    var lm = "🎯 رادار آیکان — لیدهای جدید رستوران‌ها:\n\n";
     lrows.forEach(function (r) { lm += "• " + r.score + " | " + String(r.name).slice(0, 40) + " | " + r.area + " (" + r.source + ")\n"; });
     lm += "\n📊 این دور: " + rsy3.fetchedLeads + " کاندیدا → " + rsy3.newLeads + " جدید\n➕ ثبت در پنل → تب 🤖 AI";
     await send(env, cid, lm);
