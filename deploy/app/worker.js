@@ -600,6 +600,8 @@ async function finalizeOrder(env, cid, c, lang) {
             String(o.note || "").slice(0, 300), JSON.stringify(cart), lang, String(cid).slice(0, 30), "tgbot").run();
   } catch (e) {}
   statBump(env, "order");
+  var _ih = istanbulNow();
+  if (_ih.hh >= 23 || _ih.hh < 8) summary += "\n\n🌙 " + L(lang, "Şu an mesai dışındayız (08:00–22:30) — siparişiniz sabah 08:00'de ilk sıradan hazırlanır.", "We are currently closed (08:00–22:30) — your order is first in line at 08:00.", "اکنون خارج از ساعت کاری هستیم (۰۸:۰۰–۲۲:۳۰) — سفارش شما ساعت ۰۸:۰۰ صبح در اولین نوبت آماده می‌شود.");
   summary += "\n\n📋 " + L(lang, "Kodu saklayın — /siparislerim ile takip edebilirsiniz.", "Keep this code — track it with /siparislerim.", "کد را نگه دارید — با /siparislerim پیگیری کنید.");
   c.cart = {}; c.order = {}; c.mode = null; c.rate_open = code;
   await saveChat(env, cid, c);
@@ -825,6 +827,7 @@ async function handleUpdate(env, u) {
     }
   } catch (e) {}
   await loadShopState(env);
+  try { var _tcid = u.message ? u.message.chat.id : (u.callback_query ? u.callback_query.message.chat.id : 0); if (_tcid) { var _t = await getToken(env); if (_t) fetch("https://api.telegram.org/bot" + _t + "/sendChatAction", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ chat_id: _tcid, action: "typing" }) }).catch(function () {}); } } catch (e) {}
   if (u.callback_query) {
     var cb = u.callback_query;
     var cid2 = String(cb.message.chat.id);
@@ -939,6 +942,7 @@ async function handleUpdate(env, u) {
     var fresh = !c.lang;
     if (fresh) { c.lang = lang; await saveChat(env, cid, c); }
     statBump(env, "start");
+    if (fresh) { try { await tg(env, "sendPhoto", { chat_id: +cid, photo: SITE_URL + "/assets/img0.jpg", caption: "🥩 AYKAN ET & MANGAL — " + L(lang, "Taze her sabah, tartı garantili 🔥", "Fresh every morning, weight-guaranteed 🔥", "هر صبح تازه، با تضمین وزن 🔥") }); } catch (e) {} }
     await send(env, +cid, greet(lang) + "\n\n" + tx(lang, "welcome", first) + (fresh ? "\n\n🌐 " + (DATA.LANG_NAMES[lang] || "") + " ▾" : ""), fresh ? kbLang() : kbMain(lang));
     var dl = text.split(" ")[1] || "";
     if (dl.indexOf("ref_") === 0) {
@@ -1007,11 +1011,68 @@ async function handleUpdate(env, u) {
       "👥 DAVET SİSTEMİ\n\nDavet ettiğiniz: " + mr + " kişi\n\n🔗 Davet linkiniz:\n" + BOT_URL + "?start=ref_" + cid,
       "👥 REFERRALS\n\nInvited friends: " + mr + "\n\n🔗 Your invite link:\n" + BOT_URL + "?start=ref_" + cid,
       "👥 سیستم دعوت\n\nدعوت‌شده‌ها: " + mr + " نفر\n\n🔗 لینک دعوت شما:\n" + BOT_URL + "?start=ref_" + cid), kbMain(lang));
+  } else if (low.indexOf("/paylas") === 0 || low.indexOf("/share") === 0) {
+    await send(env, +cid, L(lang,
+      "📤 AYKAN ET & MANGAL'ı paylaşın:\n\n🥩 Günlük taze kesim • %100 helal\n⚖️ 1 kg çiğ tartılır, pişmiş teslim\n🚚 Aynı gün teslimat\n\nArkadaşlarınızı davet edin — /referansim ile davet linkinizi alın!",
+      "📤 Share AYKAN ET & MANGAL:\n\n🥩 Fresh daily cuts • 100% halal\n⚖️ 1 kg raw weighed, cooked delivered\n🚚 Same-day delivery\n\nInvite friends — get your link with /referansim!",
+      "📤 آیکان ات و منگال را به اشتراک بگذارید:\n\n🥩 برش تازه روزانه • ۱۰۰٪ حلال\n⚖️ ۱ کیلو چیغ وزن، پخته تحویل\n🚚 تحویل همان روز\n\nدوستان را دعوت کنید — لینک دعوت شما: /referansim"),
+      [[{ text: "📤 " + L(lang, "Telegram'da Paylaş", "Share on Telegram", "در تلگرام به اشتراک بگذارید"), url: "https://t.me/share/url?url=" + encodeURIComponent(BOT_URL) + "&text=" + encodeURIComponent("🥩 Aykan Et & Mangal — taze et, hazır mangal paketleri!") }, { text: "💬 WhatsApp", url: "https://wa.me/?text=" + encodeURIComponent("🥩 Aykan Et & Mangal — taze et, hazır mangal paketleri! " + BOT_URL) }], [{ text: tx(lang, "home"), callback_data: "home" }]]);
   } else if (low.indexOf("/sube") === 0) {
     await send(env, +cid, tx(lang, "sube"), kbMain(lang));
   } else {
-    await send(env, +cid, tx(lang, "fallback", first), kbMain(lang));
+    await send(env, +cid, tx(lang, "unknown", first), kbMain(lang));
   }
+}
+
+
+// ─── مهارت ۱: منوی دستورات تلگرام (سه‌زبانه) ───
+async function setMyCommands(env) {
+  var tok = await getToken(env);
+  if (!tok) return;
+  var base = [
+    { command: "start", description: "🥩 Ana menü — 主菜单" },
+    { command: "menu", description: "🥩 Menü & fiyatlar" },
+    { command: "sepet", description: "🛒 Sepetim" },
+    { command: "siparislerim", description: "📦 Siparişlerim" },
+    { command: "b2b", description: "🏢 Toptan (B2B)" },
+    { command: "gununfiyati", description: "🔥 Günün fırsatı" },
+    { command: "teslimat", description: "🚚 Teslimat bölgeleri" },
+    { command: "odeme", description: "💵 Ödeme & teslim" },
+    { command: "sube", description: "📍 Şubeler" },
+    { command: "oneri", description: "💡 Öneri / şikayet" },
+    { command: "lang", description: "🌐 Dil / Language" }
+  ];
+  var loc = {
+    tr: base,
+    en: [
+      { command: "start", description: "🥩 Main menu" },
+      { command: "menu", description: "🥩 Menu & prices" },
+      { command: "sepet", description: "🛒 My cart" },
+      { command: "siparislerim", description: "📦 My orders" },
+      { command: "b2b", description: "🏢 Wholesale (B2B)" },
+      { command: "gununfiyati", description: "🔥 Today's special" },
+      { command: "teslimat", description: "🚚 Delivery areas" },
+      { command: "odeme", description: "💵 Payment & delivery" },
+      { command: "sube", description: "📍 Branches" },
+      { command: "oneri", description: "💡 Suggest / complain" },
+      { command: "lang", description: "🌐 Language" }
+    ],
+    ar: [
+      { command: "start", description: "🥩 القائمة الرئيسية" },
+      { command: "menu", description: "🥩 القائمة والأسعار" },
+      { command: "sepet", description: "🛒 سلتي" },
+      { command: "siparislerim", description: "📦 طلباتي" },
+      { command: "b2b", description: "🏢 الجملة (B2B)" },
+      { command: "gununfiyati", description: "🔥 عرض اليوم" },
+      { command: "teslimat", description: "🚚 مناطق التوصيل" },
+      { command: "odeme", description: "💵 الدفع والتوصيل" },
+      { command: "sube", description: "📍 الفروع" },
+      { command: "oneri", description: "💡 اقتراح / شكوى" },
+      { command: "lang", description: "🌐 اللغة" }
+    ]
+  };
+  try { await tg(env, "setMyCommands", { commands: base }); } catch (e) {}
+  for (var lc in loc) { try { await tg(env, "setMyCommands", { commands: loc[lc], language_code: lc }); } catch (e) {} }
 }
 
 // ---------- زمان استانبول ----------
@@ -1124,7 +1185,7 @@ async function ensureWebhook(env) {
   if (!tok) return { ok: false, detail: "no-token" };
   try {
     var info = await (await fetch("https://api.telegram.org/bot" + tok + "/getWebhookInfo")).json();
-    if (info.ok && info.result.url === HOOK_URL) return { ok: true, detail: "already" };
+    if (info.ok && info.result.url === HOOK_URL) { try { await setMyCommands(env); } catch (e) {} return { ok: true, detail: "already" }; }
     var r = await (await fetch("https://api.telegram.org/bot" + tok + "/setWebhook", {
       method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({ url: HOOK_URL, secret_token: HOOK_SECRET, allowed_updates: ["message", "callback_query"], drop_pending_updates: false })
@@ -1305,8 +1366,13 @@ async function testPlatform(c, plat) {
     if (plat === "tg") {
       if (!c.tg || !c.tg.token) return { ok: false, detail: "توکن ربات تنظیم نشده" };
       const me = await (await fetch("https://api.telegram.org/bot" + c.tg.token + "/getMe")).json();
+      if (!me.ok) {
+        if (me.error_code === 401) return { ok: false, detail: "توکن باطل شده (Unauthorized) — توکن تازه را فقط از BotFather (پیام API Token) بردارید و در صفحه /bot بچسبانید. دکمه Revoke را نزنید." };
+        return { ok: false, detail: "⛔ ربات: " + (me.description || "خطا") };
+      }
       const ch = await (await fetch("https://api.telegram.org/bot" + c.tg.token + "/getChat?chat_id=" + encodeURIComponent(c.tg.channel || "")).catch(() => ({ ok: false, json: async () => ({}) }))).json().catch(() => ({}));
-      return (me.ok && ch.ok) ? { ok: true, detail: "@" + me.result.username + " \u2192 \u0627\u0631\u062a\u0628\u0627\u0637 \u0628\u0627 \u06a9\u0627\u0646\u0627\u0644 \u00ab" + (ch.result && ch.result.title ? ch.result.title : c.tg.channel) + "\u00bb \u0628\u0631\u0642\u0631\u0627\u0631 \u0634\u062f" } : { ok: false, detail: "\u062e\u0637\u0627: " + ((ch && ch.description) || (me && me.description) || "bot/channel") };
+      if (!ch.ok) return { ok: false, detail: "✅ ربات @" + me.result.username + " زنده است اما کانال در دسترس نیست (" + (ch.description || "chat not found") + ") — ربات را ادمین کانال کنید و شناسه کانال را درست وارد کنید." };
+      return { ok: true, detail: "@" + me.result.username + " → اتصال با کانال «" + (ch.result && ch.result.title ? ch.result.title : c.tg.channel) + "» برقرار شد" };
     }
     if (plat === "wa") {
       if (!c.wa || !c.wa.token || !c.wa.phone_id) return { ok: false, detail: "token \u06cc phone_id \u062a\u0646\u0638\u06cc\u0645 \u0646\u0634\u062f\u0647" };
@@ -1400,6 +1466,7 @@ async function panelApi(request, env, path) {
     const cur = await getSocialCfg(env);
     cur.tg = cur.tg || {};
     cur.tg.token = token;
+    try { } catch (e) {}
     cur.tg.enabled = true;
     if (!cur.tg.channel) cur.tg.channel = "@AykanEtmangal_shopping";
     await saveSocialCfg(env, cur);
@@ -1407,6 +1474,7 @@ async function panelApi(request, env, path) {
     try {
       hook = await (await fetch("https://api.telegram.org/bot" + token + "/setWebhook", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: SITE_URL + "/hook-" + HOOK_SECRET, secret_token: HOOK_SECRET, allowed_updates: ["message", "callback_query"], drop_pending_updates: false }) })).json();
     } catch (e) {}
+    try { await setMyCommands(env); } catch (e) {}
     return json({ ok: true, bot: me.result.username, name: me.result.first_name, webhook: !!(hook && hook.ok) });
   }
   if (path === "/robots.txt") return new Response("User-agent: *\nDisallow: /\n", { headers: { "content-type": "text/plain" } });
@@ -1487,6 +1555,7 @@ async function panelApi(request, env, path) {
 
   // ---- B2B: RFQ inbox (list) ----
   if (path === "/api/b2b" && request.method === "GET") {
+    if (!authed) return json({ ok: false, error: "unauthorized" }, 401);
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS b2b_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), firm TEXT, phone TEXT, addr TEXT, items TEXT, total_kg REAL, est_total REAL, status TEXT DEFAULT 'new', quote TEXT, note TEXT)").run();
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS b2b_price_history (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), product TEXT, price REAL, firm TEXT)").run();
     const rq = await env.DB.prepare("SELECT * FROM b2b_requests ORDER BY id DESC LIMIT 300").all();
@@ -1504,6 +1573,7 @@ async function panelApi(request, env, path) {
   }
   // ---- B2B: actions (quote / won / lost) ----
   if (path === "/api/b2b" && request.method === "POST") {
+    if (!authed) return json({ ok: false, error: "unauthorized" }, 401);
     let b = {}; try { b = await request.json(); } catch (e) {}
     const id = parseInt(b.id, 10) || 0;
     const act = String(b.action || "");
@@ -1649,6 +1719,55 @@ async function panelApi(request, env, path) {
   }
 
 
+
+  // ---- sync: export/import (main <-> backup) ----
+  if (path === "/api/sync/export") {
+    const out = { ok: true, ts: Date.now(), orders: [], leads: [], b2b: [], ai: [], trends: [] };
+    try { out.orders = (await env.DB.prepare("SELECT * FROM orders ORDER BY id").all()).results || []; } catch (e) {}
+    try { out.leads = (await env.DB.prepare("SELECT num, data FROM leads ORDER BY num").all()).results || []; } catch (e) {}
+    try { out.b2b = (await env.DB.prepare("SELECT * FROM b2b_requests ORDER BY id").all()).results || []; } catch (e) {}
+    try { out.ai = (await env.DB.prepare("SELECT * FROM ai_leads ORDER BY id").all()).results || []; } catch (e) {}
+    try { out.trends = (await env.DB.prepare("SELECT * FROM trend_news ORDER BY id").all()).results || []; } catch (e) {}
+    try { const s = await env.DB.prepare("SELECT key, value FROM settings").all(); out.settings = (s.results || []).filter(r => r.key !== "social_config"); } catch (e) {}
+    return json(out);
+  }
+  if (path === "/api/sync/import" && request.method === "POST") {
+    let b = {}; try { b = await request.json(); } catch (e) { return json({ ok: false, error: "bad-json" }, 400); }
+    const stats = { orders: 0, leads: 0, b2b: 0, ai: 0, trends: 0, settings: 0, skipped: 0 };
+    const seenOrders = new Set((await env.DB.prepare("SELECT code FROM orders").all()).results.map(r => String(r.code)));
+    for (const o of (b.orders || [])) {
+      if (seenOrders.has(String(o.code))) { stats.skipped++; continue; }
+      try { await env.DB.prepare("INSERT INTO orders (code, kind, total, currency, name, phone, address, items, lang, chat, source, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+        .bind(String(o.code).slice(0,40), String(o.kind||"order").slice(0,10), Number(o.total)||0, String(o.currency||"TL").slice(0,8), String(o.name||"").slice(0,120), String(o.phone||"").slice(0,40), String(o.address||"").slice(0,300), o.items ? String(o.items).slice(0,3000) : null, String(o.lang||"tr").slice(0,4), String(o.chat||"").slice(0,30), String(o.source||"").slice(0,20), o.created_at||null).run(); stats.orders++; } catch (e) {}
+    }
+    const seenLeads = new Set((await env.DB.prepare("SELECT num FROM leads").all()).results.map(r => String(r.num)));
+    for (const l of (b.leads || [])) {
+      if (seenLeads.has(String(l.num))) { stats.skipped++; continue; }
+      try { await env.DB.prepare("INSERT INTO leads (num, data) VALUES (?,?)").bind(l.num, String(l.data).slice(0, 4000)).run(); stats.leads++; } catch (e) {}
+    }
+    const seenB2B = new Set((await env.DB.prepare("SELECT id FROM b2b_requests").all()).results.map(r => String(r.id)));
+    for (const r of (b.b2b || [])) {
+      if (seenB2B.has(String(r.id))) { stats.skipped++; continue; }
+      try { await env.DB.prepare("INSERT INTO b2b_requests (id, ts, firm, phone, addr, items, total_kg, est_total, status, quote, note) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+        .bind(Number(r.id)||0, r.ts||null, String(r.firm||"").slice(0,200), String(r.phone||"").slice(0,60), String(r.addr||"").slice(0,200), r.items?String(r.items).slice(0,3000):null, Number(r.total_kg)||0, Number(r.est_total)||0, String(r.status||"new").slice(0,20), r.quote?String(r.quote).slice(0,3000):null, String(r.note||"").slice(0,300)).run(); stats.b2b++; } catch (e) {}
+    }
+    const seenAI = new Set((await env.DB.prepare("SELECT url FROM ai_leads").all()).results.map(r => String(r.url)));
+    for (const r of (b.ai || [])) {
+      if (seenAI.has(String(r.url))) { stats.skipped++; continue; }
+      try { await env.DB.prepare("INSERT INTO ai_leads (ts, name, area, url, source, score, title, published, status) VALUES (?,?,?,?,?,?,?,?,?)")
+        .bind(r.ts||null, String(r.name||"").slice(0,200), String(r.area||"").slice(0,100), String(r.url||"").slice(0,500), String(r.source||"").slice(0,60), Number(r.score)||0, String(r.title||"").slice(0,300), r.published||null, String(r.status||"new").slice(0,20)).run(); stats.ai++; } catch (e) {}
+    }
+    const seenTr = new Set((await env.DB.prepare("SELECT url FROM trend_news").all()).results.map(r => String(r.url)));
+    for (const r of (b.trends || [])) {
+      if (seenTr.has(String(r.url))) { stats.skipped++; continue; }
+      try { await env.DB.prepare("INSERT INTO trend_news (ts, title, url, source, published, category) VALUES (?,?,?,?,?,?)")
+        .bind(r.ts||null, String(r.title||"").slice(0,300), String(r.url||"").slice(0,500), String(r.source||"").slice(0,60), r.published||null, String(r.category||"").slice(0,60)).run(); stats.trends++; } catch (e) {}
+    }
+    for (const s of (b.settings || [])) {
+      try { await env.DB.prepare("INSERT INTO settings (key, value) VALUES (?,?) ON CONFLICT(key) DO NOTHING").bind(String(s.key).slice(0,60), String(s.value).slice(0, 20000)).run(); stats.settings++; } catch (e) {}
+    }
+    return json({ ok: true, stats });
+  }
   // ---- data (leads + invest + catalog) ----
   if (path === "/api/data") {
     const leads = await env.DB.prepare("SELECT data FROM leads ORDER BY num").all();
@@ -2478,7 +2597,7 @@ export default {
       try { await autopostTick(env); done.autopost = "ok"; } catch (e) { done.autopost = String(e).slice(0, 120); }
       return new Response(JSON.stringify({ ok: true, detail: done }), { headers: { "content-type": "application/json" } });
     }
-    if (p === "/health") return new Response("OK — Aykan All-in-One v7.6.0 (site + panel + bot + radar)");
+    if (p === "/health") return new Response("OK — Aykan All-in-One v7.11.0 (site + panel + bot + radar)");
     if (p === "/api/setup" && url.searchParams.get("key") === HOOK_SECRET) {
       var r2 = await ensureWebhook(env);
       return new Response(JSON.stringify(r2), { headers: { "content-type": "application/json" } });
@@ -2584,7 +2703,7 @@ export default {
       for (var ki = 0; ki < kb.length; ki++) ka[ki] = kb.charCodeAt(ki);
       return new Response(ka, { headers: { "content-type": "image/jpeg", "cache-control": "public, max-age=3600", ...SEC } });
     }
-    if (p === "/api/hit" || p === "/api/ping" || p === "/api/login" || p === "/api/data" || p === "/api/orders" || p === "/api/stats" || p === "/api/public-stats" || p === "/api/bot-setup" || p === "/api/social" || p === "/api/social/test" || p === "/api/social/send" || p === "/api/social/cfg" || p === "/api/social/autopost" || p === "/api/wa-webhook" || p === "/api/b2b" || p === "/api/ai") return panelApi(request, env, p);
+    if (p === "/api/hit" || p === "/api/ping" || p === "/api/login" || p === "/api/data" || p === "/api/orders" || p === "/api/stats" || p === "/api/public-stats" || p === "/api/bot-setup" || p === "/api/social" || p === "/api/social/test" || p === "/api/social/send" || p === "/api/social/cfg" || p === "/api/social/autopost" || p === "/api/wa-webhook" || p === "/api/b2b" || p === "/api/ai" || p === "/api/sync/export" || p === "/api/sync/import") return panelApi(request, env, p);
     // ─── تریگر عمومی سینک رادار (داشبورد HF — بدون کلید، با محدودیت) ───
     if (p === "/api/ai/trigger") {
       var jc = { "content-type": "application/json", "access-control-allow-origin": "*" };
