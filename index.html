@@ -10,6 +10,9 @@
 <link rel="icon" type="image/jpeg" href="assets/img0.jpg">
 <meta name="theme-color" content="#b91c1c">
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800;900&display=swap" rel="stylesheet">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Aykan Et &amp; Mangal">
 <meta property="og:title" content="قصاب آیکان — ما گوشت نمی‌فروشیم؛ خیالِ منقلِ شما را می‌فروشیم 🔥">
@@ -33,12 +36,12 @@
 </script>
 <style>
 :root{
-  --ink:#151617; --ink2:#2d2d2d; --mut:#878c9f; --bg:#f5f5f5; --card:#ffffff;
+  --ink:#151617; --ink2:#2d2d2d; --mut:#666b7a; --bg:#f5f5f5; --card:#ffffff;
   --red:#b91c1c; --red-d:#7f1d1d; --green:#16a34a; --amber:#b45309; --line:#e6e6e8;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:Vazirmatn,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,Arial,sans-serif}
 html{scroll-behavior:smooth;overflow-x:hidden}
-body{background:var(--bg);color:var(--ink);line-height:1.75;padding-bottom:90px}
+body{background:var(--bg);color:var(--ink);line-height:1.85;padding-bottom:90px}
 a{color:inherit}
 img{max-width:100%;display:block}
 .wrap{max-width:1100px;margin:0 auto;padding:0 18px}
@@ -46,12 +49,21 @@ img{max-width:100%;display:block}
 .ticker{background:var(--ink);color:#fff;overflow:hidden;white-space:nowrap;font-size:13px;font-weight:700;padding:9px 0;position:relative;width:100%}
 .ticker>div{position:absolute;top:9px;right:0;white-space:nowrap;will-change:transform;animation:tk 38s linear infinite}
 @keyframes tk{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+/* ── منوی چسبان ── */
+.nav{position:sticky;top:0;z-index:70;background:rgba(245,245,245,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nwrap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:9px 16px;max-width:1100px;margin:0 auto}
+.nwrap::-webkit-scrollbar{display:none}
+.nav a{flex:none;padding:10px 16px;border-radius:999px;font-size:13.5px;font-weight:800;color:var(--ink2);text-decoration:none;min-height:44px;display:flex;align-items:center;transition:background .15s}
+.nav a.on{background:var(--ink);color:#fff}
+.nav a.navcta{background:var(--green);color:#fff}
+@media(max-width:520px){.nav a{padding:9px 13px;font-size:12.5px}.nwrap{padding:8px 12px}}
+
 /* ── هیرو ── */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center;padding:44px 0 24px}
 .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:800;color:var(--green);box-shadow:0 2px 10px rgba(0,0,0,.04)}
 .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pl 1.6s infinite}
 @keyframes pl{50%{opacity:.3}}
-h1{font-size:clamp(28px,4.6vw,46px);line-height:1.35;margin:16px 0 12px;font-weight:900}
+h1{font-size:clamp(28px,4.6vw,46px);line-height:1.45;margin:16px 0 12px;font-weight:900}
 h1 em{color:var(--red);font-style:normal}
 .sub{color:var(--ink2);font-size:16.5px;max-width:52ch}
 .cta{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 8px}
@@ -69,8 +81,8 @@ h1 em{color:var(--red);font-style:normal}
 .playcard .pp{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
 .igtag{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:800}
 /* ── سکشن‌ها ── */
-section{padding:44px 0}
-.kicker{color:var(--red);font-weight:900;font-size:13.5px;letter-spacing:.4px}
+section{padding:44px 0;scroll-margin-top:76px}
+.kicker{color:var(--red);font-weight:900;font-size:13.5px}
 h2{font-size:clamp(23px,3.4vw,33px);font-weight:900;margin:6px 0 8px}
 .lead{color:var(--ink2);max-width:64ch}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px}
@@ -83,7 +95,7 @@ h2{font-size:clamp(23px,3.4vw,33px);font-weight:900;margin:6px 0 8px}
 .tag.new{background:var(--amber);color:#fff}
 .tag.raw{background:#fff;color:var(--ink2)}
 .card .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
-.card .tr{font-size:11.5px;color:var(--mut);font-weight:800;letter-spacing:.3px}
+.card .tr{font-size:11.5px;color:var(--mut);font-weight:800}
 .card h3{font-size:16.5px;font-weight:900}
 .card p{font-size:13px;color:var(--ink2);flex:1}
 .price{font-size:17px;font-weight:900;color:var(--red)}
@@ -216,11 +228,22 @@ h1{font-size:27px}
 @media print{.ticker,.float,.admin,.cta{display:none!important}body{background:#fff}}
 </style>
 </head>
-<body>
+<body id="top">
 
 <div class="ticker"><div>
 🥩 تازه‌ی هر صبح &nbsp;·&nbsp; ⚖️ ۱ کیلو چیغ وزن می‌کنیم، پخته تحویل می‌دهیم &nbsp;·&nbsp; 🚚 ارسال همان روز در باجیلار و اسنلر &nbsp;·&nbsp; 📲 سفارش با یک پیام واتس‌اپ &nbsp;·&nbsp; 🕌 حلال ۱۰۰٪ &nbsp;·&nbsp; ❄️ بدون فریز &nbsp;·&nbsp; 🔥 ذغال و ادویه داخل بسته‌ی منقل &nbsp;·&nbsp; 🥩 تازه‌ی هر صبح &nbsp;·&nbsp; ⚖️ ۱ کیلو چیغ وزن می‌کنیم، پخته تحویل می‌دهیم &nbsp;·&nbsp; 🚚 ارسال همان روز در باجیلار و اسنلر &nbsp;·&nbsp; 📲 سفارش با یک پیام واتس‌اپ &nbsp;·&nbsp; 🕌 حلال ۱۰۰٪ &nbsp;·&nbsp; ❄️ بدون فریز &nbsp;·&nbsp; 🔥 ذغال و ادویه داخل بسته‌ی منقل &nbsp;·&nbsp;
 </div></div>
+
+<nav class="nav" aria-label="منوی اصلی"><div class="nwrap">
+<a href="#top" class="on" data-sec="top">🏠 خانه</a>
+<a href="#signature" data-sec="signature">🥩 محصولات</a>
+<a href="#mangal" data-sec="mangal">🔥 بسته‌ساز</a>
+<a href="#b2b" data-sec="b2b">🏢 عمده</a>
+<a href="#b2bform" data-sec="b2bform">🤖 فرم خرید</a>
+<a href="#reels" data-sec="reels">📹 ویدیوها</a>
+<a href="#sss" data-sec="sss">❓ سوالات</a>
+<a class="navcta" href="https://wa.me/905377325269?text=%D8%B3%D9%84%D8%A7%D9%85%20%D9%82%D8%B5%D8%A7%D8%A8%20%D8%A2%DB%8C%DA%A9%D8%A7%D9%86!%20%D9%85%DB%8C%E2%80%8C%D8%AE%D9%88%D8%A7%D9%87%D9%85%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%A8%D8%AF%D9%85." target="_blank" rel="noopener">💬 سفارش</a>
+</div></nav>
 
 <header class="wrap hero">
   <div>
@@ -569,6 +592,25 @@ var TIPS=[
  'نمک را آخرِ مزه‌دار شدن اضافه کنید؛ نمکِ زودهنگام آب گوشت را می‌کشد.'
 ];
 document.getElementById('tipbody').textContent=TIPS[Math.floor(Math.random()*TIPS.length)];
+// ─── حالت فعال منو ───
+var NAVL={};
+document.querySelectorAll('.nav a[data-sec]').forEach(function(a){NAVL[a.dataset.sec]=a});
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        document.querySelectorAll('.nav a.on').forEach(function(x){x.classList.remove('on')});
+        var l=NAVL[e.target.id==='top'?'top':e.target.id];
+        if(l)l.classList.add('on');
+      }
+    });
+  },{rootMargin:'-40% 0px -55% 0px'});
+  ['top','signature','mangal','b2b','b2bform','reels','sss'].forEach(function(id){
+    var el=(id==='top')?document.body:document.getElementById(id);
+    if(el)io.observe(el);
+  });
+}
+
 // ─── دکمه بالا ───
 var tt=document.getElementById('toTop');
 window.addEventListener('scroll',function(){tt.style.display=scrollY>500?'flex':'none'});
