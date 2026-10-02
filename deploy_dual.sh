@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # دیپلوی هر ۴ ورکر به هر دو اکانت کلودفلر (اصلی + پشتیبان)
-# استفاده: CF_API_TOKEN_NEW=... CF_ACCOUNT_ID_NEW=... CF_API_TOKEN_OLD=... CF_ACCOUNT_ID_OLD=... ./deploy_dual.sh [tgbot|panel|hizli|site|all]
+# استفاده: CF_API_TOKEN_NEW=... CF_ACCOUNT_ID_NEW=... CF_API_TOKEN_OLD=... CF_ACCOUNT_ID_OLD=... ./deploy_dual.sh [tgbot|worker|site|all]
 set -e
 W="${1:-all}"
-[ "$W" = "all" ] && LIST="tgbot panel worker site" || LIST="$W"
+[ "$W" = "all" ] && LIST="tgbot worker site" || LIST="$W"
 NEW_T="${CF_API_TOKEN_NEW:?}" NEW_A="${CF_ACCOUNT_ID_NEW:?}"
 OLD_T="${CF_API_TOKEN_OLD:?}" OLD_A="${CF_ACCOUNT_ID_OLD:?}"
 NEW_SUB="aykanet34.workers.dev"; OLD_SUB="elasa2next.workers.dev"

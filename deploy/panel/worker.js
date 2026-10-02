@@ -149,7 +149,7 @@ async function handleApi(request, env, path) {
     if (lr.n > 12) return json({ ok: false, error: "çok fazla deneme — 10 dakika bekleyin" }, 429);
     const pin = String(b.pin || "");
     const token = String(b.token || "").trim();
-    if (pin !== String(env.ADMIN_PIN || "5269")) return json({ ok: false, error: "رمز نادرست است" }, 401);
+    if (pin !== String(env.ADMIN_PIN || "__ADMIN_PIN__")) return json({ ok: false, error: "رمز نادرست است" }, 401);
     if (!/^\d{6,12}:[A-Za-z0-9_-]{30,40}$/.test(token)) return json({ ok: false, error: "فرمت توکن کامل نیست — کل خط توکن را کپی کنید (حدود ۴۶ کاراکتر)" }, 400);
     const me = await (await fetch("https://api.telegram.org/bot" + token + "/getMe")).json();
     if (!me.ok) return json({ ok: false, error: "⛔ توکن توسط تلگرام رد شد (" + (me.description || "Unauthorized") + ") — این توکن قبلاً باطل شده. توکنِ زنده فقط در صفحه‌ی API Token ربات است (BotFather → /mybots → ربات → API Token)؛ از پیام‌های چت کپی نکنید." }, 400);
@@ -174,7 +174,7 @@ async function handleApi(request, env, path) {
     if (Date.now() - lr.t > 600000) { lr.n = 0; lr.t = Date.now(); }
     lr.n++;
     if (lr.n > 5) return json({ ok: false, error: "Çok fazla deneme — 10 dakika bekleyin" }, 429);
-    if (pin !== String(env.ADMIN_PIN || "5269")) return json({ ok: false, error: "رمز نادرست است" }, 401);
+    if (pin !== String(env.ADMIN_PIN || "__ADMIN_PIN__")) return json({ ok: false, error: "رمز نادرست است" }, 401);
     const token = await sha256hex(env.PANEL_SECRET + ":" + pin);
     return json({ ok: true, token });
   }
@@ -237,7 +237,7 @@ async function handleApi(request, env, path) {
     return json({ ok: true });
   }
 
-  const expected = await sha256hex(env.PANEL_SECRET + ":" + (env.ADMIN_PIN || "5269"));
+  const expected = await sha256hex(env.PANEL_SECRET + ":" + (env.ADMIN_PIN || "__ADMIN_PIN__"));
   const auth = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
   const authed = auth && auth === expected;
 
@@ -1056,7 +1056,7 @@ function renderQ() {
   const rows = QITEMS.map((it, i) => {
     const lp = lastPrice(it.name);
     const line = it.qty * (it.price || 0); gross += line;
-    return "<tr><td><input data-i='" + i + "' data-k='name' class='qin' value=\"" + esc(it.name) + "\" style='" + QIN + ";min-width:130px'></td>" +
+    return "<tr><td><input data-i='" + i + "' data-k='name' class='qin' value='" + esc(it.name) + "' style='" + QIN + ";min-width:130px'></td>" +
       "<td><input type='number' min='0' step='0.5' data-i='" + i + "' data-k='qty' class='qin' value='" + it.qty + "' style='" + QIN + "'></td>" +
       "<td><input type='number' min='0' data-i='" + i + "' data-k='price' class='qin' value='" + it.price + "' style='" + QIN + "'></td>" +
       "<td class='mut'>" + (lp != null && Math.abs(lp - (it.price || 0)) > 0.01 ? "قبلی: " + en(lp) : "—") + "</td>" +
