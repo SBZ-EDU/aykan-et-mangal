@@ -139,6 +139,32 @@ async function handleApi(request, env, path) {
     return new Response(null, { status: 204, headers: { "access-control-allow-origin": "*" } });
   }
   if (path === "/api/ping") return json({ ok: true, ts: Date.now(), svc: "aykan-panel" });
+  // ---- one-page bot setup (/bot): validate + save + webhook in one shot ----
+  if (path === "/api/bot-setup" && request.method === "POST") {
+    let b = {}; try { b = await request.json(); } catch (e) {}
+    const ipBS = request.headers.get("cf-connecting-ip") || "x";
+    const lr = _LR[ipBS] = _LR[ipBS] || { n: 0, t: Date.now() };
+    if (Date.now() - lr.t > 600000) { lr.n = 0; lr.t = Date.now(); }
+    lr.n++;
+    if (lr.n > 12) return json({ ok: false, error: "çok fazla deneme — 10 dakika bekleyin" }, 429);
+    const pin = String(b.pin || "");
+    const token = String(b.token || "").trim();
+    if (pin !== String(env.ADMIN_PIN || "5269")) return json({ ok: false, error: "رمز نادرست است" }, 401);
+    if (!/^\d{6,12}:[A-Za-z0-9_-]{30,40}$/.test(token)) return json({ ok: false, error: "فرمت توکن کامل نیست — کل خط توکن را کپی کنید (حدود ۴۶ کاراکتر)" }, 400);
+    const me = await (await fetch("https://api.telegram.org/bot" + token + "/getMe")).json();
+    if (!me.ok) return json({ ok: false, error: "⛔ توکن توسط تلگرام رد شد (" + (me.description || "Unauthorized") + ") — این توکن قبلاً باطل شده. توکنِ زنده فقط در صفحه‌ی API Token ربات است (BotFather → /mybots → ربات → API Token)؛ از پیام‌های چت کپی نکنید." }, 400);
+    const cur = await getSocialCfg(env);
+    cur.tg = cur.tg || {};
+    cur.tg.token = token;
+    cur.tg.enabled = true;
+    if (!cur.tg.channel) cur.tg.channel = "@AykanEtmangal_shopping";
+    await saveSocialCfg(env, cur);
+    let hook = null;
+    try {
+      hook = await (await fetch("https://api.telegram.org/bot" + token + "/setWebhook", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: String(env.APP_URL || "https://lively-mouse-0c7c.aykanet34.workers.dev") + "/hook-" + String(env.HOOK_SECRET || ""), secret_token: String(env.HOOK_SECRET || ""), allowed_updates: ["message", "callback_query"], drop_pending_updates: false }) })).json();
+    } catch (e) {}
+    return json({ ok: true, bot: me.result.username, name: me.result.first_name, webhook: !!(hook && hook.ok) });
+  }
   if (path === "/robots.txt") return new Response("User-agent: *\nDisallow: /\n", { headers: { "content-type": "text/plain" } });
   if (path === "/api/login" && request.method === "POST") {
     let pin = "";
@@ -373,6 +399,66 @@ async function handleApi(request, env, path) {
   return json({ ok: false, error: "not-found" }, 404);
 }
 
+function botSetupHTML() {
+  return `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><title>🤖 اتصال ربات — آیکان</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:Vazirmatn,Tahoma,system-ui,sans-serif;background:#120f0e;color:#f5efe9;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background-image:radial-gradient(700px 400px at 80% -10%,rgba(226,98,28,.18),transparent 60%)}
+.c{width:100%;max-width:460px}
+.logo{width:74px;height:74px;border-radius:50%;border:3px solid #e2621c;display:block;margin:0 auto 12px}
+h1{font-size:19px;text-align:center;margin-bottom:4px}
+.sub{font-size:12.5px;color:#b8a89c;text-align:center;margin-bottom:16px;line-height:1.9}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:20px;backdrop-filter:blur(10px)}
+.steps{background:rgba(226,98,28,.1);border:1px dashed rgba(226,98,28,.45);border-radius:14px;padding:12px 14px;font-size:12.5px;line-height:2.1;margin-bottom:16px;color:#f8c9a8}
+.steps b{color:#fff}
+label{font-size:12.5px;font-weight:700;display:block;margin:10px 0 5px}
+input{width:100%;background:rgba(0,0,0,.4);border:1.5px solid rgba(255,255,255,.14);border-radius:12px;color:#f5efe9;padding:13px;font-family:inherit;font-size:16px;outline:none;direction:ltr;text-align:left}
+input:focus{border-color:#f2833a}
+button{width:100%;margin-top:16px;background:linear-gradient(90deg,#f2833a,#e2621c);color:#fff;border:0;border-radius:14px;padding:15px;font-family:inherit;font-size:16px;font-weight:800;cursor:pointer}
+button:disabled{opacity:.6}
+.res{margin-top:14px;border-radius:14px;padding:13px 15px;font-size:14px;line-height:2;display:none}
+.ok{background:rgba(37,211,102,.12);border:1.5px solid #2c7a4f;color:#9ff0c0}
+.bad{background:rgba(239,68,68,.1);border:1.5px solid #7a2c2c;color:#ffb3b3}
+.wa{display:block;text-align:center;margin-top:14px;color:#25d366;font-size:13px;text-decoration:none}
+</style></head><body><div class="c">
+<img class="logo" src="https://lively-mouse-0c7c.aykanet34.workers.dev/assets/img0.jpg" alt="">
+<h1>🤖 اتصال ربات تلگرام آیکان</h1>
+<p class="sub">توکن را همین‌جا بچسبانید — بررسی، ذخیره و فعال‌سازی وبهوک خودکار انجام می‌شود.<br>توکن از چت تلگرام رد نمی‌شود، پس زنده می‌ماند ✅</p>
+<div class="card">
+<div class="steps">
+🔑 <b>توکن زنده فقط اینجا است:</b><br>
+۱. تلگرام → BotFather → پیام <b>/mybots</b><br>
+۲. انتخاب <b>@Aykan_Et_mangal_shopping_bot</b><br>
+۳. انتخاب <b>API Token</b> → روی متن توکن نگه دارید → <b>Copy</b><br>
+⛔ هیچ دکمه‌ای نزنید (مخصوصاً Revoke) · پیام را فوروارد نکنید
+</div>
+<label>رمز پنل</label>
+<input id="pin" type="password" inputmode="numeric" placeholder="••••" value="">
+<label>توکن ربات (از صفحه‌ی API Token)</label>
+<input id="tok" placeholder="1234567890:AA..." autocomplete="off">
+<button id="go" onclick="doSetup()">✅ بررسی و فعال‌سازی ربات</button>
+<div class="res" id="res"></div>
+<a class="wa" href="https://wa.me/905377325269">سوالی دارید؟ واتس‌اپ پشتیبانی</a>
+</div></div>
+<script>
+async function doSetup(){
+  const res=document.getElementById('res'), btn=document.getElementById('go');
+  const pin=document.getElementById('pin').value.trim(), tok=document.getElementById('tok').value.trim();
+  res.style.display='block'; res.className='res';
+  if(!pin||!tok){res.classList.add('bad');res.textContent='⛔ رمز و توکن را وارد کنید';return}
+  btn.disabled=true;btn.textContent='⏳ در حال بررسی...';
+  try{
+    const r=await fetch('/api/bot-setup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pin:pin,token:tok})});
+    const d=await r.json();
+    if(d.ok){res.classList.add('ok');res.innerHTML='🎉 ربات <b>@'+d.bot+'</b> وصل شد!'+(d.webhook?'<br>✅ وبهوک فعال شد — الان در تلگرام به ربات /start بفرستید.':'<br>⚠️ توکن ذخیره شد اما وبهوک تنظیم نشد — چند لحظه بعد دوباره دکمه را بزنید.');}
+    else{res.classList.add('bad');res.textContent='⛔ '+(d.error||'خطا');}
+  }catch(e){res.classList.add('bad');res.textContent='⛔ خطای شبکه — دوباره تلاش کنید'}
+  btn.disabled=false;btn.textContent='✅ بررسی و فعال‌سازی ربات';
+}
+</script></body></html>`;
+}
 function panelHTML() {
   return `<!DOCTYPE html>
 <html lang="fa" dir="rtl"><head><meta charset="UTF-8">
@@ -956,6 +1042,7 @@ export default {
       for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
       return new Response(arr, { headers: { "content-type": "image/jpeg", "cache-control": "public, max-age=3600", ...SEC } });
     }
+    if (p === "/bot") return new Response(botSetupHTML(), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", ...SEC } });
     if (p === "/health") return new Response("OK");
     return new Response(panelHTML(), { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", ...SEC } });
   },
