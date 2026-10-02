@@ -296,6 +296,39 @@ async function handleApi(request, env, path) {
     return json({ ok: false, error: "unknown-action" }, 400);
   }
 
+  // ---- AI radar: leads + trends ----
+  if (path === "/api/ai" && request.method === "GET") {
+    await env.DB.prepare("CREATE TABLE IF NOT EXISTS trend_news (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), title TEXT, url TEXT UNIQUE, source TEXT, published TEXT, category TEXT)").run();
+    await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_leads (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), name TEXT, area TEXT, url TEXT UNIQUE, source TEXT, score INTEGER, title TEXT, published TEXT, status TEXT DEFAULT 'new')").run();
+    const al = await env.DB.prepare("SELECT * FROM ai_leads ORDER BY score DESC, id DESC LIMIT 100").all();
+    const tn = await env.DB.prepare("SELECT category, title, url, source, published FROM trend_news ORDER BY id DESC LIMIT 20").all();
+    const ls = await env.DB.prepare("SELECT value FROM settings WHERE key='ai_radar_ts'").first();
+    return json({ ok: true, aiLeads: al.results || [], trends: tn.results || [], lastSync: (ls && JSON.parse(ls.value)) || 0 });
+  }
+  if (path === "/api/ai" && request.method === "POST") {
+    let b = {}; try { b = await request.json(); } catch (e) {}
+    if (b.action === "convert") {
+      const id = parseInt(b.id, 10) || 0;
+      const r = await env.DB.prepare("SELECT * FROM ai_leads WHERE id=?").bind(id).first();
+      if (!r) return json({ ok: false, error: "not-found" }, 404);
+      try {
+        const leadObj = { name: String(r.name).slice(0, 100), category: "AI-Restaurant", area: String(r.area).slice(0, 60), phone: "", email: "", website: r.url, opportunity: r.score || 0, source: r.source, origin: "ai-radar", url: r.url, title: r.title };
+        await env.DB.prepare("INSERT INTO leads (category, name, area, phone, email, data) VALUES (?,?,?,?,?,?)")
+          .bind("AI-Restaurant", String(r.name).slice(0, 100), String(r.area).slice(0, 60), "", "", JSON.stringify(leadObj)).run();
+        await env.DB.prepare("UPDATE ai_leads SET status='added' WHERE id=?").bind(id).run();
+        return json({ ok: true });
+      } catch (e) { return json({ ok: false, error: String(e).slice(0, 120) }, 500); }
+    }
+    if (b.action === "refresh") {
+      try {
+        const rr = await fetch(String(env.APP_URL || "https://lively-mouse-0c7c.aykanet34.workers.dev") + "/api/ai/sync?key=" + String(env.HOOK_SECRET || ""), { method: "POST" });
+        const d = await rr.json();
+        return json({ ok: !!(d && d.ok), result: (d && d.result) || null });
+      } catch (e) { return json({ ok: false, error: "radar-unreachable" }, 502); }
+    }
+    return json({ ok: false, error: "unknown-action" }, 400);
+  }
+
   // ---- bot pushes orders here ----
   if (path === "/api/orders" && request.method === "POST") {
     if ((request.headers.get("x-panel-secret") || "") !== env.PANEL_SECRET)
@@ -565,6 +598,7 @@ textarea#so-text:focus,#so-img:focus{border-color:var(--or1)}
       <button id="tb-leads" onclick="go('leads')">🎯 لیدها</button>
       <button id="tb-kart" onclick="go('kart')">💳 کارت ویزیت</button>
       <button id="tb-b2b" onclick="go('b2b')">🏢 B2B</button>
+      <button id="tb-ai" onclick="go('ai')">🤖 AI</button>
       <button id="tb-links" onclick="go('links')">🔗 لینک‌ها</button>
       <button id="tb-social" onclick="go('social')">🌐 شبکه‌ها</button>
       <button onclick="logout()" style="border-color:rgba(239,68,68,.4);color:#f87171;">خروج</button>
@@ -621,6 +655,19 @@ textarea#so-text:focus,#so-img:focus{border-color:var(--or1)}
         <p class="mut">🤖 پیشنهاد هوشمند: قیمت هر قلم از کاتالوگ روز + تخفیف حجمی خودکار (۶۰kg←۴٪ · ۱۰۰kg←۷٪ · ۱۵۰kg←۱۰٪). 🔄 بازتولید بعد از هر تغییر قیمت، دوباره از روی آخرین قیمت‌ها می‌سازد.</p>
       </div>
       <div class="card"><h3>📈 تحلیل مشتریان B2B و هشدارها</h3><div id="b2firms"></div></div>
+    </div>
+    <div id="v-ai" class="view hide">
+      <div class="stats">
+        <div class="stat"><div class="n" id="ai-new">۰</div><div class="l">🎯 لید جدید AI</div></div>
+        <div class="stat"><div class="n" id="ai-added">۰</div><div class="l">➕ افزوده به لیدها</div></div>
+        <div class="stat"><div class="n" id="ai-trends">۰</div><div class="l">📈 ترندهای ثبت‌شده</div></div>
+        <div class="stat"><div class="n" id="ai-sync">—</div><div class="l">🔄 آخرین همگام‌سازی</div></div>
+      </div>
+      <div class="card"><h3>🎯 رستوران‌های کاندیدا (کاشف لید AI) <button class="refresh" onclick="radarRefresh()">↻ اسکن جدید</button></h3>
+        <p class="mut" style="margin-bottom:10px">رادار AI رستوران‌های تازه‌افتتاح‌شده‌ی استانبول را از اخبار پیدا می‌کند و امتیاز می‌دهد. با «➕» به دفتر لیدها (تب 🎯) اضافه‌شان کنید.</p>
+        <div style="overflow-x:auto"><table id="aitable"></table></div>
+      </div>
+      <div class="card"><h3>📈 آخرین ترندهای غذایی (منتشرشده در بلاگ سایت)</h3><div id="aitrends"></div></div>
     </div>
     <div id="v-kart" class="view hide">
       <div class="card"><h3>💳 کارت ویزیت — سه مدل نهایی (فقط ادمین)</h3>
@@ -742,10 +789,10 @@ function logout() { localStorage.removeItem("aykan_panel_token"); location.reloa
 async function startApp() {
   document.getElementById("login").classList.add("hide");
   document.getElementById("app").classList.remove("hide");
-  await Promise.all([loadStats(), loadOrders(), loadLeads(), loadSocial(), loadB2B()]);
+  await Promise.all([loadStats(), loadOrders(), loadLeads(), loadSocial(), loadB2B(), loadAI()]);
 }
 function go(v) {
-  ["dash", "orders", "leads", "b2b", "kart", "links", "social"].forEach(x => {
+  ["dash", "orders", "leads", "b2b", "ai", "kart", "links", "social"].forEach(x => {
     document.getElementById("v-" + x).classList.toggle("hide", x !== v);
     const b = document.getElementById("tb-" + x); if (b) b.classList.toggle("on", x === v);
   });
@@ -888,6 +935,40 @@ async function sendSocial() {
     }).join("<br>");
     loadSocial();
   } catch (e) { st.textContent = "⛔ خطای شبکه"; st.style.color = "#f87171"; }
+}
+// ─── AI رادار: لید + ترند ───
+let AID = { aiLeads: [], trends: [], lastSync: 0 };
+async function loadAI() {
+  try { const d = await api("/api/ai"); AID = d; renderAI(); } catch (e) {}
+}
+function renderAI() {
+  const L = AID.aiLeads || [];
+  document.getElementById("ai-new").textContent = fa(L.filter(x => x.status === "new").length);
+  document.getElementById("ai-added").textContent = fa(L.filter(x => x.status === "added").length);
+  document.getElementById("ai-trends").textContent = fa((AID.trends || []).length >= 20 ? "۲۰+" : (AID.trends || []).length);
+  const ago = AID.lastSync ? Math.round((Date.now() - AID.lastSync) / 3600000) : 0;
+  document.getElementById("ai-sync").textContent = AID.lastSync ? (ago < 1 ? "الان" : fa(ago) + " ساعت پیش") : "—";
+  const head = "<tr><th>امتیاز</th><th>نام</th><th>منطقه</th><th>منبع</th><th>وضعیت</th><th></th></tr>";
+  const rows = L.slice(0, 60).map(r => {
+    const st = r.status === "added" ? '<span class="tag gr">➕ افزوده</span>' : '<span class="tag">🆕 جدید</span>';
+    const act = r.status === "added" ? "" : "<button class='refresh' onclick='convertAI(" + r.id + ")'>➕</button>";
+    return "<tr><td><b>" + fa(r.score) + "</b></td><td><b>" + esc(r.name) + "</b><br><span class='mut' style='font-size:11px'>" + esc(String(r.title || "").slice(0, 60)) + "</span></td><td>" + esc(r.area) +
+      "</td><td class='mut' dir='ltr'><a href='" + esc(r.url) + "' target='_blank' style='color:#f2833a'>" + esc(r.source) + " ↗</a></td><td>" + st + "</td><td>" + act + "</td></tr>";
+  }).join("");
+  document.getElementById("aitable").innerHTML = head + (rows || '<tr><td colspan="6" class="empty">هنوز کاندیدایی پیدا نشده — دکمه «↻ اسکن جدید» را بزنید 🤖</td></tr>');
+  const T = AID.trends || [];
+  document.getElementById("aitrends").innerHTML = T.length
+    ? "<table><tr><th>دسته</th><th>خبر</th><th>منبع</th></tr>" + T.map(t => "<tr><td><span class='tag or'>" + esc(t.category || "📡") + "</span></td><td><a href='" + esc(t.url) + "' target='_blank' style='color:#f5efe9'>" + esc(String(t.title).slice(0, 90)) + " ↗</a></td><td class='mut' dir='ltr'>" + esc(t.source) + "</td></tr>").join("") + "</table>"
+    : '<div class="empty">ترندی ثبت نشده — «↻ اسکن جدید» را بزنید</div>';
+}
+async function convertAI(id) {
+  try { const d = await b2post({ action: "convert", id: id }); if (d.ok) { loadAI(); loadLeads(); } } catch (e) {}
+}
+async function radarRefresh() {
+  try {
+    const d = await b2post({ action: "refresh" });
+    if (d.ok) { await loadAI(); } else { alert("⛔ رادار در دسترس نیست — چند دقیقه بعد دوباره"); }
+  } catch (e) { alert("⛔ خطای شبکه"); }
 }
 // ─── B2B: صندوق RFQ + پیش‌فاکتور هوشمند ───
 let B2B = { requests: [], firms: [], prices: [], catalog: [] }, B2SEL = null, QITEMS = [];

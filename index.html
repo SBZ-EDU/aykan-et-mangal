@@ -161,6 +161,17 @@ h2{font-size:clamp(23px,3.4vw,33px);font-weight:900;margin:6px 0 8px}
 .vid .pp{position:absolute;top:42%;right:calc(50% - 21px);width:42px;height:42px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
 .tip{margin-top:22px;background:#fff;border:1px solid var(--line);border-right:5px solid var(--amber);border-radius:14px;padding:16px 18px;font-size:14.5px}
 .tip b{color:var(--amber)}
+/* ── بلاگ ترند ── */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.tcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px 16px;display:flex;flex-direction:column;gap:7px;text-decoration:none;color:var(--ink);transition:transform .16s,box-shadow .16s}
+.tcard:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.08)}
+.tcat{align-self:flex-start;background:var(--ink);color:#fff;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:800}
+.ttitle{font-weight:800;font-size:14px;line-height:1.7}
+.tsrc{color:var(--mut);font-size:11.5px;font-weight:700}
+.tempty{grid-column:1/-1;background:#fff;border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:var(--mut);font-size:14px}
+@media(max-width:920px){.tgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.tgrid{grid-template-columns:1fr}}
+
 /* ── شخصیت ── */
 .persona{background:var(--ink);color:#f5f5f5;border-radius:26px;padding:40px 30px;display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center}
 .persona img{border-radius:20px;aspect-ratio:4/4.4;object-fit:cover}
@@ -246,6 +257,7 @@ h1{font-size:27px}
 <a href="#b2b" data-sec="b2b">🏢 عمده</a>
 <a href="#b2bform" data-sec="b2bform">🤖 فرم خرید</a>
 <a href="#reels" data-sec="reels">📹 ویدیوها</a>
+<a href="#blog" data-sec="blog">📈 ترفندها</a>
 <a href="#sss" data-sec="sss">❓ سوالات</a>
 <a class="navcta" href="https://wa.me/905377325269?text=%D8%B3%D9%84%D8%A7%D9%85%20%D9%82%D8%B5%D8%A7%D8%A8%20%D8%A2%DB%8C%DA%A9%D8%A7%D9%86!%20%D9%85%DB%8C%E2%80%8C%D8%AE%D9%88%D8%A7%D9%87%D9%85%20%D8%B3%D9%81%D8%A7%D8%B1%D8%B4%20%D8%A8%D8%AF%D9%85." target="_blank" rel="noopener">💬 سفارش</a>
 </div></nav>
@@ -398,6 +410,13 @@ h1{font-size:27px}
     <a class="vid" href="https://www.instagram.com/aykanetmangal/" target="_blank" rel="noopener"><span class="cat">پشت صحنه</span><span class="pp">▶</span><img src="assets/foods/aile.jpg" alt="چیدن جعبه خانواده" loading="lazy" width="800" height="800"><span class="cap">چیدن جعبه‌ی هفتگی خانواده</span></a>
   </div>
   <div class="tip" id="tiptip"><b>💡 نکته‌ی قصاب:</b> <span id="tipbody"></span></div>
+</section>
+
+<section class="wrap" id="blog">
+  <span class="kicker">📡 رادار ترند غذایی — به‌روزرسانی خودکار</span>
+  <h2>چه خبر؟ تازه‌ترین ترندهای دنیای گوشت و منقل</h2>
+  <p class="lead">سیستم هوشمند آیکان، اخبار و ترندهای غذایی ترکیه را رصد می‌کند و این‌جا جمع می‌کند — برای اینکه همیشه یک قدم جلوتر از بازار باشید. منبع: مطبوعات ترکیه.</p>
+  <div class="tgrid" id="trendgrid"></div>
 </section>
 
 <section class="wrap">
@@ -597,6 +616,20 @@ var TIPS=[
  'نمک را آخرِ مزه‌دار شدن اضافه کنید؛ نمکِ زودهنگام آب گوشت را می‌کشد.'
 ];
 document.getElementById('tipbody').textContent=TIPS[Math.floor(Math.random()*TIPS.length)];
+// ─── رادار ترند ───
+function escHtml(x){return String(x||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]})}
+async function loadTrends(){
+  var g=document.getElementById('trendgrid');
+  try{
+    var r=await fetch('/api/trends?limit=6');var d=await r.json();
+    if(!d.trends||!d.trends.length){g.innerHTML='<div class="tempty">📡 رادار در حال جمع‌آوری اولین اخبار است — کمی بعد دوباره سر بزنید</div>';return}
+    g.innerHTML=d.trends.map(function(t){
+      return '<a class="tcard" href="'+escHtml(t.url)+'" target="_blank" rel="noopener"><span class="tcat">'+escHtml(t.category||'📡')+'</span><span class="ttitle">'+escHtml(String(t.title).slice(0,130))+'</span><span class="tsrc">'+escHtml(t.source||'')+' · '+escHtml(String(t.published||'').slice(5,16))+'</span></a>';
+    }).join('');
+  }catch(e){g.innerHTML='<div class="tempty">📡 ترندها موقتاً در دسترس نیست</div>'}
+}
+loadTrends();
+
 // ─── حالت فعال منو ───
 var NAVL={};
 document.querySelectorAll('.nav a[data-sec]').forEach(function(a){NAVL[a.dataset.sec]=a});
@@ -610,7 +643,7 @@ if('IntersectionObserver' in window){
       }
     });
   },{rootMargin:'-40% 0px -55% 0px'});
-  ['top','signature','mangal','b2b','b2bform','reels','sss'].forEach(function(id){
+  ['top','signature','mangal','b2b','b2bform','reels','blog','sss'].forEach(function(id){
     var el=(id==='top')?document.body:document.getElementById(id);
     if(el)io.observe(el);
   });

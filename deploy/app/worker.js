@@ -656,7 +656,7 @@ async function handleAdminCommand(env, cid, text) {
     return;
   }
   if (cmd === "/yardim") {
-    await send(env, cid, "🛠 ADMİN KOMUTLARI\n\n🔗 KANAL\n/kanal @x — bağla • /kanalkapat — kes\n/postnow — hemen post • /plan — yayın planı\n/aralik N — saat aralığı • /durdur • /devam\n\n📊 YÖNETİM\n/istatistik — satış/chat/etkinlik\n/siparisler — son 10 sipariş\n/bul KOD — sipariş ara • /rapor — son 24 saat\n/durum KOD MESAJ — müşteriye bildirim\n/duyuru MESAJ — toplu duyuru\n/fiyatguncelle id fiyat — fiyat değiştir (sifirla = geri al)\n/stok id yok|var — stok kapat/aç\n/ping — sistem durumu\n\n🎯 LİDLER\n/lidedefteri — tarayıcı • /bolge N • /yatirim");
+    await send(env, cid, "🛠 ADMİN KOMUTLARI\n\n🔗 KANAL\n/kanal @x — bağla • /kanalkapat — kes\n/postnow — hemen post • /plan — yayın planı\n/aralik N — saat aralığı • /durdur • /devam\n\n📊 YÖNETİM\n/istatistik — satış/chat/etkinlik\n/siparisler — son 10 sipariş\n/bul KOD — sipariş ara • /rapor — son 24 saat\n/durum KOD MESAJ — müşteriye bildirim\n/duyuru MESAJ — toplu duyuru\n/fiyatguncelle id fiyat — fiyat değiştir (sifirla = geri al)\n/stok id yok|var — stok kapat/aç\n/ping — sistem durumu\n\n🎯 LİDLER\n/lidedefteri — tarayıcı • /bolge N • /yatirim\n\n📡 RADAR\n/trendler — yemek trendleri • /lidyeni — AI restoran lidleri");
     return;
   }
   if (cmd === "/fiyatguncelle") {
@@ -695,6 +695,28 @@ async function handleAdminCommand(env, cid, text) {
     try { yr = (await env.DB.prepare("SELECT COUNT(*) n, COALESCE(SUM(total),0) t FROM orders WHERE kind='order' AND created_at >= datetime('now','-1 day')").first()) || {}; } catch (e) {}
     var nch2 = 0; try { nch2 = ((await env.DB.prepare("SELECT COUNT(*) n FROM bot_chats").first()) || {}).n || 0; } catch (e) {}
     await send(env, cid, "📊 SON 24 SAAT\n\n🧾 Sipariş: " + (yr.n || 0) + " | " + fmtTL(yr.t || 0) + " TL\n👥 Sohbet: " + nch2);
+    return;
+  }
+  if (cmd === "/trendler") {
+    var lastR = await getSetting(env, "ai_radar_ts");
+    var rsy2 = (lastR && Date.now() - lastR < 10800000) ? { newTrends: 0, newLeads: 0, fetchedTrends: 0, fetchedLeads: 0, fresh: true } : await aiRadarSync(env);
+    var trows = [];
+    try { trows = (await env.DB.prepare("SELECT category, title, source FROM trend_news ORDER BY id DESC LIMIT 5").all()).results || []; } catch (e) {}
+    var tm = "📡 AYKAN RADAR — SON TRENDLER:\n\n";
+    trows.forEach(function (r) { tm += r.category + " | " + String(r.title).slice(0, 70) + " (" + r.source + ")\n"; });
+    tm += "\n📊 این دور: " + rsy2.fetchedTrends + " ترند اسکن → " + rsy2.newTrends + " جدید\n🌐 بلاگ سایت هم به‌روز شد.";
+    await send(env, cid, tm);
+    return;
+  }
+  if (cmd === "/lidyeni") {
+    var lastR3 = await getSetting(env, "ai_radar_ts");
+    var rsy3 = (lastR3 && Date.now() - lastR3 < 10800000) ? { newTrends: 0, newLeads: 0, fetchedTrends: 0, fetchedLeads: 0, fresh: true } : await aiRadarSync(env);
+    var lrows = [];
+    try { lrows = (await env.DB.prepare("SELECT name, area, score, source FROM ai_leads WHERE status='new' ORDER BY score DESC, id DESC LIMIT 8").all()).results || []; } catch (e) {}
+    var lm = "🎯 AYKAN RADAR — YENİ RESTORAN LİDLERİ:\n\n";
+    lrows.forEach(function (r) { lm += "• " + r.score + " | " + String(r.name).slice(0, 40) + " | " + r.area + " (" + r.source + ")\n"; });
+    lm += "\n📊 این دور: " + rsy3.fetchedLeads + " کاندیدا → " + rsy3.newLeads + " جدید\n➕ ثبت در پنل → تب 🤖 AI";
+    await send(env, cid, lm);
     return;
   }
   if (cmd === "/siparisler") {
@@ -855,7 +877,7 @@ async function handleUpdate(env, u) {
   var st = await getBotState(env);
 
   // ادمین؟
-  var adminCmds = ["/kanal", "/channel", "/kanalkapat", "/postnow", "/plan", "/aralik", "/interval", "/durdur", "/pause", "/devam", "/resume", "/lidedefteri", "/lidegonder", "/lidekanal", "/leadschannel", "/lidekanalkapat", "/bolge", "/yatirim", "/istatistik", "/stats", "/duyuru", "/durum", "/ping", "/siparisler", "/fiyatguncelle", "/stok", "/yardim", "/bul", "/rapor"];
+  var adminCmds = ["/kanal", "/channel", "/kanalkapat", "/postnow", "/plan", "/aralik", "/interval", "/durdur", "/pause", "/devam", "/resume", "/lidedefteri", "/lidegonder", "/lidekanal", "/leadschannel", "/lidekanalkapat", "/bolge", "/yatirim", "/istatistik", "/stats", "/duyuru", "/durum", "/ping", "/siparisler", "/fiyatguncelle", "/stok", "/yardim", "/bul", "/rapor", "/trendler", "/lidyeni"];
   for (var ai = 0; ai < adminCmds.length; ai++) {
     if (new RegExp("^" + adminCmds[ai].replace(/\//g, "\\/") + "(\\s|$)").test(low)) {
       if (st.admin_chat === cid) { await handleAdminCommand(env, cid, text); }
@@ -1055,6 +1077,7 @@ async function maybeTick(env) {
     await autopostTick(env);
     await cartNudge(env, nowTs);
     await weeklyReport(env);
+    await aiRadarMaybe(env);
   } catch (e) {}
 }
 async function weeklyReport(env) {
@@ -1110,6 +1133,108 @@ async function ensureWebhook(env) {
 }
 
 // ---------- روتر ----------
+// ---------- رادار AI: ترند غذایی + کاشف لید رستوران ----------
+var AI_ZONES = ["Bağcılar", "Esenler", "Başakşehir", "İkitelli", "Bahçelievler", "Şirinevler", "Güngören", "Merter", "Zeytinburnu", "Topkapı", "Bakırköy", "Gaziosmanpaşa", "Sultangazi", "Küçükçekmece", "Halkalı", "Sefaköy", "Esenyurt", "Mahmutbey", "Güneşli"];
+var AI_TREND_QUERIES = [
+  ["💰 قیمت گوشت", "et fiyatları zam"],
+  ["🥩 گوشت قرمز", "kırmızı et üretimi fiyat"],
+  ["🔥 منقل", "mangal sezonu trend"],
+  ["🍢 کباب", "kebap viral trend"],
+  ["🍽 ترند رستوران", "restoran trendleri 2026"],
+  ["🍗 مرغ", "tavuk fiyatları"],
+  ["🏪 صنعت قصابی", "kasap sektörü yenilik"],
+  ["🧊 امنیت غذایی", "gıda güvenliği et helal"]
+];
+var AI_LEAD_QUERIES = ["restoran açılışı İstanbul", "yeni restoran açıldı Bağcılar", "restoran açılışı Esenler Başakşehir", "kebapçı açılışı İstanbul", "kafe restoran yeni açtı İstanbul Avrupa", "otel restoran açılışı İstanbul", "catering firma açılışı İstanbul"];
+function aiUnesc(x) { return String(x || "").replace(/<!\[CDATA\[|\]\]>/g, "").replace(/&#(\d+);/g, function (m, n) { return String.fromCharCode(+n); }).replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"').trim(); }
+function rssParse(xml) {
+  var out = [], re = /<item>([\s\S]*?)<\/item>/g, m;
+  while ((m = re.exec(xml)) && out.length < 40) {
+    var b = m[1];
+    var t = aiUnesc((b.match(/<title>([\s\S]*?)<\/title>/) || [])[1]);
+    var l = aiUnesc((b.match(/<link>([\s\S]*?)<\/link>/) || [])[1]);
+    var pd = aiUnesc((b.match(/<pubDate>([\s\S]*?)<\/pubDate>/) || [])[1]);
+    var sc = aiUnesc((b.match(/<source[^>]*>([\s\S]*?)<\/source>/) || [])[1]) || "Google News";
+    if (t && l) out.push({ title: t, url: l, published: pd, source: sc });
+  }
+  return out;
+}
+function aiRealUrl(link) {
+  var m = String(link).match(/[?&]url=([^&]+)/);
+  if (m) { try { return decodeURIComponent(m[1]); } catch (e) {} }
+  return link;
+}
+function aiHost(u) { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return "Bing News"; } }
+async function rssFetchOne(u) {
+  try {
+    var r = await fetch(u, { headers: { "User-Agent": "AykanBot/1.0" }, signal: AbortSignal.timeout(8000) });
+    if (!r.ok) return [];
+    var its = rssParse(await r.text());
+    its.forEach(function (it) { it.url = aiRealUrl(it.url); if (it.source === "Google News") it.source = aiHost(it.url); });
+    return its;
+  } catch (e) { return []; }
+}
+async function rssFetch(q) {
+  var b = await rssFetchOne("https://www.bing.com/news/search?q=" + encodeURIComponent(q) + "&mkt=tr-TR&format=RSS");
+  if (b.length) return b;
+  return await rssFetchOne("https://news.google.com/rss/search?q=" + encodeURIComponent(q) + "&hl=tr&gl=TR&ceid=TR:tr");
+}
+function aiDaysAgo(pub) { var t = Date.parse(pub || ""); return isFinite(t) ? Math.max(0, Math.floor((Date.now() - t) / 86400000)) : 99; }
+function aiHasAny(low, words) { for (var i = 0; i < words.length; i++) if (low.indexOf(words[i]) > -1) return true; return false; }
+function aiExtractLead(it) {
+  var t = it.title.replace(/\s*-\s*[^-]*$/, "");
+  var m = t.match(/[""\u201c\u201d]([^""\u201c\u201d]+)[""\u201c\u201d]/);
+  var name = m ? m[1] : t.split(" açı")[0].replace(/^(Yeni|YENİ)\s+/, "");
+  name = String(name).trim().slice(0, 70);
+  var area = "İstanbul";
+  for (var i = 0; i < AI_ZONES.length; i++) { if (it.title.toLowerCase().indexOf(AI_ZONES[i].toLowerCase()) > -1) { area = AI_ZONES[i]; break; } }
+  var low = it.title.toLowerCase();
+  var score = 40;
+  if (aiHasAny(low, ["restoran", "kebap", "lokanta", "kafe", "otel", "catering", "mutfak", "yemek", "döner", "doner"])) score += 20;
+  if (AI_ZONES.slice(0, 14).indexOf(area) > -1) score += 25;
+  if (aiHasAny(low, ["açılış", "açıldı", "açtı", "hizmete girdi"])) score += 15;
+  var a = aiDaysAgo(it.published); if (a <= 7) score += 10; else if (a <= 30) score += 5;
+  return { name: name || it.title.slice(0, 60), area: area, source: it.source, url: it.url, title: it.title, published: it.published, score: Math.min(score, 100) };
+}
+async function aiRadarSync(env) {
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS trend_news (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), title TEXT, url TEXT UNIQUE, source TEXT, published TEXT, category TEXT)").run();
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_leads (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), name TEXT, area TEXT, url TEXT UNIQUE, source TEXT, score INTEGER, title TEXT, published TEXT, status TEXT DEFAULT 'new')").run();
+  var trends = [], leads = [], seenT = {}, seenL = {};
+  for (var i = 0; i < AI_TREND_QUERIES.length; i++) {
+    if (i) await new Promise(function (rs) { setTimeout(rs, 400); });
+    var items = await rssFetch(AI_TREND_QUERIES[i][1]);
+    for (var j = 0; j < items.length && j < 4; j++) {
+      var k = items[j].title.slice(0, 60);
+      if (!seenT[k]) { seenT[k] = 1; items[j].category = AI_TREND_QUERIES[i][0]; trends.push(items[j]); }
+    }
+  }
+  for (var i2 = 0; i2 < AI_LEAD_QUERIES.length; i2++) {
+    await new Promise(function (rs2) { setTimeout(rs2, 400); });
+    var items2 = await rssFetch(AI_LEAD_QUERIES[i2]);
+    for (var j2 = 0; j2 < items2.length; j2++) {
+      var it2 = items2[j2], low2 = it2.title.toLowerCase();
+      if (aiHasAny(low2, ["açılış", "açıldı", "açtı", "hizmete girdi", "kapılarını"]) && !seenL[it2.url]) { seenL[it2.url] = 1; leads.push(aiExtractLead(it2)); }
+    }
+  }
+  trends.sort(function (a, b) { return aiDaysAgo(a.published) - aiDaysAgo(b.published); });
+  leads.sort(function (a, b) { return b.score - a.score; });
+  var newT = 0, newL = 0;
+  var st = trends.slice(0, 24).map(function (t) { return env.DB.prepare("INSERT OR IGNORE INTO trend_news (title,url,source,published,category) VALUES (?,?,?,?,?)").bind(t.title.slice(0, 220), t.url.slice(0, 300), t.source.slice(0, 80), t.published.slice(0, 40), t.category); });
+  if (st.length) { var rs = await env.DB.batch(st); rs.forEach(function (r) { newT += (r.meta && r.meta.changes) || 0; }); }
+  var sl = leads.slice(0, 20).map(function (l) { return env.DB.prepare("INSERT OR IGNORE INTO ai_leads (name,area,url,source,score,title,published) VALUES (?,?,?,?,?,?,?)").bind(l.name.slice(0, 120), l.area.slice(0, 60), l.url.slice(0, 300), l.source.slice(0, 80), l.score, l.title.slice(0, 220), l.published.slice(0, 40)); });
+  if (sl.length) { var rs2 = await env.DB.batch(sl); rs2.forEach(function (r) { newL += (r.meta && r.meta.changes) || 0; }); }
+  await setSetting(env, "ai_radar_ts", Date.now());
+  return { newTrends: newT, newLeads: newL, fetchedTrends: trends.length, fetchedLeads: leads.length };
+}
+async function aiRadarMaybe(env) {
+  try {
+    var last = await getSetting(env, "ai_radar_ts");
+    if (last && Date.now() - last < 43200000) return;
+    var r = await aiRadarSync(env);
+    if (r.newTrends + r.newLeads > 0) await notifyAdmin(env, "📡 رادار AI گزارش داد:\n📈 " + r.newTrends + " ترند جدید\n🎯 " + r.newLeads + " لید جدید (رستوران)\n\n/trendler — ترندها\n/lidyeni — لیدهای AI");
+  } catch (e) {}
+}
+
 export default {
   async fetch(request, env, ctx) {
     var url = new URL(request.url);
@@ -1139,6 +1264,47 @@ export default {
       }
       var out = SIM; SIM = null;
       return new Response(JSON.stringify({ ok: true, calls: out }, null, 1), { headers: { "content-type": "application/json" } });
+    }
+    if (p === "/api/trends" && request.method === "GET") {
+      try {
+        await env.DB.prepare("CREATE TABLE IF NOT EXISTS trend_news (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT DEFAULT (datetime('now')), title TEXT, url TEXT UNIQUE, source TEXT, published TEXT, category TEXT)").run();
+        var limT = Math.min(parseInt(url.searchParams.get("limit") || "6", 10) || 6, 20);
+        var tr = await env.DB.prepare("SELECT category, title, url, source, published FROM trend_news ORDER BY id DESC LIMIT ?").bind(limT).all();
+        return new Response(JSON.stringify({ ok: true, trends: tr.results || [] }), { headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+      } catch (e) { return new Response(JSON.stringify({ ok: false, trends: [] }), { headers: { "content-type": "application/json", "access-control-allow-origin": "*" } }); }
+    }
+    if (p === "/api/radar-stats" && request.method === "GET") {
+      try {
+        var tn = ((await env.DB.prepare("SELECT COUNT(*) n FROM trend_news").first()) || {}).n || 0;
+        var ln = ((await env.DB.prepare("SELECT COUNT(*) n FROM ai_leads").first()) || {}).n || 0;
+        var ls = await getSetting(env, "ai_radar_ts");
+        return new Response(JSON.stringify({ ok: true, trends: tn, aiLeads: ln, lastSync: ls || 0 }), { headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
+      } catch (e) { return new Response(JSON.stringify({ ok: false }), { headers: { "content-type": "application/json", "access-control-allow-origin": "*" } }); }
+    }
+    if (p === "/api/dev-cleanup" && url.searchParams.get("key") === HOOK_SECRET) {
+      var outC = {};
+      try { await env.DB.prepare("DELETE FROM bot_chats WHERE chat_id < 0 OR (chat_id >= 555000000 AND chat_id <= 566000000)").run(); outC.chats = "ok"; } catch (e) { outC.chats = String(e).slice(0, 60); }
+      try { var stC = await getSetting(env, "bot_state"); if (stC) { stC.admin_chat = null; await setSetting(env, "bot_state", stC); } outC.admin = "ok"; } catch (e) { outC.admin = String(e).slice(0, 60); }
+      return new Response(JSON.stringify({ ok: true, done: outC }), { headers: { "content-type": "application/json" } });
+    }
+    if (p === "/api/ai/test" && url.searchParams.get("key") === HOOK_SECRET) {
+      var q1 = url.searchParams.get("q") || "et fiyatları";
+      var src1 = url.searchParams.get("src") || "google";
+      var t0 = Date.now();
+      var u1 = src1 === "bing" ? "https://www.bing.com/news/search?q=" + encodeURIComponent(q1) + "&format=RSS" : "https://news.google.com/rss/search?q=" + encodeURIComponent(q1) + "&hl=tr&gl=TR&ceid=TR:tr";
+      var stat = "?", err = "";
+      try {
+        var r1 = await fetch(u1, { headers: { "User-Agent": "AykanBot/1.0" }, signal: AbortSignal.timeout(10000) });
+        stat = String(r1.status);
+        var tx = await r1.text();
+        var its = rssParse(tx);
+        return new Response(JSON.stringify({ ok: true, src: src1, status: stat, items: its.length, ms: Date.now() - t0, first: (its[0] || {}).title || "" }), { headers: { "content-type": "application/json" } });
+      } catch (e) { err = String(e).slice(0, 150); }
+      return new Response(JSON.stringify({ ok: false, src: src1, status: stat, err: err, ms: Date.now() - t0 }), { headers: { "content-type": "application/json" } });
+    }
+    if (p === "/api/ai/sync" && (url.searchParams.get("key") === HOOK_SECRET || (request.headers.get("x-sim-key") || "") === HOOK_SECRET)) {
+      var rsy = await aiRadarSync(env);
+      return new Response(JSON.stringify({ ok: true, result: rsy }), { headers: { "content-type": "application/json", "access-control-allow-origin": "*" } });
     }
     if (p === "/api/b2b/rfq" && request.method === "POST") {
       try {
