@@ -506,7 +506,7 @@ var HREFS = {"s10": {"fa": "https://wa.me/905377325269?text=%D8%B3%D9%84%D8%A7%D
 var CUR = 'tr';
 var API_BASE=/\.workers\.dev$/.test(location.hostname)?'':'https://lively-mouse-0c7c.aykanet34.workers.dev';
 function t(k){var d=I18N[CUR]||{};if(d[k]!=null)return d[k];var f=I18N.fa[k];return f!=null?f:k}
-function num(n){n=String(n);if(CUR==='fa')return n.replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d]}).replace(/,/g,'٬');if(CUR==='ar')return n.replace(/\d/g,function(d){return '٠١٢٣٤٥٦٧٨٩'[d]});return n}
+function num(n){n=String(n).replace(/\B(?=(\d{3})+(?!\d))/g,function(){return CUR==='fa'?'٬':CUR==='ar'?'٬':CUR==='en'?',':CUR==='ru'?'\u00a0':'.'});if(CUR==='fa')return n.replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[d]});if(CUR==='ar')return n.replace(/\d/g,function(d){return '٠١٢٣٤٥٦٧٨٩'[d]});return n}
 function applyLang(l){
   CUR=l;
   var rtl=(l==='fa'||l==='ar');
