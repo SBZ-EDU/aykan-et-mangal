@@ -17,11 +17,12 @@ jobs:
             "https://lively-mouse-0c7c.aykanet34.workers.dev/" \
             "https://lively-mouse-0c7c.aykanet34.workers.dev/health" \
             "https://lively-mouse-0c7c.aykanet34.workers.dev/brosur/aykan_fiyat_brosuru_baski.pdf" \
-            "https://aykan-panel.aykanet34.workers.dev/api/ping" \
+            "https://lively-mouse-0c7c.aykanet34.workers.dev/api/ping" \
             "https://lively-mouse-0c7c.elasa2next.workers.dev/" \
             "https://lively-mouse-0c7c.elasa2next.workers.dev/health" \
             "https://lively-mouse-0c7c.elasa2next.workers.dev/aykan.vcf" \
-            "https://aykan-panel.elasa2next.workers.dev/api/ping" \
+            "https://lively-mouse-0c7c.elasa2next.workers.dev/api/ping" \
+            "https://aykan.atikova.org/" \
             "https://t.me/Aykan_Et_mangal_shopping_bot"; do
             code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 -A "AykanBot/1.0" "$u" || echo 000)
             echo "$u → $code"
