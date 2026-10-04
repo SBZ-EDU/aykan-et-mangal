@@ -2599,7 +2599,7 @@ export default {
       try { await autopostTick(env); done.autopost = "ok"; } catch (e) { done.autopost = String(e).slice(0, 120); }
       return new Response(JSON.stringify({ ok: true, detail: done }), { headers: { "content-type": "application/json" } });
     }
-    if (p === "/health") return new Response("OK — Aykan All-in-One v7.17.0 (site + panel + bot + radar)");
+    if (p === "/health") return new Response("OK — Aykan All-in-One v7.18.0 (site + panel + bot + radar)");
     if (p === "/api/setup" && url.searchParams.get("key") === HOOK_SECRET) {
       var r2 = await ensureWebhook(env);
       return new Response(JSON.stringify(r2), { headers: { "content-type": "application/json" } });

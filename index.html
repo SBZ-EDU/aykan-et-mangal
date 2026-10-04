@@ -9,11 +9,11 @@
 <meta content="index, follow" name="robots"/>
 <link href="https://lively-mouse-0c7c.aykanet34.workers.dev/" rel="canonical"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%A9%3C/text%3E%3C/svg%3E"/>
-<meta content="#120f0e" name="theme-color"/>
+<meta content="#df231d" name="theme-color"/>
 <link href="manifest.json" rel="manifest"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Vazirmatn:wght@400;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Vazirmatn:wght@400;700;800;900&amp;display=swap" rel="stylesheet"/>
 <meta content="website" property="og:type"/>
 <meta content="Aykan Et &amp; Mangal" property="og:site_name"/>
 <meta content="قصاب آیکان — ما گوشت نمی‌فروشیم؛ خیالِ منقلِ شما را می‌فروشیم 🔥" property="og:title"/>
@@ -37,9 +37,9 @@
 </script>
 <style>
 :root{
-  --ink:#f5f5f4; --ink2:#d6d3d1; --mut:#a8a29e; --bg:#120f0e; --card:#1c1917;
-  --red:#c1272d; --red-d:#8e1a20; --green:#16a34a; --amber:#d97706; --line:#2b2724;
-  --bone:#f6f1ea; --ember:#e2621c; --coal8:#1c1917; --coal9:#120f0e;
+  --ink:#1B1C20; --ink2:#44464d; --mut:#6d7076; --bg:#ffffff; --card:#ffffff;
+  --red:#df231d; --red-d:#b91a16; --green:#16a34a; --amber:#d97706; --line:#e6e4df;
+  --brick:#7d2728; --sage:#eef1ea; --yellow:#F5A800;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:Vazirmatn,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,Arial,sans-serif}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -288,33 +288,30 @@ h1{font-size:27px}
 [dir=ltr] .admin{left:auto;right:14px}
 [dir=ltr] .lsw{left:auto;right:14px}
 
-/* ═════ تم تیرهٔ آیکان — مشکی + قرمز ═════ */
+/* ═════ تم Coşkun/Horizon — روشن + قرمز #df231d (v7.18.0) ═════ */
 body{background:var(--bg)}
-.nav{background:rgba(18,14,12,.95)}
-.nav a.on{background:var(--red)}
+.nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line)}
+.nwrap{background:rgba(255,255,255,.98)}
 .navburger{background:var(--red);border-color:var(--red)}
-.nwrap{background:rgba(22,17,15,.98)}
-.badge{background:var(--card)}
-.btn-gh{background:transparent;color:var(--ink);border-color:var(--line)}
-.chip{background:var(--card)}
-.tag{background:rgba(23,18,15,.88);color:#fff}
-.tag.raw{color:var(--ink2)}
-.igtag{background:rgba(23,18,15,.9);color:#fff}
-.vid .cat{background:rgba(23,18,15,.9);color:var(--ink2)}
-.builder,.persona{background:#1d1613;border:1px solid var(--line)}
-.bill{background:#241c18}
-.rfqsum{background:#1d1613}
-.tip{background:var(--card)}
-.tcard{background:var(--card)}
-.tempty{background:transparent;border-color:var(--line)}
+.badge{background:var(--yellow);color:#1B1C20}
+.chip{background:#fff;border:1px solid var(--line)}
+.tag{background:var(--red);color:#fff}
+.tag.raw{color:var(--brick);background:#fff;border:1px solid var(--line)}
+.igtag{background:rgba(255,255,255,.93);color:var(--ink)}
+.vid .cat{background:rgba(255,255,255,.93);color:var(--ink)}
+.builder,.persona{background:var(--ink)}
+.bill{background:#fff}
+.rfqsum{background:#f4f3f0}
+.tip{background:#fff;border:1px solid var(--line)}
+.tcard{background:var(--card);border:1px solid var(--line)}
 .tcat{background:var(--red)}
-details{background:var(--card)}
-footer{background:#14100e}
-.f-top{background:#2a221e}
-.lsw{background:rgba(22,17,15,.97)}
-.lsw button.on{background:rgba(185,28,28,.25)}
-.brcard{background:var(--card)}
-.step button{background:#241c18;border-color:#3a2f28}
+details{background:var(--card);border:1px solid var(--line)}
+footer{background:#1B1C20}
+.f-top{background:#2b2d33}
+.lsw{background:rgba(255,255,255,.97)}
+.lsw button.on{background:rgba(223,35,29,.12)}
+.brcard{background:#fff;border:1px solid var(--line)}
+.step button{background:#f5f5f5;color:#1B1C20;border-color:rgba(27,28,32,.25)}
 
 /* ═══ هدر برند ═══ */
 .brandbar{border-bottom:1px solid var(--line);background:var(--bg)}
@@ -328,33 +325,60 @@ footer{background:#14100e}
 .bhrs{color:var(--mut)}
 @media(max-width:640px){.bhrs{display:none}.btxt small{display:none}.bwrap{padding:9px 12px}.blogo{width:40px;height:40px;font-size:20px}}
 
-/* ═════ تم redesign v7.17 — Anton + هیروی تمام‌صفحه + grain + bone ═════ */
-h1,h2,.btxt b,.card .tr{font-family:Anton,"Vazirmatn",-apple-system,sans-serif;font-weight:400;letter-spacing:.035em}
-h1{line-height:1.06;text-transform:uppercase}
-h2{line-height:1.12}
-.card .tr{letter-spacing:.16em;text-transform:uppercase;color:var(--ember)}
-.btxt small{letter-spacing:.22em;text-transform:uppercase;font-size:10px}
+/* ═════ تم Coşkun v7.18 — Inter + گوشه‌تیز + بلوک‌های رنگی ═════ */
+body,.frm input,.frm textarea,.rfqrow input{font-family:Inter,Vazirmatn,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,.btxt b,.card .tr{font-family:Inter,Vazirmatn,sans-serif;font-weight:800;letter-spacing:-.015em}
+h1{line-height:1.08}
+h2{line-height:1.15}
+.card .tr{letter-spacing:0;text-transform:none;color:var(--ink)}
+.btxt small{letter-spacing:.24em;text-transform:uppercase;color:var(--brick);font-weight:700}
+.shead .ssub{color:var(--mut)}
 
-.hero{grid-template-columns:1fr;position:relative;isolation:isolate;padding:74px 0 64px}
-.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url(assets/hero.jpg) center 32%/cover no-repeat;opacity:.5}
-.hero::after{content:"";position:absolute;inset:0;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E"),linear-gradient(to top,var(--coal9) 2%,rgba(18,15,14,.78) 46%,rgba(18,15,14,.42) 100%)}
-.hero-img{display:none}
-.hero .cta{max-width:640px}
-.badge .dot{animation:ayflicker 2.2s ease-in-out infinite}
-@keyframes ayflicker{0%,100%{opacity:1}50%{opacity:.55}}
-@media(max-width:760px){.hero{padding:52px 0 46px}.hero::before{background-position:center 40%}}
+/* هیرو: عکس واقعی + پوشش قرمز Coşkun (بنر Kırmızı) */
+.hero{color:#fff}
+.hero::before{opacity:.62}
+.hero::after{background-image:linear-gradient(100deg,rgba(223,35,29,.96) 4%,rgba(223,35,29,.78) 42%,rgba(16,3,3,.42) 100%)}
+.hero h1{color:#fff}
+.hero .lead{color:rgba(255,255,255,.94)}
+.hero dl dt{color:rgba(255,255,255,.75)}
+.hero dl dd{color:#fff}
+.hero .btn-gh{color:#fff;border-color:rgba(255,255,255,.5)}
+@media(max-width:760px){.hero::after{background-image:linear-gradient(180deg,rgba(223,35,29,.9) 0%,rgba(223,35,29,.55) 55%,rgba(16,3,3,.5) 100%)}}
 
-#sube{background:var(--bone)}
-#sube .shead h2{color:#1c1917}
-#sube .ssub{color:#57534e}
-.brcard{background:#fff;border-color:#e7e0d6}
-.brb h3{color:#1c1917}
-.brb p{color:#57534e}
-.brh{color:#1c1917}
-.brbtns .btn{background:var(--red);color:#fff;border:0;box-shadow:0 10px 24px rgba(193,39,45,.25)}
-.brmap{border-color:#e7e0d6}
+/* دکمه‌ها: تیز + بزرگ‌حرف (امضای Horizon) */
+.btn{border-radius:0;text-transform:uppercase;font-weight:700;letter-spacing:.05em;padding:14px 26px}
+.btn-gh{border-radius:0;text-transform:uppercase;font-weight:700;letter-spacing:.05em;padding:14px 26px}
+.brbtns .btn{box-shadow:none}
+.nav a{text-transform:uppercase;font-weight:600;letter-spacing:.04em;font-size:12.5px}
+.price{color:var(--brick)}
+.tag.hot{background:var(--yellow);color:#1B1C20}
 
-.tag.hot{background:var(--ember)}
+/* گوشه‌های تیز (radius 0) — کارت‌ها و فرم‌ها */
+.card,.brcard,.tcard,.tag,.chip,.badge,.bitem,.pbadge,.bill,.rfqrow,.rfqsum,.frm input,.frm textarea,.vid,.builder,.persona,.step button,.brmap,details{border-radius:0}
+
+/* سکشن سِیج — شعبه‌ها */
+#sube{background:var(--sage)}
+#sube .shead h2{color:#1B1C20}
+#sube .ssub{color:#5c5f66}
+.brb h3{color:#1B1C20}
+.brb p{color:#5c5f66}
+.brh{color:#1B1C20}
+.brbtns .btn{background:var(--red);color:#fff;border:0}
+.brmap{border-color:#dcdaD3}
+
+.ctaband{background:var(--red)}
+.admin{background:var(--red)}
+
+/* ── اصلاح کنتراست‌های ممیزی v7.18 ── */
+.btn-wa{background:var(--red)}
+.nav a.navcta{background:var(--red)}
+.tag.new{background:#b45309}
+.tip b{color:#b45309}
+.ctaband p{color:rgba(255,255,255,.96)}
+.builder,.persona{--mut:#a9adb4}
+.builder :is(.bill,.rfqsum){--mut:#6d7076}
+footer{--mut:#9aa0a8}
+.bill .row.disc{color:#15803d}
 </style>
 </head>
 <body id="top">
