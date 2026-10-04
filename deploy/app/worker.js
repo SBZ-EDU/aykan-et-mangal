@@ -2625,7 +2625,7 @@ export default {
       try { await autopostTick(env); done.autopost = "ok"; } catch (e) { done.autopost = String(e).slice(0, 120); }
       return new Response(JSON.stringify({ ok: true, detail: done }), { headers: { "content-type": "application/json" } });
     }
-    if (p === "/health") return new Response("OK — Aykan All-in-One v7.20.0 (site + panel + bot + radar)");
+    if (p === "/health") return new Response("OK — Aykan All-in-One v7.21.0 (site + panel + bot + radar)");
     if (p === "/api/theme") {
       var jth = { "content-type": "application/json", "access-control-allow-origin": "*" };
       if (request.method === "GET") {
