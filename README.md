@@ -1,34 +1,20 @@
-# 🥩 Aykan Et & Mangal | Kasap Izgara
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-**ET • BALIK • TAVUK • KUZU — Tanzim Satış Mağazası** (Istanbul)
+# Run and deploy your AI Studio app
 
-## 📍 Şubeler / شعب / Branches
-| 🏪 Şube | 📌 Adres | 🕗 Saat |
-|---|---|---|
-| **1 — Bağcılar Göztepe** | Göztepe Mah. Maslak Cad. No: 95A-95C (Göztepe Metro yanı) | Her gün 22:30'a kadar |
-| **2 — Esenler Kemer** | Kemer Mah. 926. Sokak No: 2/C, 34218 Esenler | Her gün 22:30'a kadar |
+This contains everything you need to run your app locally.
 
-## 🛒 Güncel Vitrin Fiyatları / قیمت‌های ویترین
-| Ürün | Fiyat |
-|---|---|
-| Dana Kemikli Et | 650 TL/Kg |
-| Dana Kuşbaşı / Özel Çekim Kıyma | 750 TL/Kg |
-| Dana Antrikot | 1.100 TL/Kg |
-| Kuzu Et / Kuşbaşı | 1.069 TL/Kg |
-| Kuzu Pirzola | 1.399 TL/Kg |
-| 🔥 Aykan Özel Mangal Paketi (1 Kg et + 1 Kg marine tavuk + kömür + sos) | 998 TL |
-| 🌯 Viral Tortilla Kebabı (10 dk) | 399 TL |
+View your app in AI Studio: https://ai.studio/apps/69e8269d-ec5f-46f3-8a59-ffe13601ebaa
 
-## 💬 İletişim
-- 📞 **Tel / WhatsApp: 0537 732 52 69** → https://wa.me/905377325269
-- 📸 Instagram: **@aykanetmangal**
-- ✈️ Telegram Sipariş Botu: **@AykanEtmangal_shapping_bot**
-- 📢 Kanal: **@AykanEtmangal_shopping**
+## Run Locally
 
-## 🌐 Yayınlar / Deployments
-- GitHub Pages: https://sbz-edu.github.io/aykan-et-mangal/
-- Cloudflare Pages: (portal)
-- HuggingFace Space: (mirror)
+**Prerequisites:**  Node.js
 
----
-<div dir="rtl">🇮🇷 فروشگاه قصابی آیکان ات و منگال — باجیلار و اسنلر، استانبول. سفارش واتساپ: 0537 732 52 69</div>
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

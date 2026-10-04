@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Vazirmatn", system-ui, sans-serif;
+  --font-display: "Anton", "Vazirmatn", sans-serif;
+  --color-bone: #f6f1ea;
+  --color-brand: #c1272d;
+  --color-brand-dark: #8e1a20;
+  --color-ember-50: #fff4ec;
+  --color-ember-100: #ffe4d1;
+  --color-ember-400: #f2833a;
+  --color-ember-500: #e2621c;
+  --color-ember-600: #c24d12;
+  --color-coal-800: #1c1917;
+  --color-coal-900: #120f0e;
+}
+
+html { scroll-behavior: smooth; }
+body { @apply bg-coal-900 text-stone-100 font-sans antialiased; }
+
+.grain::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+}
+
+@keyframes flicker { 0%,100%{opacity:1} 50%{opacity:.6} }
+.flicker { animation: flicker 2.2s ease-in-out infinite; }
+
+@keyframes rise { from { opacity:0; transform: translateY(18px);} to { opacity:1; transform:none;} }
+.rise { animation: rise .7s ease-out both; }
