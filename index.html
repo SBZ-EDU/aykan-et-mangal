@@ -9,11 +9,11 @@
 <meta content="index, follow" name="robots"/>
 <link href="https://lively-mouse-0c7c.aykanet34.workers.dev/" rel="canonical"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%A9%3C/text%3E%3C/svg%3E"/>
-<meta content="#b91c1c" name="theme-color"/>
+<meta content="#120f0e" name="theme-color"/>
 <link href="manifest.json" rel="manifest"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Vazirmatn:wght@400;700;800;900&amp;display=swap" rel="stylesheet"/>
 <meta content="website" property="og:type"/>
 <meta content="Aykan Et &amp; Mangal" property="og:site_name"/>
 <meta content="قصاب آیکان — ما گوشت نمی‌فروشیم؛ خیالِ منقلِ شما را می‌فروشیم 🔥" property="og:title"/>
@@ -37,8 +37,9 @@
 </script>
 <style>
 :root{
-  --ink:#f3eee9; --ink2:#d6cdc4; --mut:#a59b92; --bg:#0f0c0b; --card:#191412;
-  --red:#b91c1c; --red-d:#8f1616; --green:#16a34a; --amber:#d97706; --line:#2b2420;
+  --ink:#f5f5f4; --ink2:#d6d3d1; --mut:#a8a29e; --bg:#120f0e; --card:#1c1917;
+  --red:#c1272d; --red-d:#8e1a20; --green:#16a34a; --amber:#d97706; --line:#2b2724;
+  --bone:#f6f1ea; --ember:#e2621c; --coal8:#1c1917; --coal9:#120f0e;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:Vazirmatn,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,Arial,sans-serif}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -326,6 +327,34 @@ footer{background:#14100e}
 .btel{color:var(--ink);text-decoration:none}
 .bhrs{color:var(--mut)}
 @media(max-width:640px){.bhrs{display:none}.btxt small{display:none}.bwrap{padding:9px 12px}.blogo{width:40px;height:40px;font-size:20px}}
+
+/* ═════ تم redesign v7.17 — Anton + هیروی تمام‌صفحه + grain + bone ═════ */
+h1,h2,.btxt b,.card .tr{font-family:Anton,"Vazirmatn",-apple-system,sans-serif;font-weight:400;letter-spacing:.035em}
+h1{line-height:1.06;text-transform:uppercase}
+h2{line-height:1.12}
+.card .tr{letter-spacing:.16em;text-transform:uppercase;color:var(--ember)}
+.btxt small{letter-spacing:.22em;text-transform:uppercase;font-size:10px}
+
+.hero{grid-template-columns:1fr;position:relative;isolation:isolate;padding:74px 0 64px}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url(assets/hero.jpg) center 32%/cover no-repeat;opacity:.5}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E"),linear-gradient(to top,var(--coal9) 2%,rgba(18,15,14,.78) 46%,rgba(18,15,14,.42) 100%)}
+.hero-img{display:none}
+.hero .cta{max-width:640px}
+.badge .dot{animation:ayflicker 2.2s ease-in-out infinite}
+@keyframes ayflicker{0%,100%{opacity:1}50%{opacity:.55}}
+@media(max-width:760px){.hero{padding:52px 0 46px}.hero::before{background-position:center 40%}}
+
+#sube{background:var(--bone)}
+#sube .shead h2{color:#1c1917}
+#sube .ssub{color:#57534e}
+.brcard{background:#fff;border-color:#e7e0d6}
+.brb h3{color:#1c1917}
+.brb p{color:#57534e}
+.brh{color:#1c1917}
+.brbtns .btn{background:var(--red);color:#fff;border:0;box-shadow:0 10px 24px rgba(193,39,45,.25)}
+.brmap{border-color:#e7e0d6}
+
+.tag.hot{background:var(--ember)}
 </style>
 </head>
 <body id="top">
