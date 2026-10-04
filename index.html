@@ -10,10 +10,21 @@
 <link href="https://lively-mouse-0c7c.aykanet34.workers.dev/" rel="canonical"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A5%A9%3C/text%3E%3C/svg%3E"/>
 <meta content="#df231d" name="theme-color"/>
+<script>
+(function(){var V=["dark","redesign","coskun","bonfilet"];
+function ap(t){document.documentElement.setAttribute("data-theme",t);var m=document.querySelector("meta[name=theme-color]");if(m){var c={dark:"#b91c1c",redesign:"#120f0e",coskun:"#df231d",bonfilet:"#fffaf3"};if(c[t])m.setAttribute("content",c[t]);}}
+var q=null;try{q=new URLSearchParams(location.search).get("theme")}catch(e){}
+if(q&&V.indexOf(q)>-1){try{localStorage.setItem("aykan_theme",q)}catch(e){}}
+var t=q;if(!t){try{t=localStorage.getItem("aykan_theme")}catch(e){}}
+if(!t){var srv=null;try{srv=localStorage.getItem("aykan_theme_srv")}catch(e){}if(srv&&V.indexOf(srv)>-1)t=srv;}
+if(t)ap(t);
+fetch("/api/theme").then(function(r){return r.json()}).then(function(d){if(!d||!d.theme||V.indexOf(d.theme)<0)return;try{localStorage.setItem("aykan_theme_srv",d.theme)}catch(e){}var forced=q||(function(){try{return localStorage.getItem("aykan_theme")}catch(e){return null}})();if(!forced){var cur=document.documentElement.getAttribute("data-theme")||"coskun";if(d.theme!==cur)ap(d.theme);}}).catch(function(){});
+})();
+</script>
 <link href="manifest.json" rel="manifest"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Vazirmatn:wght@400;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Inter:wght@400;500;600;700;800&amp;family=Montserrat:wght@400;500;700;800;900&amp;family=Vazirmatn:wght@400;700;800;900&amp;display=swap" rel="stylesheet"/>
 <meta content="website" property="og:type"/>
 <meta content="Aykan Et &amp; Mangal" property="og:site_name"/>
 <meta content="قصاب آیکان — ما گوشت نمی‌فروشیم؛ خیالِ منقلِ شما را می‌فروشیم 🔥" property="og:title"/>
@@ -379,6 +390,186 @@ h2{line-height:1.15}
 .builder :is(.bill,.rfqsum){--mut:#6d7076}
 footer{--mut:#9aa0a8}
 .bill .row.disc{color:#15803d}
+
+/* ═════ موتور تم v7.19 — ۴ تم قابل تعویض توسط ادمین (پیش‌فرض = coskun) ═════ */
+
+/* ── تم ۱: تیرهٔ کلاسیک آیکان (v7.16) ── */
+html[data-theme="dark"]{--ink:#f3eee9;--ink2:#d6cdc4;--mut:#a59b92;--bg:#0f0c0b;--card:#191412;--red:#b91c1c;--red-d:#8f1616;--green:#16a34a;--amber:#d97706;--line:#2b2420}
+html[data-theme="dark"] body{background:var(--bg)}
+html[data-theme="dark"] body,html[data-theme="dark"] .frm input,html[data-theme="dark"] .frm textarea,html[data-theme="dark"] .rfqrow input{font-family:Vazirmatn,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,Arial,sans-serif}
+html[data-theme="dark"] h1,html[data-theme="dark"] h2,html[data-theme="dark"] h3,html[data-theme="dark"] .btxt b,html[data-theme="dark"] .card .tr{font-family:Vazirmatn,-apple-system,sans-serif;font-weight:900;letter-spacing:0}
+html[data-theme="dark"] .card .tr{letter-spacing:0;text-transform:none;color:var(--ink)}
+html[data-theme="dark"] .btxt small{letter-spacing:0;text-transform:none;font-size:12px;color:var(--amber)}
+html[data-theme="dark"] .nav{background:rgba(15,12,11,.95);border-bottom:1px solid var(--line)}
+html[data-theme="dark"] .nav a{text-transform:none;letter-spacing:0;font-size:14px;font-weight:800}
+html[data-theme="dark"] .nwrap{background:rgba(18,14,12,.98)}
+html[data-theme="dark"] .badge{background:var(--card);color:var(--green)}
+html[data-theme="dark"] .badge .dot{animation:none}
+html[data-theme="dark"] .chip{background:var(--card);border:1px solid var(--line)}
+html[data-theme="dark"] .tag{background:rgba(23,18,15,.88);color:#fff}
+html[data-theme="dark"] .tag.raw{color:var(--ink2)}
+html[data-theme="dark"] .tag.hot{background:var(--red);color:#fff}
+html[data-theme="dark"] .tag.new{background:var(--amber);color:#fff}
+html[data-theme="dark"] .igtag{background:rgba(23,18,15,.9);color:#fff}
+html[data-theme="dark"] .vid .cat{background:rgba(23,18,15,.9);color:var(--ink2)}
+html[data-theme="dark"] .builder,html[data-theme="dark"] .persona{background:#1d1613;border:1px solid var(--line)}
+html[data-theme="dark"] .bill{background:#241c18}
+html[data-theme="dark"] .rfqsum{background:#1d1613}
+html[data-theme="dark"] .tip{background:var(--card)}
+html[data-theme="dark"] .tcard{background:var(--card)}
+html[data-theme="dark"] .tcat{background:var(--red)}
+html[data-theme="dark"] details{background:var(--card)}
+html[data-theme="dark"] footer{background:#14100e}
+html[data-theme="dark"] .f-top{background:#2a221e}
+html[data-theme="dark"] .lsw{background:rgba(18,14,12,.97)}
+html[data-theme="dark"] .lsw button.on{background:rgba(185,28,28,.25)}
+html[data-theme="dark"] .brcard{background:var(--card)}
+html[data-theme="dark"] .step button{background:#241c18;color:#fff;border-color:#3a2f28}
+html[data-theme="dark"] .btn,html[data-theme="dark"] .btn-gh{border-radius:14px;text-transform:none;letter-spacing:0;font-weight:800}
+html[data-theme="dark"] .btn-wa{background:var(--green)}
+html[data-theme="dark"] .nav a.navcta{background:var(--green)}
+html[data-theme="dark"] .bill .row.disc{color:var(--green)}
+html[data-theme="dark"] .price{color:var(--red)}
+html[data-theme="dark"] .ticker{background:var(--red);color:#fff}
+html[data-theme="dark"] .hero{grid-template-columns:1.15fr .85fr;padding:44px 0 24px;color:var(--ink)}
+html[data-theme="dark"] .hero::before{content:none}
+html[data-theme="dark"] .hero::after{content:none}
+html[data-theme="dark"] .hero-img{display:block}
+html[data-theme="dark"] .hero h1{color:var(--ink)}
+html[data-theme="dark"] .hero .lead{color:var(--ink2)}
+html[data-theme="dark"] .hero dl dt{color:var(--mut)}
+html[data-theme="dark"] .hero dl dd{color:var(--ink)}
+html[data-theme="dark"] .hero .btn-gh{color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] #sube{background:transparent}
+html[data-theme="dark"] #sube .shead h2,html[data-theme="dark"] .brb h3,html[data-theme="dark"] .brh{color:var(--ink)}
+html[data-theme="dark"] #sube .ssub,html[data-theme="dark"] .brb p{color:var(--mut)}
+html[data-theme="dark"] .brbtns .btn{box-shadow:none;background:var(--red)}
+html[data-theme="dark"] .ctaband{background:linear-gradient(135deg,var(--red),var(--red-d))}
+html[data-theme="dark"] .admin{background:#1c1917}
+
+/* ── تم ۲: redesign (v7.17 — Anton + coal + grain) ── */
+html[data-theme="redesign"]{--ink:#f5f5f4;--ink2:#d6d3d1;--mut:#a8a29e;--bg:#120f0e;--card:#1c1917;--red:#c1272d;--red-d:#8e1a20;--green:#16a34a;--amber:#d97706;--line:#2b2724;--bone:#f6f1ea;--ember:#e2621c;--coal8:#1c1917;--coal9:#120f0e}
+html[data-theme="redesign"] body{background:var(--bg)}
+html[data-theme="redesign"] body,html[data-theme="redesign"] .frm input,html[data-theme="redesign"] .frm textarea,html[data-theme="redesign"] .rfqrow input{font-family:Vazirmatn,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,Arial,sans-serif}
+html[data-theme="redesign"] h1,html[data-theme="redesign"] h2,html[data-theme="redesign"] h3,html[data-theme="redesign"] .btxt b,html[data-theme="redesign"] .card .tr{font-family:Anton,"Vazirmatn",-apple-system,sans-serif;font-weight:400;letter-spacing:.035em}
+html[data-theme="redesign"] h1{line-height:1.06;text-transform:uppercase}
+html[data-theme="redesign"] .card .tr{letter-spacing:.16em;text-transform:uppercase;color:var(--ember)}
+html[data-theme="redesign"] .btxt small{letter-spacing:.22em;text-transform:uppercase;font-size:10px;color:var(--ember)}
+html[data-theme="redesign"] .price{color:var(--red)}
+html[data-theme="redesign"] .ticker{background:var(--red);color:#fff}
+html[data-theme="redesign"] .btn,html[data-theme="redesign"] .btn-gh{border-radius:14px;text-transform:none;letter-spacing:0;font-weight:800}
+html[data-theme="redesign"] .btn-wa{background:var(--green)}
+html[data-theme="redesign"] .nav a.navcta{background:var(--green)}
+html[data-theme="redesign"] .bill .row.disc{color:var(--green)}
+html[data-theme="redesign"] .nav{background:rgba(18,15,14,.92);border-bottom:1px solid rgba(255,255,255,.1)}
+html[data-theme="redesign"] .nwrap{background:rgba(18,15,14,.98)}
+html[data-theme="redesign"] .badge{background:#fff;color:var(--green)}
+html[data-theme="redesign"] .badge .dot{animation:ayflicker 2.2s ease-in-out infinite}
+@keyframes ayflicker{0%,100%{opacity:1}50%{opacity:.55}}
+html[data-theme="redesign"] .chip{background:var(--card);border:1px solid var(--line)}
+html[data-theme="redesign"] .tag{background:rgba(23,18,15,.88);color:#fff}
+html[data-theme="redesign"] .tag.raw{color:var(--ink2)}
+html[data-theme="redesign"] .tag.hot{background:var(--ember)}
+html[data-theme="redesign"] .tag.new{background:var(--amber);color:#fff}
+html[data-theme="redesign"] .igtag{background:rgba(23,18,15,.9);color:#fff}
+html[data-theme="redesign"] .vid .cat{background:rgba(23,18,15,.9);color:var(--ink2)}
+html[data-theme="redesign"] .builder,html[data-theme="redesign"] .persona{background:#1d1613;border:1px solid var(--line)}
+html[data-theme="redesign"] .bill{background:#241c18}
+html[data-theme="redesign"] .rfqsum{background:#1d1613}
+html[data-theme="redesign"] .tip{background:var(--card)}
+html[data-theme="redesign"] .tcard{background:var(--card)}
+html[data-theme="redesign"] .tcat{background:var(--red)}
+html[data-theme="redesign"] details{background:var(--card)}
+html[data-theme="redesign"] footer{background:#14100e}
+html[data-theme="redesign"] .f-top{background:#2a221e}
+html[data-theme="redesign"] .lsw{background:rgba(18,15,14,.97)}
+html[data-theme="redesign"] .lsw button.on{background:rgba(193,39,45,.25)}
+html[data-theme="redesign"] .brcard{background:var(--card)}
+html[data-theme="redesign"] .step button{background:#241c18;color:#fff;border-color:#3a2f28}
+html[data-theme="redesign"] .hero{grid-template-columns:1fr;position:relative;isolation:isolate;padding:74px 0 64px}
+html[data-theme="redesign"] .hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url(assets/hero.jpg) center 32%/cover no-repeat;opacity:.5}
+html[data-theme="redesign"] .hero::after{content:"";position:absolute;inset:0;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E"),linear-gradient(to top,#120f0e 2%,rgba(18,15,14,.78) 46%,rgba(18,15,14,.42) 100%)}
+html[data-theme="redesign"] .hero-img{display:none}
+html[data-theme="redesign"] .hero .cta{max-width:640px}
+html[data-theme="redesign"] .hero h1{color:#fff}
+html[data-theme="redesign"] .hero .lead{color:rgba(255,255,255,.94)}
+html[data-theme="redesign"] .hero dl dt{color:rgba(255,255,255,.75)}
+html[data-theme="redesign"] .hero dl dd{color:#fff}
+html[data-theme="redesign"] .hero .btn-gh{color:#fff;border-color:rgba(255,255,255,.5)}
+@media(max-width:760px){html[data-theme="redesign"] .hero{padding:52px 0 46px}html[data-theme="redesign"] .hero::before{background-position:center 40%}}
+html[data-theme="redesign"] #sube{background:var(--bone)}
+html[data-theme="redesign"] #sube .shead h2,html[data-theme="redesign"] .brb h3,html[data-theme="redesign"] .brh{color:#1c1917}
+html[data-theme="redesign"] #sube .ssub,html[data-theme="redesign"] .brb p{color:#57534e}
+html[data-theme="redesign"] .brbtns .btn{background:var(--red);box-shadow:none}
+html[data-theme="redesign"] .brmap{border-color:#e7e0d6}
+html[data-theme="redesign"] .ctaband{background:linear-gradient(135deg,var(--red),var(--red-d))}
+html[data-theme="redesign"] .admin{background:var(--red)}
+
+/* ── تم ۳: coskun (v7.18 — پیش‌فرض؛ قوانین بالای فایل) ── */
+html[data-theme="coskun"] .ticker{background:var(--red);color:#fff}
+
+/* ── تم ۴: bonfilet — عاج کرم + طلایی + Montserrat (v7.19) ── */
+html[data-theme="bonfilet"]{--ink:#1f1f1d;--ink2:#4a4a44;--mut:#8a867c;--bg:#fffaf3;--card:#ffffff;--red:#96601f;--red-d:#7a4d18;--green:#16a34a;--amber:#b45309;--line:#eae3d5;--gold:#e7a24a;--bronze:#b77a2e;--peach:#fdefe2}
+html[data-theme="bonfilet"] body{background:var(--bg)}
+html[data-theme="bonfilet"] body,html[data-theme="bonfilet"] .frm input,html[data-theme="bonfilet"] .frm textarea,html[data-theme="bonfilet"] .rfqrow input{font-family:Montserrat,Vazirmatn,-apple-system,"Segoe UI",Roboto,sans-serif}
+html[data-theme="bonfilet"] h1,html[data-theme="bonfilet"] h2,html[data-theme="bonfilet"] h3,html[data-theme="bonfilet"] .btxt b,html[data-theme="bonfilet"] .card .tr{font-family:Montserrat,Vazirmatn,sans-serif;font-weight:500;letter-spacing:-.03em}
+html[data-theme="bonfilet"] h1{font-weight:400;letter-spacing:-.04em;line-height:1.15}
+html[data-theme="bonfilet"] .card .tr{letter-spacing:0;text-transform:none;color:var(--red);font-weight:700}
+html[data-theme="bonfilet"] .btxt small{letter-spacing:.2em;text-transform:uppercase;font-size:10px;color:var(--bronze);font-weight:700}
+html[data-theme="bonfilet"] .price{color:var(--ink);font-weight:900}
+html[data-theme="bonfilet"] .ticker{background:var(--gold);color:#1f1f1d}
+html[data-theme="bonfilet"] .btn,html[data-theme="bonfilet"] .btn-gh{border-radius:14px;text-transform:uppercase;font-weight:700;letter-spacing:.04em}
+html[data-theme="bonfilet"] .btn-wa{background:var(--red)}
+html[data-theme="bonfilet"] .nav a.navcta{background:var(--red)}
+html[data-theme="bonfilet"] .bill .row.disc{color:#15803d}
+html[data-theme="bonfilet"] .badge{background:var(--peach);color:var(--red)}
+html[data-theme="bonfilet"] .badge .dot{animation:none}
+html[data-theme="bonfilet"] .tag{background:var(--bronze);color:#fff}
+html[data-theme="bonfilet"] .tag.raw{color:var(--red);background:#fff;border:1px solid var(--line)}
+html[data-theme="bonfilet"] .tag.hot{background:var(--gold);color:#1f1f1d}
+html[data-theme="bonfilet"] .tag.new{background:#b45309;color:#fff}
+html[data-theme="bonfilet"] .tip b{color:#b45309}
+html[data-theme="bonfilet"] .ctaband{background:var(--peach);color:#1f1f1d}
+html[data-theme="bonfilet"] .ctaband h2{color:#1f1f1d}
+html[data-theme="bonfilet"] .ctaband p{color:#4a4a44}
+html[data-theme="bonfilet"] .hero::before{opacity:.6}
+html[data-theme="bonfilet"] .hero::after{background-image:linear-gradient(100deg,rgba(255,250,243,.96) 4%,rgba(255,250,243,.78) 45%,rgba(31,31,29,.28) 100%)}
+@media(max-width:760px){html[data-theme="bonfilet"] .hero::after{background-image:linear-gradient(180deg,rgba(255,250,243,.94) 0%,rgba(255,250,243,.72) 55%,rgba(31,31,29,.35) 100%)}}
+html[data-theme="bonfilet"] .hero{color:#1f1f1d}
+html[data-theme="bonfilet"] .hero h1{color:#1f1f1d}
+html[data-theme="bonfilet"] .hero .lead{color:#4a4a44}
+html[data-theme="bonfilet"] .hero dl dt{color:#8a867c}
+html[data-theme="bonfilet"] .hero dl dd{color:#1f1f1d}
+html[data-theme="bonfilet"] .hero .btn-gh{color:#1f1f1d;border-color:rgba(31,31,29,.4)}
+html[data-theme="bonfilet"] #sube{background:var(--peach)}
+html[data-theme="bonfilet"] #sube .shead h2,html[data-theme="bonfilet"] .brb h3,html[data-theme="bonfilet"] .brh{color:#1f1f1d}
+html[data-theme="bonfilet"] #sube .ssub,html[data-theme="bonfilet"] .brb p{color:#5c5850}
+html[data-theme="bonfilet"] .brbtns .btn{background:var(--red);box-shadow:none}
+html[data-theme="bonfilet"] .admin{background:var(--red)}
+html[data-theme="bonfilet"] .brcard{background:#fff;border-color:var(--line)}
+
+/* ── اصلاح کنتراست‌های موتور تم (v7.19) ── */
+html[data-theme="dark"] .nav a.on,html[data-theme="redesign"] .nav a.on{background:var(--red);color:#fff}
+html[data-theme="dark"] .navburger,html[data-theme="redesign"] .navburger{background:var(--red);border-color:var(--red)}
+html[data-theme="dark"] .btn-gh,html[data-theme="redesign"] .btn-gh{background:transparent;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .chip,html[data-theme="redesign"] .chip{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+html[data-theme="dark"] .chip .price,html[data-theme="redesign"] .chip .price{color:#f87171}
+html[data-theme="dark"] .chip b,html[data-theme="redesign"] .chip b{color:#f87171}
+html[data-theme="dark"] .chip[style],html[data-theme="redesign"] .chip[style]{background:var(--card)!important;color:var(--ink)!important;border:1px solid var(--line)}
+html[data-theme="dark"] .rfqsum span:not(.tier),html[data-theme="redesign"] .rfqsum span:not(.tier){color:#c8ccd8!important}
+html[data-theme="redesign"] .tag.hot{background:#c24d12}
+html[data-theme="dark"] .kicker,html[data-theme="redesign"] .kicker{color:#f87171}
+html[data-theme="dark"] .tag.new,html[data-theme="redesign"] .tag.new{background:#b45309}
+html[data-theme="dark"] .btn-wa,html[data-theme="redesign"] .btn-wa,html[data-theme="dark"] .f-wa,html[data-theme="redesign"] .f-wa,html[data-theme="dark"] .nav a.navcta,html[data-theme="redesign"] .nav a.navcta{background:#15803d}
+html[data-theme="dark"] .rfqsum,html[data-theme="redesign"] .rfqsum{color:#c8ccd8}
+html[data-theme="dark"] .tip b,html[data-theme="redesign"] .tip b{color:#fbbf24}
+html[data-theme="dark"] .lsw button,html[data-theme="redesign"] .lsw button{color:var(--ink)}
+html[data-theme="redesign"] .brcard{background:#fff;border-color:#e7e0d6}
+html[data-theme="redesign"] .brmap{border-color:#e7e0d6}
+html[data-theme="bonfilet"]{--mut:#6f6b62}
+html[data-theme="bonfilet"] .btxt small{color:var(--red)}
+html[data-theme="bonfilet"] .bhrs{color:#5c5850}
+html[data-theme="bonfilet"] .persona .kick{color:#fbbf24}
 </style>
 </head>
 <body id="top">

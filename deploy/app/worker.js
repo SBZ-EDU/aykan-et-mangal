@@ -661,7 +661,7 @@ async function handleAdminCommand(env, cid, text) {
     return;
   }
   if (cmd === "/yardim") {
-    await send(env, cid, "🛠 دستورات ادمین\n\n🔗 کانال\n/kanal @x — اتصال • /kanalkapat — قطع\n/postnow — پست فوری • /plan — برنامهٔ انتشار\n/aralik N — فاصلهٔ ساعتی • /durdur • /devam\n\n📊 مدیریت\n/istatistik — فروش/گفت‌وگو/رویداد\n/siparisler — ۱۰ سفارش آخر\n/bul KOD — جستجوی سفارش • /rapor — ۲۴ ساعت اخیر\n/durum KOD MESAJ — اطلاع‌رسانی به مشتری\n/duyuru MESAJ — اعلان همگانی\n/fiyatguncelle id fiyat — تغییر قیمت (sifirla = بازگردانی)\n/stok id yok|var — بستن/بازکردن موجودی\n/ping — وضعیت سامانه\n\n🎯 لیدها\n/lidedefteri — دفترچه • /bolge N • /yatirim\n\n📡 رادار\n/trendler — ترندهای غذا • /lidyeni — لیدهای AI رستوران‌ها");
+    await send(env, cid, "🛠 دستورات ادمین\n\n🔗 کانال\n/kanal @x — اتصال • /kanalkapat — قطع\n/postnow — پست فوری • /plan — برنامهٔ انتشار\n/aralik N — فاصلهٔ ساعتی • /durdur • /devam\n\n📊 مدیریت\n/istatistik — فروش/گفت‌وگو/رویداد\n/siparisler — ۱۰ سفارش آخر\n/bul KOD — جستجوی سفارش • /rapor — ۲۴ ساعت اخیر\n/durum KOD MESAJ — اطلاع‌رسانی به مشتری\n/duyuru MESAJ — اعلان همگانی\n/fiyatguncelle id fiyat — تغییر قیمت (sifirla = بازگردانی)\n/stok id yok|var — بستن/بازکردن موجودی\n/ping — وضعیت سامانه\n\n🎯 لیدها\n/lidedefteri — دفترچه • /bolge N • /yatirim\n\n📡 رادار\n/trendler — ترندهای غذا • /lidyeni — لیدهای AI رستوران‌ها\n\n🎨 تم\n/tema — نمایش/تغییر تم سایت (dark | redesign | coskun | bonfilet)");
     return;
   }
   if (cmd === "/fiyatguncelle") {
@@ -731,6 +731,17 @@ async function handleAdminCommand(env, cid, text) {
     var m3 = "🧾 ۱۰ سفارش آخر:\n\n";
     orows.forEach(function (r) { m3 += "• " + r.code + " | " + fmtTL(r.total) + " TL | " + (r.name || "?") + " | " + (r.phone || "?") + "\n"; });
     await send(env, cid, m3);
+    return;
+  }
+  if (cmd === "/tema") {
+    var TNAMES = { dark: "🌑 تیرهٔ کلاسیک", redesign: "🕯 Redesign (Anton)", coskun: "🔴 Coşkun (روشن)", bonfilet: "🥇 Bonfilet (کرم و طلایی)" };
+    var argT = (text.split(/\s+/)[1] || "").toLowerCase();
+    var curTh = "coskun";
+    try { curTh = (await getSetting(env, "site_theme")) || "coskun"; } catch (e) {}
+    if (!argT) { await send(env, cid, "🎨 تم فعلی سایت: " + (TNAMES[curTh] || curTh) + "\n\nبرای تغییر:\n/tema dark — تیرهٔ کلاسیک\n/tema redesign — Anton و زغالی\n/tema coskun — روشن و قرمز\n/tema bonfilet — کرم و طلایی\n\n⏱ روی سایت تا ~۳۰ ثانیه بعد اعمال می‌شود."); return; }
+    if (["dark", "redesign", "coskun", "bonfilet"].indexOf(argT) < 0) { await send(env, cid, "⛔ تم نامعتبر. گزینه‌ها: dark | redesign | coskun | bonfilet"); return; }
+    await setSetting(env, "site_theme", argT);
+    await send(env, cid, "✅ تم سایت عوض شد: " + (TNAMES[argT] || argT) + "\n\n🔍 پیش‌نمایش فوری:\nhttps://aykanmangal.com/?theme=" + argT + "\n⏱ برای بقیهٔ بازدیدکنندگان تا ~۳۰ ثانیه.");
     return;
   }
   if (cmd === "/ping") {
@@ -883,7 +894,7 @@ async function handleUpdate(env, u) {
   var st = await getBotState(env);
 
   // ادمین؟
-  var adminCmds = ["/kanal", "/channel", "/kanalkapat", "/postnow", "/plan", "/aralik", "/interval", "/durdur", "/pause", "/devam", "/resume", "/lidedefteri", "/lidegonder", "/lidekanal", "/leadschannel", "/lidekanalkapat", "/bolge", "/yatirim", "/istatistik", "/stats", "/duyuru", "/durum", "/ping", "/siparisler", "/fiyatguncelle", "/stok", "/yardim", "/bul", "/rapor", "/trendler", "/lidyeni"];
+  var adminCmds = ["/kanal", "/channel", "/kanalkapat", "/postnow", "/plan", "/aralik", "/interval", "/durdur", "/pause", "/devam", "/resume", "/lidedefteri", "/lidegonder", "/lidekanal", "/leadschannel", "/lidekanalkapat", "/bolge", "/yatirim", "/istatistik", "/stats", "/duyuru", "/durum", "/ping", "/siparisler", "/fiyatguncelle", "/stok", "/yardim", "/bul", "/rapor", "/trendler", "/lidyeni", "/tema"];
   for (var ai = 0; ai < adminCmds.length; ai++) {
     if (new RegExp("^" + adminCmds[ai].replace(/\//g, "\\/") + "(\\s|$)").test(low)) {
       if (st.admin_chat === cid) { await handleAdminCommand(env, cid, text); }
@@ -2063,7 +2074,22 @@ textarea#so-text:focus,#so-img:focus{border-color:var(--or1)}
 <a href="https://t.me/Aykan_Et_mangal_shopping_bot" target="_blank">🤖 ربات تلگرام <span data-i18n="p62">@Aykan_Et_mangal_shopping_bot</span></a>
 <a href="https://t.me/AykanEtmangal_shopping" target="_blank">📢 کانال فروش <span data-i18n="p63">@AykanEtmangal_shopping</span></a>
 <a href="https://wa.me/905377325269" target="_blank">💬 واتساپ فروشگاه <span data-i18n="p64">0537 732 52 69</span></a>
-<p class="mut" style="margin-top:14px;line-height:2">دستورهای ربات: <b data-i18n="p65">/admin 5269</b> سپس <b data-i18n="p66">/plan</b> برنامه پست‌ها • <b data-i18n="p67">/aralik N</b> فاصله پست (ساعت) • <b data-i18n="p68">/postnow</b> ارسال فوری • <b data-i18n="p69">/lidedefteri</b> دفتر لیدها • <b data-i18n="p70">/yatirim</b> لیدرهای سرمایه‌گذاری • <b data-i18n="p71">/bolge 1..10</b> خلاصه منطقه</p>
+</div>
+<div class="card"><h3>🎨 تم سایت</h3>
+<p class="mut" style="line-height:2">ظاهر سایت را انتخاب کنید (تا ~۳۰ ثانیه بعد روی سایت اعمال می‌شود):</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
+<button onclick="setTheme('dark')" style="padding:10px 16px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-weight:700">🌑 تیرهٔ کلاسیک</button>
+<button onclick="setTheme('redesign')" style="padding:10px 16px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-weight:700">🕯️ Redesign</button>
+<button onclick="setTheme('coskun')" style="padding:10px 16px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-weight:700">🔴 Coşkun</button>
+<button onclick="setTheme('bonfilet')" style="padding:10px 16px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-weight:700">🥇 Bonfilet</button>
+</div>
+<p class="mut" id="thmStat">⏳…</p>
+<script>
+async function setTheme(t){try{document.getElementById('thmStat').textContent='⏳ در حال اعمال…';const r=await fetch('/api/theme',{method:'POST',headers:{'authorization':'Bearer '+TOK,'content-type':'application/json'},body:JSON.stringify({theme:t})});const d=await r.json();document.getElementById('thmStat').textContent=d.ok?('✅ تم سایت: '+d.theme+' — پیش‌نمایش: '+location.origin+'/?theme='+d.theme):('⛔ '+(d.error||'خطا'));}catch(e){document.getElementById('thmStat').textContent='⛔ خطای شبکه';}}
+(async()=>{try{const r=await fetch('/api/theme');const d=await r.json();if(d.ok)document.getElementById('thmStat').textContent='تم فعلی: '+d.theme;}catch(e){document.getElementById('thmStat').textContent='';}})();
+</script>
+</div>
+<div class="card"><p class="mut" style="margin-top:14px;line-height:2">دستورهای ربات: <b data-i18n="p65">/admin 5269</b> سپس <b data-i18n="p66">/plan</b> برنامه پست‌ها • <b data-i18n="p67">/aralik N</b> فاصله پست (ساعت) • <b data-i18n="p68">/postnow</b> ارسال فوری • <b data-i18n="p69">/lidedefteri</b> دفتر لیدها • <b data-i18n="p70">/yatirim</b> لیدرهای سرمایه‌گذاری • <b data-i18n="p71">/bolge 1..10</b> خلاصه منطقه</p>
 </div>
 </div>
 <div class="view hide" id="v-social">
@@ -2599,7 +2625,26 @@ export default {
       try { await autopostTick(env); done.autopost = "ok"; } catch (e) { done.autopost = String(e).slice(0, 120); }
       return new Response(JSON.stringify({ ok: true, detail: done }), { headers: { "content-type": "application/json" } });
     }
-    if (p === "/health") return new Response("OK — Aykan All-in-One v7.18.0 (site + panel + bot + radar)");
+    if (p === "/health") return new Response("OK — Aykan All-in-One v7.19.0 (site + panel + bot + radar)");
+    if (p === "/api/theme") {
+      var jth = { "content-type": "application/json", "access-control-allow-origin": "*" };
+      if (request.method === "GET") {
+        var curT = "coskun";
+        try { curT = (await getSetting(env, "site_theme")) || "coskun"; } catch (e) {}
+        return new Response(JSON.stringify({ ok: true, theme: curT }), { headers: { "content-type": "application/json", "access-control-allow-origin": "*", "cache-control": "public, max-age=30" } });
+      }
+      if (request.method === "POST") {
+        var tokT = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+        var expT = await sha256hex(PANEL_SECRET + ":" + ADMIN_PIN);
+        if (tokT !== expT && (request.headers.get("x-panel-secret") || "") !== PANEL_SECRET) return new Response(JSON.stringify({ ok: false, error: "forbidden" }), { status: 403, headers: jth });
+        try {
+          var bT = await request.json();
+          if (["dark", "redesign", "coskun", "bonfilet"].indexOf(bT.theme) < 0) return new Response(JSON.stringify({ ok: false, error: "invalid-theme" }), { status: 400, headers: jth });
+          await setSetting(env, "site_theme", bT.theme);
+          return new Response(JSON.stringify({ ok: true, theme: bT.theme }), { headers: { "content-type": "application/json", "cache-control": "no-store" } });
+        } catch (e) { return new Response(JSON.stringify({ ok: false, error: "bad-request" }), { status: 400, headers: jth }); }
+      }
+    }
     if (p === "/api/setup" && url.searchParams.get("key") === HOOK_SECRET) {
       var r2 = await ensureWebhook(env);
       return new Response(JSON.stringify(r2), { headers: { "content-type": "application/json" } });
