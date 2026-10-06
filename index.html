@@ -56,7 +56,7 @@ fetch("/api/theme").then(function(r){return r.json()}).then(function(d){if(!d||!
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{background:var(--bg);color:var(--ink);line-height:1.85;padding-bottom:90px}
 a{color:inherit}
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 .wrap{max-width:1100px;margin:0 auto;padding:0 18px}
 /* ── نوار متحرک ── */
 .ticker{background:var(--red);color:#fff;overflow:hidden;white-space:nowrap;font-size:13px;font-weight:700;padding:9px 0;position:relative;width:100%}
@@ -213,7 +213,7 @@ h2{font-size:clamp(23px,3.4vw,33px);font-weight:900;margin:6px 0 8px}
 
 /* ── شخصیت ── */
 .persona{background:var(--ink);color:#f5f5f5;border-radius:26px;padding:40px 30px;display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center}
-.persona img{border-radius:20px;aspect-ratio:4/4.4;object-fit:cover}
+.persona img{width:100%;border-radius:20px;aspect-ratio:4/4.4;object-fit:cover}
 .persona .kick{color:var(--amber);font-weight:900;font-size:13px}
 .persona h2{color:#fff}
 .persona p{color:#c8ccd8;font-size:15px}
